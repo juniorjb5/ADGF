@@ -1,0 +1,64 @@
+---
+title: "Taller 1 — Flujo de datos y calidad"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+library(tidyverse)
+library(lubridate)
+
+```
+
+1. Importación (simulado)
+
+
+```{r}
+
+tickers <- c("AAPL","MSFT")
+raw <- tibble(
+  ticker = rep(tickers, each = 10),
+  date   = rep(seq.Date(as.Date("2024-01-01"), by="day", length.out=10), times=2),
+  close  = round(runif(20, 80, 120), 2),
+  volume = sample(1e6:5e6, 20, replace=TRUE)
+)
+head(raw)
+```
+
+
+2. Limpieza + validación de llave
+
+```{r}
+data <- raw %>%
+  mutate(date = as.Date(date)) %>%
+  arrange(ticker, date)
+
+data %>% count(ticker, date) %>% filter(n > 1)
+```
+
+
+
+3. Export
+
+```{r}
+dir.create("output", showWarnings = FALSE)
+write_csv(data, "output/data_final.csv")
+```
+
+
+4. Diccionario
+
+```{r}
+diccionario <- tibble(
+  variable = c("ticker","date","close","volume"),
+  descripcion = c("Identificador del activo","Fecha","Precio de cierre","Volumen"),
+  unidad_moneda = c("-","-","USD","unidades"),
+  frecuencia = "diaria",
+  fuente = "simulado",
+  llave_nivel = "ticker-date"
+)
+
+diccionario
+write_csv(diccionario, "output/diccionario.csv")
+```
+

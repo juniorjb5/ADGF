@@ -1,0 +1,5 @@
+variable,descripcion,unidad_moneda,frecuencia,fuente,llave_nivel
+ticker,Identificador del activo,-,diaria,simulado,ticker-date
+date,Fecha,-,diaria,simulado,ticker-date
+close,Precio de cierre,USD,diaria,simulado,ticker-date
+volume,Volumen,unidades,diaria,simulado,ticker-date

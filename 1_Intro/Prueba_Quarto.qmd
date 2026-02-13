@@ -1,0 +1,79 @@
+---
+title: "Taller 1 — Flujo de datos y calidad"
+author: "Tu Nombre"
+format:
+  html:
+    toc: true
+    number-sections: true
+execute:
+  echo: true
+  warning: false
+  message: false
+---
+
+## 0. Paquetes
+
+```{r}
+library(tidyverse)
+library(lubridate)
+```
+
+1. Importación
+
+# Ejemplo mínimo: simulado
+
+```{r}
+tickers <- c("AAPL","MSFT")
+raw <- tibble(
+  ticker = rep(tickers, each = 10),
+  date   = rep(seq.Date(as.Date("2024-01-01"), by="day", length.out=10), times=2),
+  close  = round(runif(20, 80, 120), 2),
+  volume = sample(1e6:5e6, 20, replace=TRUE)
+)
+
+raw %>% head()
+```
+
+
+2. Limpieza + llave
+
+```{r}
+data <- raw %>%
+  mutate(date = as.Date(date),
+         ticker = as.character(ticker),
+         close = as.numeric(close)) %>%
+  arrange(ticker, date)
+
+# Check: duplicados en (ticker, date)
+dups <- data %>% count(ticker, date) %>% filter(n > 1)
+dups
+```
+
+3. Dataset final + export
+
+
+```{r}
+data_final <- data %>% distinct(ticker, date, .keep_all = TRUE)
+
+dir.create("output", showWarnings = FALSE)
+write_csv(data_final, "output/data_final.csv")
+```
+
+
+4. Diccionario mínimo
+
+```{r}
+diccionario <- tribble(
+  ~variable, ~descripcion, ~unidad_moneda, ~frecuencia, ~fuente, ~llave_nivel,
+  "ticker", "Identificador del activo", "-", "diaria", "simulado", "ticker-date",
+  "date", "Fecha", "-", "diaria", "simulado", "ticker-date",
+  "close", "Precio de cierre", "USD", "diaria", "simulado", "ticker-date",
+  "volume", "Volumen", "unidades", "diaria", "simulado", "ticker-date"
+)
+
+diccionario
+write_csv(diccionario, "output/diccionario.csv")
+```
+
+
+
