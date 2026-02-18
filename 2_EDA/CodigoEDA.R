@@ -1,7 +1,4 @@
 
-#############################################################################
-
-
 library(tidyverse)
 library(PerformanceAnalytics)
 library(xts)
@@ -15,18 +12,25 @@ library(moments)
 
 set.seed(123)
 
-# 1) Cargar datos --------------------------------------------
+# 1) Cargar datos -----------------------------------------------------------
+# Traigo el dataset EDHEC (retornos mensuales) y lo dejo como xts:
+# fecha = índice, estrategias = columnas. Esto es la base para todo el EDA.
 data(edhec, package = "PerformanceAnalytics")
 R_xts <- edhec
 
-# 1) Wide limpio (data.frame) + nombres correctos
+
+# 2.1) Wide limpio (data.frame) + nombres correctos -------------------------
+# Paso de xts a data.frame “clásico”: creo la columna date y pego los retornos
+# como columnas. Con check.names=FALSE evito que R modifique nombres de estrategias.
 R_wide <- data.frame(
   date = as.Date(index(R_xts)),
   coredata(R_xts),
   check.names = FALSE
 )
 
-# 2) Long limpio (ret numérico)
+# 2.2) Long limpio (ret numérico) -------------------------------------------
+# Transformo a formato largo: una fila por (fecha, estrategia) con ret numérico.
+# Esto facilita summarise/ggplot y evita problemas con valores no finitos.
 R_tbl <- R_wide %>%
   pivot_longer(-date, names_to = "strategy", values_to = "ret") %>%
   mutate(
@@ -35,7 +39,9 @@ R_tbl <- R_wide %>%
   ) %>%
   filter(is.finite(ret))
 
-# 3) Top N estrategias por volatilidad (sd)
+# 2.3) Top N estrategias por volatilidad (sd) -------------------------------
+# Calculo sd por estrategia y selecciono las topN más volátiles.
+# Así reduzco ruido visual y me enfoco en las que “más se mueven”.
 topN <- 8
 top_strat <- R_tbl %>%
   group_by(strategy) %>%
@@ -46,7 +52,10 @@ top_strat <- R_tbl %>%
 
 R_top <- R_tbl %>% filter(strategy %in% top_strat)
 
-# 3) KPIs básicos + colas (pero serios) ----------------------
+
+# 3) KPIs básicos + colas ---------------------------------------------------
+# Tabla resumen por estrategia: tamaño muestral, tendencia central, volatilidad,
+# asimetría/curtosis y percentiles clave (colas). Ordeno por p05 (downside).
 kpi_tbl <- R_tbl %>%
   group_by(strategy) %>%
   summarise(
@@ -69,9 +78,14 @@ kpi_tbl <- R_tbl %>%
 
 kpi_tbl
 
-# 4) Distribución / colas / no-normalidad --------------------
-# 4.1 Ridgelines (densidades apiladas) para comparar estrategias
 
+# 4) Distribución / colas / no-normalidad -----------------------------------
+# Bloque para “ver” forma de retornos: dispersión, colas, outliers y qué tan
+# lejos está la data de una normalidad ideal (muy típico en finanzas).
+
+# 4.1 Ridgelines (densidades apiladas) --------------------------------------
+# Ordeno estrategias por volatilidad y comparo densidades apiladas.
+# Útil para ver asimetría y colas (especialmente a la izquierda).
 ord <- R_top %>%
   group_by(strategy) %>%
   summarise(sd_ret = sd(ret), .groups = "drop") %>%
@@ -94,12 +108,13 @@ p_ridge <- ggplot(R_top2, aes(x = ret, y = strategy_ord, fill = strategy_ord)) +
 
 p_ridge
 
-# 4.2 Raincloud (halfeye + box + puntos) — EDA de alta calidad
+
+# 4.2 Raincloud (halfeye + box + puntos) ------------------------------------
+# “Todo en uno”: forma (halfeye), resumen robusto (boxplot) y nube de puntos.
+# Muy útil para comparar mediana, dispersión y outliers sin asumir normalidad.
 p_rain <- R_top %>%
   ggplot(aes(x = fct_reorder(strategy, ret, .fun = median), y = ret)) +
-  ggdist::stat_halfeye(
-    adjust = 0.7, width = 0.6, .width = c(0.5, 0.8, 0.95)
-  ) +
+  ggdist::stat_halfeye(adjust = 0.7, width = 0.6, .width = c(0.5, 0.8, 0.95)) +
   geom_boxplot(width = 0.15, outlier.alpha = 0.35) +
   geom_point(alpha = 0.15, position = position_jitter(width = 0.1), size = 0.8) +
   coord_flip() +
@@ -111,7 +126,10 @@ p_rain <- R_top %>%
   ) +
   scale_y_continuous(labels = percent_format(accuracy = 1))
 
-# 4.3 ECDF (cola izquierda enfocada)
+
+# 4.3 ECDF (cola izquierda enfocada) ----------------------------------------
+# CDF empírica para leer probabilidades directas: P(Retorno ≤ x).
+# Muy buena para comparar downside risk entre estrategias.
 p_ecdf <- R_top %>%
   ggplot(aes(x = ret, color = strategy)) +
   stat_ecdf(size = 0.9, alpha = 0.9) +
@@ -124,8 +142,10 @@ p_ecdf <- R_top %>%
   scale_x_continuous(labels = percent_format(accuracy = 1)) +
   guides(color = guide_legend(ncol = 2))
 
-# 4.4 Q-Q plot vs Normal (por estrategia) para mostrar no-normalidad
-# Nota: muchas facetas pueden saturar; usa top 6-8
+
+# 4.4 Q-Q plot vs Normal -----------------------------------------------------
+# Comparo cuantiles empíricos vs cuantiles normales (en z-scores).
+# Si se despega en colas, queda evidente la no-normalidad (colas gordas/asimetría).
 qq_data <- R_top %>%
   group_by(strategy) %>%
   mutate(
@@ -155,13 +175,24 @@ print(p_rain)
 print(p_ecdf)
 print(p_qq)
 
-# 5) Outliers y eventos extremos -----------------------------
-# 5.1 Outliers robustos por estrategia usando MAD (más financiero que z-score)
+
+
+# 5) Outliers y eventos extremos --------------------------------------------
+# Aquí me enfoco en extremos: qué tan frecuentes son los eventos raros
+# y qué tan malos han sido (tail risk / event risk).
+
+# 5.1 Outliers robustos por estrategia usando MAD ---------------------------
+# MAD = Median Absolute Deviation (Desviación Absoluta Mediana).
+# Se calcula como: MAD = mediana(|ret - mediana(ret)|). Es una medida de dispersión
+# ROBUSTA: no se deja sesgar por outliers como sí pasa con la desviación estándar.
+# Aquí estimo un “z-score robusto”: robust_z = (ret - mediana)/MAD, y marco como
+# outlier los puntos con |robust_z| > 5. Luego resumo cuántos outliers hay, su tasa,
+# y dos referencias de cola: el peor retorno (min) y el percentil 5% (worst_5).
 out_tbl <- R_tbl %>%
   group_by(strategy) %>%
   mutate(
     med = median(ret),
-    mad = mad(ret, constant = 1),  # constante 1 para escala tipo MAD cruda
+    mad = mad(ret, constant = 1),  # constante=1: MAD “cruda”
     robust_z = (ret - med) / (mad + 1e-12),
     outlier_mad = abs(robust_z) > 5
   ) %>%
@@ -176,7 +207,8 @@ out_tbl <- R_tbl %>%
 
 print(out_tbl)
 
-# 5.2 Peores 10 retornos por estrategia (evento-riesgo)
+# 5.2 Peores 10 retornos por estrategia -------------------------------------
+# Saco los 10 meses más malos por estrategia para visualizar event risk.
 worst10 <- R_tbl %>%
   group_by(strategy) %>%
   slice_min(ret, n = 10, with_ties = FALSE) %>%
@@ -195,10 +227,18 @@ p_worst <- worst10 %>%
 
 print(p_worst)
 
-# 6) Dinámica temporal: vol rolling, VaR/ES rolling, drawdowns -
-# Pasar a xts para rolling fácil
-# Elegimos 3 estrategias para series temporales (ajusta si quieres)
-# 6.1 Volatilidad rolling (12 meses)
+
+
+# 6) Dinámica temporal: vol rolling, drawdowns ------------------------------
+# Ahora sí miro el tiempo: volatilidad en ventanas móviles, crisis vs calma,
+# y drawdowns (caídas máximas) como lectura clásica financiera.
+
+# 6.1 Volatilidad rolling (12 meses) ----------------------------------------
+# Selecciono 3 estrategias (fijas) para que el gráfico sea reproducible.
+# Calculo SD móvil de 12 meses para ver cambios de régimen y clustering.
+R_pick <- R_xts[, c("Convertible Arbitrage", "Equity Market Neutral", "Merger Arbitrage")]
+R_pick <- R_pick[complete.cases(R_pick), ]
+
 roll_sd <- zoo::rollapply(R_pick, width = 12, FUN = sd, align = "right", fill = NA)
 
 roll_sd_wide <- data.frame(
@@ -226,18 +266,21 @@ p_roll_sd <- ggplot(roll_sd_tbl, aes(x = date, y = roll_sd, color = strategy)) +
 p_roll_sd
 
 
-# 6.3 Drawdowns (EDA financiero clásico)
-# PerformanceAnalytics trae chart.Drawdown y findDrawdowns
-# (en script no guardamos el gráfico ggplot, pero lo mostramos)
+# 6.2 Drawdowns (EDA financiero clásico) ------------------------------------
+# Panel rápido: rendimiento acumulado, drawdowns y riesgo (muy estándar en finanzas).
 par(mfrow = c(1,1))
 charts.PerformanceSummary(R_pick, main = "Performance Summary (retorno, drawdown, riesgo)")
 
-# 7) Dependencia: Pearson/Spearman + cola ---------------------
-# 7.1 Matrices de correlación (Pearson)
+
+
+# 7) Dependencia: correlación ------------------------------------------------
+# Co-movimiento entre estrategias. Primera lectura de diversificación:
+# quién se mueve con quién (linealmente).
+
+# 7.1 Matriz de correlación (Pearson) ---------------------------------------
 cor_p <- cor(R_xts, use = "pairwise.complete.obs", method = "pearson")
 
-
-# Convertir a tidy para heatmap con ggplot
+# Paso a formato tidy para dibujar heatmap en ggplot
 cor_to_tbl <- function(M, name = "pearson"){
   as.data.frame(M) %>%
     rownames_to_column("A") %>%
@@ -258,7 +301,7 @@ p_cor <- cor_tbl %>%
   theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
   labs(
     title = "Correlación: Pearson",
-    subtitle = "Pearson captura linealidad",
+    subtitle = "Pearson captura dependencia lineal",
     x = NULL, y = NULL
   )
 
@@ -266,8 +309,10 @@ print(p_cor)
 
 
 
-# 8) Bootstrap para KPIs + incertidumbre ----------------------
-# KPI ejemplo: media (retorno) y p5 (downside) por estrategia
+# 8) Bootstrap para KPIs + incertidumbre ------------------------------------
+# No me quedo solo con el punto estimado: saco IC bootstrap para KPIs.
+# Ejemplos: media (retorno) y p05 (downside) por estrategia.
+
 boot_ci <- function(x, stat = mean, B = 3000, alpha = 0.05){
   x <- x[is.finite(x)]
   boots <- replicate(B, stat(sample(x, replace = TRUE)))
@@ -287,7 +332,8 @@ ci_kpi <- R_tbl %>%
   ) %>%
   arrange(mean)
 
-# 8.1 Error bars (retorno promedio con IC)
+# 8.1 Error bars: media con IC ----------------------------------------------
+# Comparo retorno promedio con incertidumbre (IC 95%).
 p_ci_mean <- ci_kpi %>%
   ggplot(aes(x = reorder(strategy, mean), y = mean)) +
   geom_point(size = 2) +
@@ -296,12 +342,13 @@ p_ci_mean <- ci_kpi %>%
   theme_minimal(base_size = 12) +
   labs(
     title = "KPI con incertidumbre: retorno promedio (IC bootstrap 95%)",
-    subtitle = "Decisión informada: no solo el punto, sino la precisión del KPI",
+    subtitle = "No solo el punto: también importa la precisión del KPI",
     x = NULL, y = "Retorno promedio"
   ) +
   scale_y_continuous(labels = percent_format(accuracy = 1))
 
-# 8.2 Error bars (p5 con IC) — cola izquierda
+# 8.2 Error bars: p05 con IC -------------------------------------------------
+# Mismo enfoque, pero ahora para riesgo de cola (percentil 5%).
 p_ci_p05 <- ci_kpi %>%
   ggplot(aes(x = reorder(strategy, p05), y = p05)) +
   geom_point(size = 2) +
@@ -318,9 +365,11 @@ p_ci_p05 <- ci_kpi %>%
 print(p_ci_mean)
 print(p_ci_p05)
 
-# 9) Panel final (composición pro) ----------------------------
-# Un “dashboard” estático para escoger qué se vuelve slides
 
+
+# 9) Panel final (composición pro) ------------------------------------------
+# Armo un “dashboard” estático con 4 gráficos clave para llevar a slides
+# o para una lectura rápida sin mil ventanas abiertas.
 library(cowplot)
 
 cowplot::plot_grid(
@@ -330,10 +379,6 @@ cowplot::plot_grid(
   p_ci_p05  + theme(legend.position="none"),
   ncol = 2
 )
-
-
-
-
 
 
 
