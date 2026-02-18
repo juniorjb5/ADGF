@@ -1,0 +1,202 @@
+---
+title: "08-purrr"
+author: "Silvia P. Canelón"
+date: "9/19/2020"
+output: html_document
+---
+
+class: penguin-tour
+
+```{r, echo=FALSE, out.width=1200}
+knitr::include_graphics("images/pptx/08-purrr.png")
+```
+
+
+
+---
+background-image: url(images/hex/purrr.png)
+background-position: 1050px 50px
+background-size: 80px
+
+# purrr: información
+
+.panelset[
+
+.panel[.panel-name[Resumen general]
+.pull-left[
+### Proporciona herramientas para trabajar con funciones y vectores 
+
+### La familia de funciones de `purrr` nos ayuda a reemplazar los *for loops*, haciendo que nuestro código sea más fácil de leer y más conciso.
+]
+
+.pull-right[
+### Con `purrr` puedes
+
+- Iterar sobre una sola entrada con `map()`
+- Iterar sobre dos entradas en paralelo con `map2()`
+- Iterar con múltiples argumentos con `pmap()`
+- Iterar con múltiples argumentos y funciones con `invoke_map()`
+- Llamar una función por sus efectos secundarios con `walk()`, `walk2()` y `pwalk()`
+]
+]
+
+.panel[.panel-name[Hoja de referencia]
+
+`r icon::fa("file-pdf")` PDF: https://github.com/rstudio/cheatsheets/raw/master/purrr.pdf
+![](https://raw.githubusercontent.com/rstudio/cheatsheets/master/pngs/thumbnails/purrr-cheatsheet-thumbs.png)
+]
+
+.panel[.panel-name[Lectura]
+
+.left-column[
+```{r echo=FALSE}
+knitr::include_graphics("images/r4ds-cover.png")
+```
+]
+
+.right-column[
+### R for Data Science: [Cap. 21 Iteración](https://r4ds.had.co.nz/iteration.html)
+
+### Documentación del paquete: https://purrr.tidyverse.org/
+]
+]
+]
+
+---
+background-image: url(images/hex/purrr.png)
+background-position: 1050px 50px
+background-size: 80px
+
+# purrr: ejercicio
+
+.panelset[
+.panel[.panel-name[¿Hora de un cambio?]
+
+.pull-left[
+### Ok, nos encanta el boxplot anterior que muestra **body_mass_g** por **sex** y coloreado por **species**... ¡pero cambiemos los colores para mantener el tema Antártico!
+
+### Soy muy fan de las paletas de color del paquete `nord` `r emo::ji("package")`
+]
+.pull-right[
+![](https://raw.githubusercontent.com/jkaupp/nord/master/man/figures/README-palettes-1.png)
+]
+]
+
+.panel[.panel-name[Objetivo]
+
+.pull-left[
+### Convirtamos este gráfico
+```{r echo=FALSE, warning=FALSE, fig.height=5}
+penguins %>%
+  ggplot(aes(x = sex, y = body_mass_g)) +
+  geom_boxplot(aes(fill = species))
+```
+]
+
+.pull-right[
+### ¡En este!
+```{r echo=FALSE, warning=FALSE, fig.height=5}
+penguins %>%
+  ggplot(aes(x = sex, y = body_mass_g)) +
+  geom_boxplot(aes(fill = species)) +
+  scale_fill_manual(values = nord::nord_palettes$frost)
+```
+
+.panel[.panel-name[Opción 1]
+
+.pull-left[
+```{r}
+library(nord)
+
+# puedes elegir colores usando 
+# los códigos hex
+nord::nord_palettes$frost
+```
+
+```{r eval=FALSE}
+# y asignarlos usando la función
+# `scale_fill_manual()`
+penguins %>%
+  ggplot(aes(x = sex, y = body_mass_g)) +
+  geom_boxplot(aes(fill = species)) +
+  scale_fill_manual(values = c("#8FBCBB", "#88C0D0", "#81A1C1")) #<<
+```
+]
+
+.pull-right[
+```{r echo=FALSE, fig.height=5}
+# y asignarlos usando la función `scale_fill_manual()`
+penguins %>%
+  ggplot(aes(x = sex, y = body_mass_g)) +
+  geom_boxplot(aes(fill = species)) +
+  scale_fill_manual(values = c("#8FBCBB", "#88C0D0", "#81A1C1"))
+```
+]
+]
+
+
+.panel[.panel-name[Opciones 2 y 3]
+
+.pull-left[
+...pero quizá prefieras usar el nombre de la paleta <br/>
+```{r eval=TRUE, warning=FALSE, fig.height=3, fig.width=5}
+penguins %>%
+  ggplot(aes(x = sex, y = body_mass_g)) +
+  geom_boxplot(aes(fill = species)) +
+  scale_fill_manual(values = nord::nord_palettes$frost) #<<
+```
+]
+
+.pull-right[
+Y algunos paquetes de paletas también traen sus propias funciones, como `scale_fill_nord()`
+```{r eval=TRUE, warning=FALSE, fig.height=3, fig.width=5}
+penguins %>%
+  ggplot(aes(x = sex, y = body_mass_g)) +
+  geom_boxplot(aes(fill = species)) +
+  nord::scale_fill_nord(palette = "frost") #<<
+```
+]
+]
+
+.panel[.panel-name[¿Purrr?]
+
+.pull-left[
+El paquete `prismatic` `r emo::ji("package")` nos ayuda a **ver** los colores que corresponden a cada código hex (casi siempre), con la función `color()`
+
+```{r}
+library(prismatic)
+```
+
+```{r, warning=FALSE, eval=FALSE}
+prismatic::color(nord::nord_palettes$frost)
+```
+![](images/nord_frost.png)
+]
+
+.pull-right[
+La función `map()` de `purrr` puede ayudarnos a iterar `color()` sobre todas las paletas en un paquete de paletas como `nord`:
+
+```{r, eval = FALSE}
+nord::nord_palettes %>% map(prismatic::color)
+```
+
+![](images/nord_multiple.png)
+]
+]
+]
+]
+
+.panel[.panel-name[¡Más paletas!]
+
+.pull-left[
+### `r emo::ji("art")` Repositorio [r-color-palettes](https://github.com/EmilHvitfeldt/r-color-palettes) de Emil Hvitfeldt
+
+### ¡Como esta temática de Wes Anderson! Y muchas, muchas más. `r emo::ji("star_struck")`
+]
+
+.pull-right[
+![](images/wesanderson_example.png)
+]
+]
+
+]

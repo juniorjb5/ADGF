@@ -1,0 +1,158 @@
+---
+title: "03-ggplot2"
+author: "Silvia P. Canelón"
+date: "9/19/2020"
+output: html_document
+---
+
+class: penguin-tour
+
+```{r, echo=FALSE, out.width=1200}
+knitr::include_graphics("images/pptx/03-ggplot2.png")
+```
+
+
+
+---
+background-image: url(images/hex/ggplot2.png)
+background-position: 1050px 50px
+background-size: 80px
+
+# ggplot2: información
+
+.panelset[
+.panel[.panel-name[Resumen general]
+### ¡Empecemos haciendo un gráfico simple de nuestros datos!
+
+### `ggplot2` usa la "Gramática de los Gráficos" (Grammar of Graphics) y apila componentes gráficos en capas para crear un gráfico.
+]
+
+.panel[.panel-name[Hoja de referencia]
+
+`r icon::fa("file-pdf")` PDF: https://github.com/rstudio/cheatsheets/raw/master/data-visualization-2.1.pdf
+![](https://raw.githubusercontent.com/rstudio/cheatsheets/master/pngs/thumbnails/data-visualization-cheatsheet-thumbs.png)
+]
+
+.panel[.panel-name[Lectura]
+
+.left-column[
+```{r echo=FALSE}
+knitr::include_graphics("images/r4ds-cover.png")
+```
+]
+
+.right-column[
+### R for Data Science: [Cap. 3 Visualización de datos](https://r4ds.had.co.nz/data-visualisation.html)
+
+### Documentación del paquete: https://ggplot2.tidyverse.org/
+]
+]
+]
+
+---
+background-image: url(images/hex/ggplot2.png)
+background-position: 1050px 50px
+background-size: 80px
+
+# ggplot2: ejercicio
+
+.panelset[
+.panel[.panel-name[Ver los datos]
+
+.pull-left[
+### Ver el dataset completo:
+```{r eval=FALSE}
+View(penguins)
+```
+]
+
+.pull-right[
+### O echar un vistazo con `glimpse`:
+```{r}
+glimpse(penguins)
+```
+]
+]
+
+.panel[.panel-name[Gráfico de dispersión]
+
+Veamos si la masa corporal varía según el sexo del pingüino
+
+.pull-left[
+```{r eval=FALSE}
+ggplot(data = penguins, 
+       aes(x = sex, y = body_mass_g)) + #<<
+  geom_point()
+```
+]
+
+.pull-right[
+```{r, echo=FALSE, warning=FALSE, fig.height=5}
+ggplot(data = penguins, 
+       aes(x = sex, y = body_mass_g)) +
+  geom_point()
+```
+]
+]
+
+.panel[.panel-name[Boxplot]
+
+.pull-left[
+```{r eval=FALSE}
+ggplot(data = penguins, 
+       aes(x = sex, y = body_mass_g)) +
+  geom_boxplot() #<<
+```
+]
+
+.pull-right[
+```{r echo=FALSE, warning=FALSE, fig.height=5}
+ggplot(data = penguins, 
+       aes(x = sex, y = body_mass_g)) +
+  geom_boxplot()
+```
+]
+]
+
+.panel[.panel-name[Por especie]
+
+.pull-left[
+```{r eval=FALSE}
+ggplot(data = penguins, 
+       aes(x = sex, y = body_mass_g)) +
+  geom_boxplot(aes(fill = species)) #<<
+```
+
+### <br/> ¿Qué notas?
+]
+
+.pull-right[
+```{r echo=FALSE, warning=FALSE, fig.height=5}
+ggplot(data = penguins, 
+       aes(x = sex, y = body_mass_g)) +
+  geom_boxplot(aes(fill = species))
+```
+]
+]
+
+.panel[.panel-name[Conversación]
+
+### Podrías observar...
+
+.pull-left[
+- Los pingüinos Gentoo tienen mayor masa corporal que los pingüinos Adélie y Chinstrap
+- Mayor masa corporal en los pingüinos Gentoo machos en comparación con las hembras
+- El patrón no es tan fácil de distinguir al comparar pingüinos Adélie y Chinstrap
+- ¡No hay *NA* en los puntos de datos de la especie Chinstrap! **sex** estuvo disponible para cada observación
+]
+
+.pull-right[
+```{r echo=FALSE, warning=FALSE, fig.height=5}
+penguins %>%
+  ggplot(aes(x = sex, y = body_mass_g)) +
+  geom_boxplot(aes(fill = species))
+```
+]
+]
+]
+

@@ -1,0 +1,531 @@
+---
+title: "10-funciones"
+author: "Adaptación (ES)"
+date: "2/17/2026"
+output: html_document
+---
+
+
+
+```{r xaringan-themer, include = FALSE}
+library(xaringanthemer)
+library(knitr)
+# style_mono_light(
+#   base_color = "#3092FF",
+#   header_font_google = google_font("Lora"),
+#   text_font_google   = google_font("Fira Sans", "450", "450i"),
+#   code_font_google   = google_font("Roboto Mono"),
+# )
+```
+
+```{r, eval=TRUE, include=FALSE}
+library(tidyverse)
+library(nycflights13)
+flights <- nycflights13::flights
+```
+
+
+class: about-me, middle, center
+
+# Funciones de Estructura
+
+## dplyr
+
+---
+
+
+
+# Agenda
+
+--
+
+- Introducción (por qué transformar datos en finanzas)
+
+--
+
+- Filtrar filas con `filter()`
+
+--
+
+- Ordenar filas con `arrange()`
+
+--
+
+- Seleccionar columnas con `select()`
+
+--
+
+- Crear variables con `mutate()`
+
+--
+
+- Resúmenes por grupos con `summarize()`
+
+--
+
+- `mutate()` por grupos (y filtros por grupos)
+
+---
+
+
+## Introducción
+
+### La transformación de datos te ayuda a llevar los datos a la forma exacta que necesitas para decidir.
+
+--
+
+En analítica financiera esto es el pan de cada día: antes de estimar riesgo, performance, elasticidades o construir tableros, **primero hay que “dejar listo” el dataset**.
+
+--
+
+Con transformación de datos puedes:
+
+- crear nuevas variables (KPIs, spreads, retornos, dummies, flags)
+- construir resúmenes (promedios, percentiles, tasas)
+- renombrar variables (estandarizar nombres)
+- reordenar observaciones (ranking, top/bottom)
+- ...¡y más!
+
+
+---
+
+### Dataset de ejemplo: `nycflights13` `r emo::ji('package')`
+
+Aunque el dataset es de vuelos (operación/logística), lo usaremos como **análogía financiera**:
+
+- cada vuelo = “transacción/operación” (un registro de evento)
+- `dep_delay` / `arr_delay` = “latencia / desviación del proceso” (costo operativo / riesgo de incumplimiento)
+- `carrier` = “contraparte / proveedor” (segmentación por entidad)
+- `distance` = “tamaño/exposición” (proxy de escala)
+- tiempo (mes/día/hora) = “estacionalidad / ciclos”
+
+Datos: 336,776 vuelos que salieron de NYC en 2013 (Bureau of Transportation Statistics, EE. UU.)
+
+---
+
+## Introducción
+
+```{r}
+flights
+```
+
+---
+
+## Introducción
+
+```{r}
+head(flights, 4)
+```
+
+--
+
+.pull-left[
+Tipos comunes que verás (¡igual que en bases financieras!):
+
+- `int`: enteros (conteos, IDs)
+- `dbl`: números reales (montos, tasas, retornos)
+- `chr`: texto (categorías, códigos)
+- `dttm`: fecha-hora (timestamp: trade time, corte contable)
+]
+
+--
+
+.pull-right[
+- `lgl`: lógico (TRUE/FALSE) (flags: default, fraude, activo)
+- `fctr`: factores (categorías) (segmentos, rating)
+- `date`: fechas (cierre, vencimiento)
+]
+
+---
+
+## Introducción
+
+### Fundamentos de **dplyr** (lo que más usarás en la práctica)
+
+- Seleccionar observaciones por valores (`filter()`).
+- Reordenar filas (`arrange()`).
+- Seleccionar variables por nombre (`select()`).
+- Crear variables nuevas a partir de existentes (`mutate()`).
+- Colapsar muchos valores en un resumen (`summarize()`).
+--
+
+- **+** `group_by()` para que todo lo anterior funcione **por grupos** (por entidad, sector, producto, portafolio, mes, etc.)
+
+### ¿Cómo funcionan?
+
+1. El primer argumento es un data frame
+2. Los demás argumentos describen qué hacer con el data frame
+3. El resultado es un **nuevo** data frame (ideal para pipelines reproducibles)
+
+---
+
+## Filtrar filas con `filter()`
+
+Permite quedarte con observaciones según condiciones.
+
+En finanzas: “tráeme solo estas fechas”, “solo este portafolio”, “solo defaults”, “solo operaciones con spread > X”.
+
+--
+
+```{r}
+filter(flights, month == 1, day == 1)
+```
+
+---
+
+### Comparaciones
+
+R trae los operadores estándar:
+
+- `>`
+- `>=`
+- `<`
+- `<=`
+- `!=` (distinto)
+- `==` (igual)
+
+(En finanzas: filtros por monto, tasa, retorno, VaR, rating, etc.)
+
+---
+
+### Operadores lógicos
+
+- `&` es "y" (AND)
+- `|` es "o" (OR)
+- `!` es "no" (NOT)
+
+.center[
+```{r, echo=FALSE, out.height=400}
+knitr::include_graphics('https://d33wubrfki0l68.cloudfront.net/01f4b6d39d2be8269740a3ad7946faa79f7243cf/8369a/diagrams/transform-logical.png')
+```
+]
+
+---
+
+### Valores faltantes (Missing values)
+
+- Valores faltantes (`NA`) representan un valor desconocido.
+
+--
+
+- Son “contagiosos” `r emo::ji('microbe')`: casi cualquier operación con algo desconocido tiende a producir desconocido.
+
+--
+
+### Importante porque...
+
+`filter()` **solo** conserva filas donde la condición es `TRUE`.
+
+Si la condición da `FALSE` o `NA`, la fila NO queda.
+
+--
+
+Si quieres conservar `NA`, debes pedirlo explícitamente:
+
+```{r, eval = FALSE, echo=TRUE}
+filter(df, is.na(x) | x > 1)
+```
+
+(En finanzas: ojo con `NA` en precios, retornos, spreads: si no los tratas, puedes sesgar análisis y KPIs.)
+
+---
+
+### Ejemplo: encontrar “contrapartes” específicas (carriers)
+
+En finanzas esto sería: “qué operaciones están asociadas a estas entidades / emisores / brokers”.
+
+```{r, eval=TRUE, include = TRUE, echo=FALSE}
+head(flights, 2)
+```
+
+--
+
+```{r, eval=TRUE, include=TRUE, echo=FALSE}
+unique(flights$carrier)
+```
+
+--
+
+```{r, eval=FALSE, include = TRUE}
+# opción 1 (incorrecta)
+flights %>% filter(carrier = "UA" | "AA" | "DL")
+
+# opción 2 (incorrecta)
+flights %>% filter(carrier == "UA" | "AA" | "DL")
+
+# opción 3 (correcta, pero más larga)
+flights %>% filter(carrier == "UA" | carrier == "AA" | carrier == "DL")
+
+# opción 4 (correcta, recomendada)
+flights %>% filter(carrier %in% c("UA", "AA", "DL"))
+```
+
+---
+
+#### Ejemplo: United, American o Delta (error típico)
+
+```{r, eval = FALSE, include=TRUE, echo=TRUE}
+flights %>% filter(carrier = "UA" | "AA" | "DL")
+```
+
+> Error: Problem with `filter()` input `..1`. x Input `..1` is named.  
+> ℹ Esto suele pasar cuando usas `=` en lugar de `==`.  
+> ℹ ¿Quisiste decir `carrier == "UA" | "AA" | "DL"`?
+
+---
+
+#### Ejemplo: United, American o Delta (segundo error típico)
+
+```{r eval=FALSE, include=TRUE, echo=TRUE, warning=TRUE, message=TRUE}
+flights %>% filter(carrier == "UA" | "AA" | "DL")
+```
+
+> Error: Problem with `filter()` input `..1`.  
+> x operaciones solo son posibles para tipos numéricos, lógicos o complejos  
+> ℹ Input `..1` es `carrier == "UA" | "AA" | "DL"`.
+
+---
+
+#### Ejemplo: forma correcta (explícita)
+
+```{r}
+flights %>% filter(carrier == "UA" | carrier == "AA" | carrier == "DL")
+```
+
+---
+
+#### Ejemplo: forma correcta (recomendada con `%in%`)
+
+```{r}
+flights %>% filter(carrier %in% c("UA", "AA", "DL"))
+```
+
+---
+
+## Ordenar filas con `arrange()`
+
+### Cambia el orden de las filas
+
+Toma un data frame y lo ordena por una o más columnas (o expresiones).
+
+--
+
+- por defecto ordena de menor a mayor (ascendente)
+- `desc()` ordena de mayor a menor (descendente)
+
+--
+
+- **Nota:** los `NA` siempre quedan al final
+
+(En finanzas: rankings de retornos, riesgos, drawdowns, spreads, moras.)
+
+---
+
+### Ejemplo: ordenar para encontrar las “operaciones” más críticas
+
+En finanzas: “top pérdidas”, “mayores retrasos”, “mayor exposición”.
+
+```{r}
+flights
+```
+
+---
+
+#### Ordenar para encontrar vuelos más demorados
+
+```{r eval=FALSE}
+arrange(flights, desc(dep_delay))
+```
+
+```{r, echo=FALSE}
+head(arrange(flights, desc(dep_delay)),3)
+```
+
+--
+#### Encontrar los vuelos que salieron más temprano (menor retraso)
+
+```{r eval=FALSE}
+arrange(flights, dep_delay)
+```
+
+```{r echo=FALSE}
+head(arrange(flights, dep_delay),3)
+```
+
+---
+
+## Seleccionar columnas con `select()`
+
+A veces llegan datasets con cientos o miles de variables `r emo::ji('grimacing')`.
+
+--
+
+`select()` te deja quedarte solo con lo relevante (muy útil para KPIs y tableros). `r emo::ji('tada')`
+
+--
+
+#### Funciones helper útiles
+
+- `starts_with("abc")`: nombres que empiezan con “abc”.
+- `ends_with("xyz")`: nombres que terminan con “xyz”.
+- `contains("ijk")`: nombres que contienen “ijk”.
+- `matches("(.)\\1")`: usa regex (más en Cap. 14: Strings)
+- `num_range("x", 1:3)`: x1, x2, x3.
+
+--
+
+- `r emo::ji("star")` `everything()`: útil para mover unas variables al inicio del data frame
+
+---
+
+### Ejemplo: selecciona `dep_time`, `dep_delay`, `arr_time`, `arr_delay`
+
+(Piénsalo como: time-stamps y métricas de “desviación”.)
+
+```{r}
+flights
+```
+
+---
+
+#### Forma 1 (explícita)
+
+```{r}
+select(flights, dep_time, dep_delay, arr_time, arr_delay)
+```
+
+---
+
+#### Forma 2 (por prefijos)
+
+```{r}
+select(flights, starts_with("dep") | starts_with("arr"))
+```
+
+---
+
+#### Forma 3 (por sufijos) — Ojo
+
+```{r}
+select(flights, ends_with("time") | ends_with("delay"))
+```
+
+## No del todo. ¿Por qué?
+
+(Respuesta: `|` aquí no se usa así dentro de `select()`; lo correcto sería algo como  
+`select(flights, ends_with("time"), ends_with("delay"))`.)
+
+---
+
+## Agregar variables con `mutate()`
+
+Sirve para crear nuevas columnas como funciones de columnas existentes.
+
+--
+
+- por defecto agrega columnas al final del dataset
+
+--
+
+- si solo quieres conservar las nuevas variables, usa `transmute()`
+
+(En finanzas: retornos, spreads, ratios, flags, cambios porcentuales, normalizaciones.)
+
+---
+
+### Agregar variables con `mutate()`
+
+.pull-left[
+Operadores aritméticos
+
+- `+`
+- `-`
+- `*`
+- `/`
+- `^`
+- `sum()`
+]
+
+--
+
+.pull-right[
+Aritmética modular y funciones
+
+- `%/%` (división entera)
+- `%%` (residuo)
+- `log()`
+- `log2()`
+- `log10()`
+]
+
+--
+
+.pull-left[
+Otros súper usados
+
+- comparaciones lógicas: `<`, `<=`, `>`, `>=`, `!=`
+- rezagos/adelantos: `lead()` y `lag()` (clave en series financieras)
+- rankings: `min_rank()`, `row_number()`, `dense_rank()`, etc.
+]
+
+---
+
+## Resúmenes por grupos con `summarize()`
+
+Colapsa un data frame en un resumen (una fila por grupo) y es más potente con `group_by()`.
+
+--
+
+En finanzas: KPIs por emisor, sector, portafolio, mes, producto, oficina, trader, etc.
+
+--
+
+Arguablemente es **lo más** útil cuando se usa con el pipe `%>%`.
+
+--
+
+De esto:
+
+```{r eval=FALSE}
+by_dest <- group_by(flights, dest)
+delay_tbl <- summarize(by_dest,
+                       count = n(),
+                       dis   = mean(distance, na.rm = TRUE),
+                       delay = mean(arr_delay, na.rm = TRUE))
+```
+
+--
+¡A esto! `r emo::ji('tada')`
+
+```{r eval=FALSE}
+flights %>% 
+  group_by(dest) %>% 
+  summarize(count = n(),
+            dis   = mean(distance, na.rm = TRUE),
+            delay = mean(arr_delay, na.rm = TRUE))
+```
+
+#### ¡Identifica las diferencias!
+
+---
+
+## `mutate()` por grupos (y filtros por grupos)
+
+Esto es muy útil cuando quieres filtrar por “popularidad” o “tamaño” del grupo.
+
+En finanzas: “quedarme con emisores con al menos N observaciones”, “productos con suficiente historial”, etc.
+
+--
+
+Ejemplo:
+
+```{r}
+popular_dests <- flights %>%
+  group_by(dest) %>%
+  filter(n() > 365)
+```
+
+### ¿Qué hace?
+
+(Respuesta: conserva solo destinos con más de 365 vuelos en el año; grupos con suficiente volumen para análisis estable.)
+

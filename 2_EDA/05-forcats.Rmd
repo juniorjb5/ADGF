@@ -1,0 +1,101 @@
+---
+title: "05-forcats"
+author: "Silvia P. Canelón"
+date: "9/19/2020"
+output: html_document
+---
+
+class: penguin-tour
+
+```{r, echo=FALSE, out.width=1200}
+knitr::include_graphics("images/pptx/05-forcats.png")
+```
+
+
+
+---
+background-image: url(images/hex/forcats.png)
+background-position: 1050px 50px
+background-size: 80px
+
+# forcats: información
+
+.panelset[
+
+.panel[.panel-name[Resumen general]
+### Nos ayuda a trabajar con **variables categóricas** o factores. 
+
+### Estas son variables que tienen un conjunto fijo y conocido de valores posibles, como **species**, **island** y **sex** en nuestro dataset `penguins`.
+]
+
+.panel[.panel-name[Hoja de referencia]
+
+`r icon::fa("file-pdf")` PDF: https://github.com/rstudio/cheatsheets/raw/master/factors.pdf
+![](https://raw.githubusercontent.com/rstudio/cheatsheets/master/pngs/thumbnails/forcats-cheatsheet-thumbs.png)
+]
+
+.panel[.panel-name[Lectura]
+
+.left-column[
+```{r echo=FALSE}
+knitr::include_graphics("images/r4ds-cover.png")
+```
+]
+
+.right-column[
+### R for Data Science: [Cap. 15 Factores](https://r4ds.had.co.nz/factors.html)
+
+### Documentación del paquete: https://forcats.tidyverse.org/
+]
+]
+]
+
+---
+background-image: url(images/hex/forcats.png)
+background-position: 1050px 50px
+background-size: 80px
+
+# forcats: ejercicio
+
+.panelset[
+.panel[.panel-name[Código]
+.pull-left[
+### Actualmente, la variable **year** en `penguins` es continua desde 2007 hasta 2009.
+
+### Puede haber situaciones en las que eso no sea lo que queremos, y preferimos convertirla en una variable categórica.
+]
+
+.pull-right[
+
+### La función `factor()` es perfecta para esto.
+```{r eval=FALSE}
+penguins %>%
+  mutate(year_factor = 
+           factor(year,                   #<<
+                  levels = unique(year))) #<<
+```
+]
+]
+
+.panel[.panel-name[Resultado]
+### El resultado es un nuevo factor **year_factor** con niveles **2007**, **2008** y **2009**
+.pull-left[
+```{r}
+penguins_new <-
+  penguins %>%
+  mutate(year_factor = 
+           factor(year,                   #<<
+                  levels = unique(year))) #<<
+penguins_new
+```
+]
+
+.pull-right[
+```{r}
+class(penguins_new$year_factor)
+
+levels(penguins_new$year_factor)
+```
+]
+]
+]

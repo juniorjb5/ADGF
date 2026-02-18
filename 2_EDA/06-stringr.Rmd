@@ -1,0 +1,95 @@
+---
+title: "06-stringr"
+author: "Silvia P. Canelón"
+date: "9/19/2020"
+output: html_document
+---
+
+class: penguin-tour
+
+```{r, echo=FALSE, out.width=1200}
+knitr::include_graphics("images/pptx/06-stringr.png")
+```
+
+
+
+---
+background-image: url(images/hex/stringr.png)
+background-position: 1050px 50px
+background-size: 80px
+
+# stringr: información
+
+.panelset[
+
+.panel[.panel-name[Resumen general]
+
+.pull-left[
+### `stringr` nos ayuda a manipular cadenas de texto. El paquete incluye muchas funciones para trabajar con **expresiones regulares**, que son un lenguaje conciso para describir patrones en texto.
+]
+
+.pull-right[
+### Estas funciones nos ayudan a
+
+- detectar coincidencias
+- extraer/subconjuntar cadenas
+- gestionar longitudes de texto
+- modificar (mutar) cadenas
+- unir y separar cadenas
+- ordenar cadenas
+- ...y más
+]
+
+]
+
+.panel[.panel-name[Hoja de referencia]
+
+`r icon::fa("file-pdf")` PDF: https://github.com/rstudio/cheatsheets/raw/master/strings.pdf
+![](https://raw.githubusercontent.com/rstudio/cheatsheets/master/pngs/thumbnails/strings-cheatsheet-thumbs.png)
+]
+
+.panel[.panel-name[Lectura]
+
+.left-column[
+```{r echo=FALSE}
+knitr::include_graphics("images/r4ds-cover.png")
+```
+]
+
+.right-column[
+### R for Data Science: [Cap. 14 Cadenas de texto](https://r4ds.had.co.nz/strings.html)
+
+### Documentación del paquete: https://stringr.tidyverse.org/
+]
+]
+]
+
+---
+background-image: url(images/hex/stringr.png)
+background-position: 1050px 50px
+background-size: 80px
+
+# stringr: ejercicio
+
+.panelset[
+.panel[.panel-name[Mutate]
+
+### ¿Qué hace este chunk?
+```{r}
+penguins %>%
+  select(species, island) %>%
+  mutate(ISLAND = str_to_upper(island)) #<<
+```
+]
+
+.panel[.panel-name[Join]
+
+### ¿Y este otro?
+```{r}
+penguins %>%
+  select(species, island) %>%
+  mutate(ISLAND = str_to_upper(island)) %>%
+  mutate(species_island = str_c(species, ISLAND, sep = "_")) #<<
+```
+]
+]

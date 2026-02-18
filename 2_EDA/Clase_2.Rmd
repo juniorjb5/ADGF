@@ -1,0 +1,187 @@
+---
+title: "Analítica en la Gestión Financiera"
+subtitle: "<br/> EDA Financiero"
+author: "Orlando Joaqui-Barandica, PhD."
+institute: "Universidad del Valle"
+date: " "
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    css: 
+      - default
+      - rladies
+      - rladies-fonts
+      - fonts_mtheme.css
+      - cols.css
+    seal: false  
+    nature:
+      beforeInit: "cols_macro.js"
+      ratio: 16:9
+      highlightStyle: github
+      highlightLines: true
+      highlightLanguage: ["r", "css", "yaml"]
+      countIncrementalSlides: false
+---
+
+```{r setup, include=FALSE}
+library(knitr)
+library(tidyverse)
+library(palmerpenguins)
+library(nord)
+library(prismatic)
+library(shiny)
+
+# opciones predeterminadas
+knitr::opts_chunk$set(echo = TRUE,
+                      dpi = 300,
+                      warning = FALSE,
+                      message = FALSE,
+                      error = FALSE)
+
+options(htmltools.dir.version = FALSE)
+
+xaringanExtra::use_share_again()
+xaringanExtra::use_clipboard()
+xaringanExtra::use_panelset()
+```
+
+class: inverse, left, bottom
+background-image: url("img/fondo.jpg")
+background-size: cover
+
+# **`r rmarkdown::metadata$title`**
+----
+
+## **`r rmarkdown::metadata$subtitle`**
+
+### `r rmarkdown::metadata$author`
+### `r rmarkdown::metadata$date`
+
+---
+
+class: center, middle
+
+```{r, echo=FALSE, fig.align="center", out.width="20%"}
+knitr::include_graphics("img/univalle.jpg")
+```
+
+---
+
+class: center, middle
+
+.center[
+
+<br>
+
+<a href="https://www.joaquibarandica.com" target="_blank">
+  <img src="img/avatar.png"
+       style="border-radius: 80%; width: 220px; max-width: 30%; height: auto;"
+       alt="Avatar"/>
+</a>
+
+## Orlando Joaqui-Barandica
+
+Doctor en Ingeniería, Enf. Ingeniería Industrial **|** Magíster en Economía Aplicada **|** Estadístico.
+
+`r anicon::faa("envelope", animate = "passing")` orlando.joaqui@correounivalle.edu.co 
+]
+
+.center[
+### [www.joaquibarandica.com](https://www.joaquibarandica.com)
+]
+
+---
+
+class: right, bottom
+background-image: url(images/antarctica.jpg)
+background-size: cover
+
+
+Inspiración de las diapositivas basada en materiales recientes de formación docente de ´Hill & Canelón´ 
+
+---
+
+
+class: right, top
+background-image: url(images/pptx/tidyverse.png)
+background-size: 1150px
+
+## Colección de paquetes de R, que incluye <br/> estos 8 paquetes base (¡y más!)
+
+---
+
+```{r 01-readr, child="01-readr.Rmd"}
+```
+
+---
+
+```{r 02-tibble, child="02-tibble.Rmd"}
+```
+
+---
+
+```{r 03-ggplot2, child="03-ggplot2.Rmd"}
+```
+
+---
+
+```{r 04-dplyr, child="04-dplyr.Rmd"}
+```
+
+---
+
+```{r 05-forcats, child="05-forcats.Rmd"}
+```
+
+---
+
+```{r 06-stringr, child="06-stringr.Rmd"}
+```
+
+---
+
+```{r 07-tidyr, child="07-tidyr.Rmd"}
+```
+
+---
+
+```{r 08-purrr, child="08-purrr.Rmd"}
+```
+
+---
+
+```{r 09-lubridate, child="09-lubridate.Rmd"}
+```
+
+---
+
+```{r 10-funciones, child="10-funciones.Rmd"}
+```
+
+---
+
+
+```{r 11-eda, child="11-eda.Rmd"}
+```
+
+---
+
+
+
+# Taller 2 (20%) — Dashboard EDA financiero en Flexdashboard
+
+**Objetivo:** construir un **dashboard reproducible (Flexdashboard)** que, usando el dataset final del Taller 1, entregue un diagnóstico financiero: distribución, colas, comparaciones por grupos, dependencia y KPIs con incertidumbre. 
+
+
+
+
+
+---
+
+
+class: about-me, middle, center
+
+
+# Gracias 🙌
+## ¿Preguntas?
+

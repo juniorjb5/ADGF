@@ -1,0 +1,113 @@
+---
+title: "01-readr"
+author: "Orlando Joaqui Barandica"
+output: html_document
+---
+
+class: penguin-tour
+
+```{r, echo=FALSE, out.width=1200}
+knitr::include_graphics("images/pptx/01-readr.png")
+```
+
+
+
+---
+background-image: url(images/hex/readr.png)
+background-position: 1050px 50px
+background-size: 80px
+
+# readr: información
+
+.panelset[
+
+.panel[.panel-name[Resumen general]
+
+.pull-left[
+### ¡Importar datos es el primer paso! <br/> Puedes usar `readr` para importar datos rectangulares.
+]
+.pull-right[
+### Puedes importar...
+
+- archivos separados por comas (CSV) con `read_csv()`
+- archivos separados por tabulaciones con `read_tsv()`
+- archivos delimitados en general con `read_delim()`
+- archivos de ancho fijo con `read_fwf()`
+- archivos tabulares donde las columnas están separadas por espacios en blanco con `read_table()`
+- archivos de registros web (web logs) con `read_log()` 
+
+]
+]
+
+.panel[.panel-name[Hoja de referencia]
+
+`r icon::fa("file-pdf")` PDF: https://github.com/rstudio/cheatsheets/raw/master/data-import.pdf
+![](https://raw.githubusercontent.com/rstudio/cheatsheets/master/pngs/thumbnails/data-import-cheatsheet-thumbs.png)
+]
+
+.panel[.panel-name[Lectura]
+
+.left-column[
+```{r echo=FALSE}
+knitr::include_graphics("images/r4ds-cover.png")
+```
+]
+
+.right-column[
+### R for Data Science: [Cap. 11 Importación de datos](https://r4ds.had.co.nz/data-import.html)
+
+### Documentación del paquete: https://readr.tidyverse.org/
+]
+]
+
+]
+
+---
+background-image: url(images/hex/readr.png)
+background-position: 1050px 50px
+background-size: 80px
+
+# readr: ejercicio
+
+.panelset[
+.panel[.panel-name[Cargar datos]
+.center[
+### ¡Ambas opciones de abajo te entregan el mismo dataset!]
+
+Opción 1
+```{r echo=TRUE, eval=FALSE}
+# option 1: load using URL ----
+raw_adelie_url <- read_csv("https://portal.edirepository.org/nis/dataviewer?packageid=knb-lter-pal.219.3&entityid=002f3893385f710df69eeebe893144ff")
+```
+
+Opción 2
+
+```{r echo=TRUE, eval=FALSE}
+# option 2: load using filepath ----
+raw_adelie_filepath <- read_csv("tutorial/raw_adelie.csv")
+```
+
+]
+
+.panel[.panel-name[Guardar datos]
+
+¡Por suerte para nosotros, el paquete `palmerpenguins` `r emo::ji("package")` reúne los datos de las tres especies en un solo lugar!
+
+.pull-left[
+`penguins` contiene un dataset limpio
+```{r}
+# saves package tibble into global environment
+penguins <- palmerpenguins::penguins 
+head(penguins)
+```
+]
+.pull-right[
+`penguins_raw` contiene datos en bruto
+```{r}
+penguins_raw <- palmerpenguins::penguins_raw
+head(penguins_raw)
+```
+]
+]
+]
+

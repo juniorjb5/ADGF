@@ -1,0 +1,109 @@
+---
+title: "02-tibble"
+author: "Silvia P. Canelón"
+date: "9/19/2020"
+output: html_document
+---
+
+class: penguin-tour
+
+```{r, echo=FALSE, out.width=1200}
+knitr::include_graphics("images/pptx/02-tibble.png")
+```
+
+
+
+---
+background-image: url(images/hex/tibble.png)
+background-position: 1050px 50px
+background-size: 80px
+
+# tibble: información
+
+.panelset[
+
+.panel[.panel-name[Resumen general]
+
+.pull-left[
+### Un `tibble` es muy parecido al `data.frame` de base R, pero está optimizado para su uso en el Tidyverse.  
+]
+]
+
+.panel[.panel-name[Hoja de referencia]
+
+`r icon::fa("file-pdf")` PDF (tidyr): https://github.com/rstudio/cheatsheets/raw/master/data-transformation.pdf
+![](https://raw.githubusercontent.com/rstudio/cheatsheets/master/pngs/thumbnails/data-import-cheatsheet-thumbs.png)
+]
+
+.panel[.panel-name[Lectura]
+
+.left-column[
+```{r echo=FALSE}
+knitr::include_graphics("images/r4ds-cover.png")
+```
+]
+
+.right-column[
+### R for Data Science: [Cap. 10 Tibbles](https://r4ds.had.co.nz/tibbles.html)
+
+### Documentación del paquete: https://tibble.tidyverse.org/
+]
+]
+
+]
+
+---
+background-image: url(images/hex/tibble.png)
+background-position: 1050px 50px
+background-size: 80px
+
+# tibble: ejercicio
+
+.panelset[
+.panel[.panel-name[Código]
+¡Veamos las diferencias!
+```{r eval=FALSE}
+# prueba cada uno de estos comandos en la consola y mira si logras identificar las diferencias
+
+as_tibble(penguins)
+as.data.frame(penguins)
+```
+]
+
+.panel[.panel-name[Resultado]
+.pull-left[
+```{r}
+as_tibble(penguins)
+```
+]
+.pull-right[
+```{r}
+as.data.frame(penguins)
+```
+]
+]
+
+.panel[.panel-name[Conversación]
+
+### ¿Qué diferencias ves?
+
+Puede que notes que un `tibble` imprime:
+- las clases de las variables
+- solo 10 filas
+- solo tantas columnas como quepan en la pantalla
+- los `NA` se resaltan en la consola para que sean fáciles de identificar (resaltado de fuente y estilo en `tibble`)
+
+En un archivo R Markdown esto no suele ser un problema, pero en la consola sí se nota. 
+El método de impresión facilita trabajar con datasets grandes.
+
+]
+
+.panel[.panel-name[Más]
+Hay un par de diferencias principales adicionales, especialmente en **subconjuntos (subsetting)** y **reciclaje (recycling)**. Revísalas en la [`vignette("tibble")`](https://tibble.tidyverse.org/articles/tibble.html)
+
+¡Pruébalo aquí!
+```{r eval=FALSE}
+vignette("tibble")
+```
+]
+]

@@ -1,0 +1,178 @@
+---
+title: "09-lubridate"
+author: "Adaptación (ES): ChatGPT"
+date: "2/17/2026"
+output: html_document
+---
+
+
+
+background-image: url(images/hex/lubridate.png)
+background-position: 1050px 50px
+background-size: 80px
+
+# lubridate: información
+
+.panelset[
+
+.panel[.panel-name[Resumen general]
+.pull-left[
+### `lubridate` facilita trabajar con **fechas y tiempos**.
+
+### En datos reales (y financieros), casi siempre hay tiempo: fecha de transacción, mes contable, trimestre, ventanas móviles, retornos diarios, etc.
+]
+.pull-right[
+### Con `lubridate` puedes
+
+- **parsear** fechas desde texto: `ymd()`, `mdy()`, `dmy()`
+- **extraer** componentes: `year()`, `month()`, `day()`, `wday()`
+- **crear** fechas: `make_date()`
+- **sumar/restar** periodos: `days()`, `months()`, `years()`
+- **agrupar** por tiempo: `floor_date()`, `ceiling_date()`
+- medir diferencias: `interval()`, `as.duration()`
+]
+]
+
+.panel[.panel-name[Cheatsheet]
+
+`r icon::fa("file-pdf")` PDF: https://raw.githubusercontent.com/rstudio/cheatsheets/main/lubridate.pdf
+![](https://raw.githubusercontent.com/rstudio/cheatsheets/main/pngs/thumbnails/lubridate-cheatsheet-thumbs.png)
+]
+
+.panel[.panel-name[Lectura]
+
+.left-column[
+```{r echo=FALSE}
+knitr::include_graphics("images/r4ds-cover.png")
+```
+]
+
+.right-column[
+### R for Data Science: [Fechas y tiempos](https://r4ds.hadley.nz/datetimes.html)
+
+### Documentación del paquete: https://lubridate.tidyverse.org/
+]
+]
+]
+
+---
+background-image: url(images/hex/lubridate.png)
+background-position: 1050px 50px
+background-size: 80px
+
+# lubridate: ejercicio
+
+.panelset[
+
+.panel[.panel-name[Setup]
+
+```{r}
+library(tidyverse)
+library(lubridate)
+```
+]
+
+.panel[.panel-name[Parsear fechas]
+
+### Parsear texto a fecha (Date)
+```{r}
+fechas <- tibble(
+  f_ymd = c("2026-02-17", "2025-12-26"),
+  f_mdy = c("02/17/2026", "12/26/2025"),
+  f_dmy = c("17-02-2026", "26-12-2025")
+)
+
+fechas %>%
+  mutate(
+    date_ymd = ymd(f_ymd),   #<<
+    date_mdy = mdy(f_mdy),   #<<
+    date_dmy = dmy(f_dmy)    #<<
+  )
+```
+]
+
+.panel[.panel-name[Crear fechas]
+
+### Crear fechas a partir de componentes
+```{r}
+tibble(
+  year = c(2025, 2026),
+  month = c(12, 2),
+  day = c(26, 17)
+) %>%
+  mutate(fecha = make_date(year, month, day)) #<<
+```
+]
+
+.panel[.panel-name[Extraer componentes]
+
+### Extraer componentes (útil para agrupar por mes/trimestre)
+```{r}
+fechas %>%
+  mutate(date = ymd(f_ymd)) %>%
+  transmute(
+    date,
+    anio = year(date),                 #<<
+    mes_num = month(date),             #<<
+    mes_lbl = month(date, label=TRUE), #<<
+    dia = day(date),                   #<<
+    dia_sem = wday(date, label=TRUE)   #<<
+  )
+```
+]
+
+.panel[.panel-name[Sumar y restar]
+
+### Sumar/restar periodos (ojo: meses no siempre tienen igual duración)
+```{r}
+d0 <- ymd("2026-02-17")
+tibble(
+  d0 = d0,
+  d_mas_10_dias = d0 + days(10),   #<<
+  d_menos_1_mes = d0 - months(1),  #<<
+  d_mas_1_anio  = d0 + years(1)    #<<
+)
+```
+]
+
+.panel[.panel-name[Agrupar por tiempo]
+
+### Redondear fechas para agrupar (mensual, semanal, etc.)
+```{r}
+set.seed(1)
+serie <- tibble(
+  fecha = ymd("2026-01-01") + days(sample(0:59, 30, replace = TRUE)),
+  kpi = rnorm(30, mean = 100, sd = 10)
+)
+
+serie %>%
+  mutate(
+    mes = floor_date(fecha, unit = "month"),  #<<
+    semana = floor_date(fecha, unit = "week") #<<
+  ) %>%
+  group_by(mes) %>%
+  summarise(kpi_prom = mean(kpi), .groups = "drop")
+```
+]
+
+.panel[.panel-name[Intervalos y duración]
+
+### Diferencias de tiempo: intervalos y duración
+```{r}
+inicio <- ymd("2026-01-15")
+fin    <- ymd("2026-02-17")
+
+int <- interval(inicio, fin) #<<
+
+tibble(
+  inicio = inicio,
+  fin = fin,
+  dias = as.numeric(fin - inicio),             #<<
+  duracion = as.duration(int),                 #<<
+  semanas_aprox = as.numeric(duracion, "weeks")#<<
+)
+```
+]
+
+
+]

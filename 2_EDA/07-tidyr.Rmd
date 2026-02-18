@@ -1,0 +1,94 @@
+---
+title: "07-tidyr"
+author: "Silvia P. Canelón"
+date: "9/19/2020"
+output: html_document
+---
+
+class: penguin-tour
+
+```{r, echo=FALSE, out.width=1200}
+knitr::include_graphics("images/pptx/07-tidyr.png")
+```
+
+
+
+---
+background-image: url(images/hex/tidyr.png)
+background-position: 1050px 50px
+background-size: 80px
+
+# tidyr: información
+
+.panelset[
+
+.panel[.panel-name[Resumen general]
+[De R for Data Science](https://r4ds.had.co.nz/tidy-data.html):
+
+> Hay tres reglas interrelacionadas que hacen que un dataset sea tidy (ordenado):
+
+> - Cada variable debe tener su propia columna.
+> - Cada observación debe tener su propia fila.
+> - Cada valor debe tener su propia celda.
+![](https://d33wubrfki0l68.cloudfront.net/6f1ddb544fc5c69a2478e444ab8112fb0eea23f8/91adc/images/tidy-1.png)
+
+]
+
+.panel[.panel-name[Hoja de referencia]
+
+`r icon::fa("file-pdf")` PDF: https://github.com/rstudio/cheatsheets/raw/master/data-import.pdf
+![](https://raw.githubusercontent.com/rstudio/cheatsheets/master/pngs/thumbnails/data-import-cheatsheet-thumbs.png)
+]
+
+.panel[.panel-name[Lectura]
+
+.left-column[
+```{r echo=FALSE}
+knitr::include_graphics("images/r4ds-cover.png")
+```
+]
+
+.right-column[
+### R for Data Science: [Cap. 12 Datos tidy](https://r4ds.had.co.nz/tidy-data.html)
+
+### Documentación del paquete: https://tidyr.tidyverse.org/
+]
+]
+]
+
+---
+background-image: url(images/hex/tidyr.png)
+background-position: 1050px 50px
+background-size: 80px
+
+# tidyr: ejercicio
+
+.panelset[
+.panel[.panel-name[Des-ordenando (Un-tidying)]
+
+### ¡Ambos datasets de pingüinos ya están en formato tidy!
+
+Podemos fingir que `penguins` no estuviera tidy y que, en cambio, se viera como `untidy_penguins` abajo, donde **body_mass_g** se registró por separado para pingüinos *male*, *female* y con **sex** igual a *NA*.
+
+```{r}
+untidy_penguins <- 
+  penguins %>% pivot_wider(names_from = sex, values_from = body_mass_g)
+untidy_penguins
+```
+
+]
+
+.panel[.panel-name[Volver a ordenar (Re-tidying)]
+
+### ¡Ahora dejémoslo tidy de nuevo!
+
+Usaremos la ayuda de `pivot_longer()`
+
+```{r}
+untidy_penguins %>%
+  pivot_longer(cols = male:`NA`,           #<<
+               names_to = "sex",           #<<
+               values_to = "body_mass_g")  #<<
+```
+]
+]

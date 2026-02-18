@@ -1,0 +1,4244 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Analítica en la Gestión Financiera</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Orlando Joaqui-Barandica, PhD." />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link href="libs/remark-css/rladies.css" rel="stylesheet" />
+    <link href="libs/remark-css/rladies-fonts.css" rel="stylesheet" />
+    <script src="libs/clipboard/clipboard.min.js"></script>
+    <link href="libs/shareon/shareon.min.css" rel="stylesheet" />
+    <script src="libs/shareon/shareon.min.js"></script>
+    <link href="libs/xaringanExtra-shareagain/shareagain.css" rel="stylesheet" />
+    <script src="libs/xaringanExtra-shareagain/shareagain.js"></script>
+    <link href="libs/xaringanExtra-clipboard/xaringanExtra-clipboard.css" rel="stylesheet" />
+    <script src="libs/xaringanExtra-clipboard/xaringanExtra-clipboard.js"></script>
+    <script>window.xaringanExtraClipboard(null, {"button":"Copy Code","success":"Copied!","error":"Press Ctrl+C to Copy"})</script>
+    <link href="libs/panelset/panelset.css" rel="stylesheet" />
+    <script src="libs/panelset/panelset.js"></script>
+    <link href="libs/font-awesome-animation/font-awesome-animation-emi.css" rel="stylesheet" />
+    <script src="libs/fontawesome/js/fontawesome-all.min.js"></script>
+    <link href="libs/font-awesome/css/fontawesome-all.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="fonts_mtheme.css" type="text/css" />
+    <link rel="stylesheet" href="cols.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+
+
+
+
+class: inverse, left, bottom
+background-image: url("img/fondo.jpg")
+background-size: cover
+
+# **Analítica en la Gestión Financiera**
+----
+
+## **&lt;br/&gt; EDA Financiero**
+
+### Orlando Joaqui-Barandica, PhD.
+###  
+
+---
+
+class: center, middle
+
+&lt;img src="img/univalle.jpg" width="20%" style="display: block; margin: auto;" /&gt;
+
+---
+
+class: center, middle
+
+.center[
+
+&lt;br&gt;
+
+&lt;a href="https://www.joaquibarandica.com" target="_blank"&gt;
+  &lt;img src="img/avatar.png"
+       style="border-radius: 80%; width: 220px; max-width: 30%; height: auto;"
+       alt="Avatar"/&gt;
+&lt;/a&gt;
+
+## Orlando Joaqui-Barandica
+
+Doctor en Ingeniería, Enf. Ingeniería Industrial **|** Magíster en Economía Aplicada **|** Estadístico.
+
+<span>&lt;i class="fas  fa-envelope faa-passing animated "&gt;&lt;/i&gt;</span> orlando.joaqui@correounivalle.edu.co 
+]
+
+.center[
+### [www.joaquibarandica.com](https://www.joaquibarandica.com)
+]
+
+---
+
+class: right, bottom
+background-image: url(images/antarctica.jpg)
+background-size: cover
+
+
+Inspiración de las diapositivas basada en materiales recientes de formación docente de ´Hill &amp; Canelón´ 
+
+---
+
+
+class: right, top
+background-image: url(images/pptx/tidyverse.png)
+background-size: 1150px
+
+## Colección de paquetes de R, que incluye &lt;br/&gt; estos 8 paquetes base (¡y más!)
+
+---
+
+
+
+
+
+
+
+
+class: penguin-tour
+
+&lt;img src="images/pptx/01-readr.png" width="1200" /&gt;
+
+
+
+---
+background-image: url(images/hex/readr.png)
+background-position: 1050px 50px
+background-size: 80px
+
+# readr: información
+
+.panelset[
+
+.panel[.panel-name[Resumen general]
+
+.pull-left[
+### ¡Importar datos es el primer paso! &lt;br/&gt; Puedes usar `readr` para importar datos rectangulares.
+]
+.pull-right[
+### Puedes importar...
+
+- archivos separados por comas (CSV) con `read_csv()`
+- archivos separados por tabulaciones con `read_tsv()`
+- archivos delimitados en general con `read_delim()`
+- archivos de ancho fijo con `read_fwf()`
+- archivos tabulares donde las columnas están separadas por espacios en blanco con `read_table()`
+- archivos de registros web (web logs) con `read_log()` 
+
+]
+]
+
+.panel[.panel-name[Hoja de referencia]
+
+<i class="fas  fa-file-pdf "></i> PDF: https://github.com/rstudio/cheatsheets/raw/master/data-import.pdf
+![](https://raw.githubusercontent.com/rstudio/cheatsheets/master/pngs/thumbnails/data-import-cheatsheet-thumbs.png)
+]
+
+.panel[.panel-name[Lectura]
+
+.left-column[
+&lt;img src="images/r4ds-cover.png" width="160" /&gt;
+]
+
+.right-column[
+### R for Data Science: [Cap. 11 Importación de datos](https://r4ds.had.co.nz/data-import.html)
+
+### Documentación del paquete: https://readr.tidyverse.org/
+]
+]
+
+]
+
+---
+background-image: url(images/hex/readr.png)
+background-position: 1050px 50px
+background-size: 80px
+
+# readr: ejercicio
+
+.panelset[
+.panel[.panel-name[Cargar datos]
+.center[
+### ¡Ambas opciones de abajo te entregan el mismo dataset!]
+
+Opción 1
+
+```r
+# option 1: load using URL ----
+raw_adelie_url &lt;- read_csv("https://portal.edirepository.org/nis/dataviewer?packageid=knb-lter-pal.219.3&amp;entityid=002f3893385f710df69eeebe893144ff")
+```
+
+Opción 2
+
+
+```r
+# option 2: load using filepath ----
+raw_adelie_filepath &lt;- read_csv("tutorial/raw_adelie.csv")
+```
+
+]
+
+.panel[.panel-name[Guardar datos]
+
+¡Por suerte para nosotros, el paquete `palmerpenguins` 📦 reúne los datos de las tres especies en un solo lugar!
+
+.pull-left[
+`penguins` contiene un dataset limpio
+
+```r
+# saves package tibble into global environment
+penguins &lt;- palmerpenguins::penguins 
+head(penguins)
+```
+
+```
+## # A tibble: 6 × 8
+##   species island    bill_length_mm bill_depth_mm flipper_length_mm body_mass_g
+##   &lt;fct&gt;   &lt;fct&gt;              &lt;dbl&gt;         &lt;dbl&gt;             &lt;int&gt;       &lt;int&gt;
+## 1 Adelie  Torgersen           39.1          18.7               181        3750
+## 2 Adelie  Torgersen           39.5          17.4               186        3800
+## 3 Adelie  Torgersen           40.3          18                 195        3250
+## 4 Adelie  Torgersen           NA            NA                  NA          NA
+## 5 Adelie  Torgersen           36.7          19.3               193        3450
+## 6 Adelie  Torgersen           39.3          20.6               190        3650
+## # ℹ 2 more variables: sex &lt;fct&gt;, year &lt;int&gt;
+```
+]
+.pull-right[
+`penguins_raw` contiene datos en bruto
+
+```r
+penguins_raw &lt;- palmerpenguins::penguins_raw
+head(penguins_raw)
+```
+
+```
+## # A tibble: 6 × 17
+##   studyName `Sample Number` Species          Region Island Stage `Individual ID`
+##   &lt;chr&gt;               &lt;dbl&gt; &lt;chr&gt;            &lt;chr&gt;  &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt;          
+## 1 PAL0708                 1 Adelie Penguin … Anvers Torge… Adul… N1A1           
+## 2 PAL0708                 2 Adelie Penguin … Anvers Torge… Adul… N1A2           
+## 3 PAL0708                 3 Adelie Penguin … Anvers Torge… Adul… N2A1           
+## 4 PAL0708                 4 Adelie Penguin … Anvers Torge… Adul… N2A2           
+## 5 PAL0708                 5 Adelie Penguin … Anvers Torge… Adul… N3A1           
+## 6 PAL0708                 6 Adelie Penguin … Anvers Torge… Adul… N3A2           
+## # ℹ 10 more variables: `Clutch Completion` &lt;chr&gt;, `Date Egg` &lt;date&gt;,
+## #   `Culmen Length (mm)` &lt;dbl&gt;, `Culmen Depth (mm)` &lt;dbl&gt;,
+## #   `Flipper Length (mm)` &lt;dbl&gt;, `Body Mass (g)` &lt;dbl&gt;, Sex &lt;chr&gt;,
+## #   `Delta 15 N (o/oo)` &lt;dbl&gt;, `Delta 13 C (o/oo)` &lt;dbl&gt;, Comments &lt;chr&gt;
+```
+]
+]
+]
+
+
+---
+
+
+
+
+
+
+
+
+
+class: penguin-tour
+
+&lt;img src="images/pptx/02-tibble.png" width="1200" /&gt;
+
+
+
+---
+background-image: url(images/hex/tibble.png)
+background-position: 1050px 50px
+background-size: 80px
+
+# tibble: información
+
+.panelset[
+
+.panel[.panel-name[Resumen general]
+
+.pull-left[
+### Un `tibble` es muy parecido al `data.frame` de base R, pero está optimizado para su uso en el Tidyverse.  
+]
+]
+
+.panel[.panel-name[Hoja de referencia]
+
+<i class="fas  fa-file-pdf "></i> PDF (tidyr): https://github.com/rstudio/cheatsheets/raw/master/data-transformation.pdf
+![](https://raw.githubusercontent.com/rstudio/cheatsheets/master/pngs/thumbnails/data-import-cheatsheet-thumbs.png)
+]
+
+.panel[.panel-name[Lectura]
+
+.left-column[
+&lt;img src="images/r4ds-cover.png" width="160" /&gt;
+]
+
+.right-column[
+### R for Data Science: [Cap. 10 Tibbles](https://r4ds.had.co.nz/tibbles.html)
+
+### Documentación del paquete: https://tibble.tidyverse.org/
+]
+]
+
+]
+
+---
+background-image: url(images/hex/tibble.png)
+background-position: 1050px 50px
+background-size: 80px
+
+# tibble: ejercicio
+
+.panelset[
+.panel[.panel-name[Código]
+¡Veamos las diferencias!
+
+```r
+# prueba cada uno de estos comandos en la consola y mira si logras identificar las diferencias
+
+as_tibble(penguins)
+as.data.frame(penguins)
+```
+]
+
+.panel[.panel-name[Resultado]
+.pull-left[
+
+```r
+as_tibble(penguins)
+```
+
+```
+## # A tibble: 344 × 8
+##    species island    bill_length_mm bill_depth_mm flipper_length_mm body_mass_g
+##    &lt;fct&gt;   &lt;fct&gt;              &lt;dbl&gt;         &lt;dbl&gt;             &lt;int&gt;       &lt;int&gt;
+##  1 Adelie  Torgersen           39.1          18.7               181        3750
+##  2 Adelie  Torgersen           39.5          17.4               186        3800
+##  3 Adelie  Torgersen           40.3          18                 195        3250
+##  4 Adelie  Torgersen           NA            NA                  NA          NA
+##  5 Adelie  Torgersen           36.7          19.3               193        3450
+##  6 Adelie  Torgersen           39.3          20.6               190        3650
+##  7 Adelie  Torgersen           38.9          17.8               181        3625
+##  8 Adelie  Torgersen           39.2          19.6               195        4675
+##  9 Adelie  Torgersen           34.1          18.1               193        3475
+## 10 Adelie  Torgersen           42            20.2               190        4250
+## # ℹ 334 more rows
+## # ℹ 2 more variables: sex &lt;fct&gt;, year &lt;int&gt;
+```
+]
+.pull-right[
+
+```r
+as.data.frame(penguins)
+```
+
+```
+##       species    island bill_length_mm bill_depth_mm flipper_length_mm
+## 1      Adelie Torgersen           39.1          18.7               181
+## 2      Adelie Torgersen           39.5          17.4               186
+## 3      Adelie Torgersen           40.3          18.0               195
+## 4      Adelie Torgersen             NA            NA                NA
+## 5      Adelie Torgersen           36.7          19.3               193
+## 6      Adelie Torgersen           39.3          20.6               190
+## 7      Adelie Torgersen           38.9          17.8               181
+## 8      Adelie Torgersen           39.2          19.6               195
+## 9      Adelie Torgersen           34.1          18.1               193
+## 10     Adelie Torgersen           42.0          20.2               190
+## 11     Adelie Torgersen           37.8          17.1               186
+## 12     Adelie Torgersen           37.8          17.3               180
+## 13     Adelie Torgersen           41.1          17.6               182
+## 14     Adelie Torgersen           38.6          21.2               191
+## 15     Adelie Torgersen           34.6          21.1               198
+## 16     Adelie Torgersen           36.6          17.8               185
+## 17     Adelie Torgersen           38.7          19.0               195
+## 18     Adelie Torgersen           42.5          20.7               197
+## 19     Adelie Torgersen           34.4          18.4               184
+## 20     Adelie Torgersen           46.0          21.5               194
+## 21     Adelie    Biscoe           37.8          18.3               174
+## 22     Adelie    Biscoe           37.7          18.7               180
+## 23     Adelie    Biscoe           35.9          19.2               189
+## 24     Adelie    Biscoe           38.2          18.1               185
+## 25     Adelie    Biscoe           38.8          17.2               180
+## 26     Adelie    Biscoe           35.3          18.9               187
+## 27     Adelie    Biscoe           40.6          18.6               183
+## 28     Adelie    Biscoe           40.5          17.9               187
+## 29     Adelie    Biscoe           37.9          18.6               172
+## 30     Adelie    Biscoe           40.5          18.9               180
+## 31     Adelie     Dream           39.5          16.7               178
+## 32     Adelie     Dream           37.2          18.1               178
+## 33     Adelie     Dream           39.5          17.8               188
+## 34     Adelie     Dream           40.9          18.9               184
+## 35     Adelie     Dream           36.4          17.0               195
+## 36     Adelie     Dream           39.2          21.1               196
+## 37     Adelie     Dream           38.8          20.0               190
+## 38     Adelie     Dream           42.2          18.5               180
+## 39     Adelie     Dream           37.6          19.3               181
+## 40     Adelie     Dream           39.8          19.1               184
+## 41     Adelie     Dream           36.5          18.0               182
+## 42     Adelie     Dream           40.8          18.4               195
+## 43     Adelie     Dream           36.0          18.5               186
+## 44     Adelie     Dream           44.1          19.7               196
+## 45     Adelie     Dream           37.0          16.9               185
+## 46     Adelie     Dream           39.6          18.8               190
+## 47     Adelie     Dream           41.1          19.0               182
+## 48     Adelie     Dream           37.5          18.9               179
+## 49     Adelie     Dream           36.0          17.9               190
+## 50     Adelie     Dream           42.3          21.2               191
+## 51     Adelie    Biscoe           39.6          17.7               186
+## 52     Adelie    Biscoe           40.1          18.9               188
+## 53     Adelie    Biscoe           35.0          17.9               190
+## 54     Adelie    Biscoe           42.0          19.5               200
+## 55     Adelie    Biscoe           34.5          18.1               187
+## 56     Adelie    Biscoe           41.4          18.6               191
+## 57     Adelie    Biscoe           39.0          17.5               186
+## 58     Adelie    Biscoe           40.6          18.8               193
+## 59     Adelie    Biscoe           36.5          16.6               181
+## 60     Adelie    Biscoe           37.6          19.1               194
+## 61     Adelie    Biscoe           35.7          16.9               185
+## 62     Adelie    Biscoe           41.3          21.1               195
+## 63     Adelie    Biscoe           37.6          17.0               185
+## 64     Adelie    Biscoe           41.1          18.2               192
+## 65     Adelie    Biscoe           36.4          17.1               184
+## 66     Adelie    Biscoe           41.6          18.0               192
+## 67     Adelie    Biscoe           35.5          16.2               195
+## 68     Adelie    Biscoe           41.1          19.1               188
+## 69     Adelie Torgersen           35.9          16.6               190
+## 70     Adelie Torgersen           41.8          19.4               198
+## 71     Adelie Torgersen           33.5          19.0               190
+## 72     Adelie Torgersen           39.7          18.4               190
+## 73     Adelie Torgersen           39.6          17.2               196
+## 74     Adelie Torgersen           45.8          18.9               197
+## 75     Adelie Torgersen           35.5          17.5               190
+## 76     Adelie Torgersen           42.8          18.5               195
+## 77     Adelie Torgersen           40.9          16.8               191
+## 78     Adelie Torgersen           37.2          19.4               184
+## 79     Adelie Torgersen           36.2          16.1               187
+## 80     Adelie Torgersen           42.1          19.1               195
+## 81     Adelie Torgersen           34.6          17.2               189
+## 82     Adelie Torgersen           42.9          17.6               196
+## 83     Adelie Torgersen           36.7          18.8               187
+## 84     Adelie Torgersen           35.1          19.4               193
+## 85     Adelie     Dream           37.3          17.8               191
+## 86     Adelie     Dream           41.3          20.3               194
+## 87     Adelie     Dream           36.3          19.5               190
+## 88     Adelie     Dream           36.9          18.6               189
+## 89     Adelie     Dream           38.3          19.2               189
+## 90     Adelie     Dream           38.9          18.8               190
+## 91     Adelie     Dream           35.7          18.0               202
+## 92     Adelie     Dream           41.1          18.1               205
+## 93     Adelie     Dream           34.0          17.1               185
+## 94     Adelie     Dream           39.6          18.1               186
+## 95     Adelie     Dream           36.2          17.3               187
+## 96     Adelie     Dream           40.8          18.9               208
+## 97     Adelie     Dream           38.1          18.6               190
+## 98     Adelie     Dream           40.3          18.5               196
+## 99     Adelie     Dream           33.1          16.1               178
+## 100    Adelie     Dream           43.2          18.5               192
+## 101    Adelie    Biscoe           35.0          17.9               192
+## 102    Adelie    Biscoe           41.0          20.0               203
+## 103    Adelie    Biscoe           37.7          16.0               183
+## 104    Adelie    Biscoe           37.8          20.0               190
+## 105    Adelie    Biscoe           37.9          18.6               193
+## 106    Adelie    Biscoe           39.7          18.9               184
+## 107    Adelie    Biscoe           38.6          17.2               199
+## 108    Adelie    Biscoe           38.2          20.0               190
+## 109    Adelie    Biscoe           38.1          17.0               181
+## 110    Adelie    Biscoe           43.2          19.0               197
+## 111    Adelie    Biscoe           38.1          16.5               198
+## 112    Adelie    Biscoe           45.6          20.3               191
+## 113    Adelie    Biscoe           39.7          17.7               193
+## 114    Adelie    Biscoe           42.2          19.5               197
+## 115    Adelie    Biscoe           39.6          20.7               191
+## 116    Adelie    Biscoe           42.7          18.3               196
+## 117    Adelie Torgersen           38.6          17.0               188
+## 118    Adelie Torgersen           37.3          20.5               199
+## 119    Adelie Torgersen           35.7          17.0               189
+## 120    Adelie Torgersen           41.1          18.6               189
+## 121    Adelie Torgersen           36.2          17.2               187
+## 122    Adelie Torgersen           37.7          19.8               198
+## 123    Adelie Torgersen           40.2          17.0               176
+## 124    Adelie Torgersen           41.4          18.5               202
+## 125    Adelie Torgersen           35.2          15.9               186
+## 126    Adelie Torgersen           40.6          19.0               199
+## 127    Adelie Torgersen           38.8          17.6               191
+## 128    Adelie Torgersen           41.5          18.3               195
+## 129    Adelie Torgersen           39.0          17.1               191
+## 130    Adelie Torgersen           44.1          18.0               210
+## 131    Adelie Torgersen           38.5          17.9               190
+## 132    Adelie Torgersen           43.1          19.2               197
+## 133    Adelie     Dream           36.8          18.5               193
+## 134    Adelie     Dream           37.5          18.5               199
+## 135    Adelie     Dream           38.1          17.6               187
+## 136    Adelie     Dream           41.1          17.5               190
+## 137    Adelie     Dream           35.6          17.5               191
+## 138    Adelie     Dream           40.2          20.1               200
+## 139    Adelie     Dream           37.0          16.5               185
+## 140    Adelie     Dream           39.7          17.9               193
+## 141    Adelie     Dream           40.2          17.1               193
+## 142    Adelie     Dream           40.6          17.2               187
+## 143    Adelie     Dream           32.1          15.5               188
+## 144    Adelie     Dream           40.7          17.0               190
+## 145    Adelie     Dream           37.3          16.8               192
+## 146    Adelie     Dream           39.0          18.7               185
+## 147    Adelie     Dream           39.2          18.6               190
+## 148    Adelie     Dream           36.6          18.4               184
+## 149    Adelie     Dream           36.0          17.8               195
+## 150    Adelie     Dream           37.8          18.1               193
+## 151    Adelie     Dream           36.0          17.1               187
+## 152    Adelie     Dream           41.5          18.5               201
+## 153    Gentoo    Biscoe           46.1          13.2               211
+## 154    Gentoo    Biscoe           50.0          16.3               230
+## 155    Gentoo    Biscoe           48.7          14.1               210
+## 156    Gentoo    Biscoe           50.0          15.2               218
+## 157    Gentoo    Biscoe           47.6          14.5               215
+## 158    Gentoo    Biscoe           46.5          13.5               210
+## 159    Gentoo    Biscoe           45.4          14.6               211
+## 160    Gentoo    Biscoe           46.7          15.3               219
+## 161    Gentoo    Biscoe           43.3          13.4               209
+## 162    Gentoo    Biscoe           46.8          15.4               215
+## 163    Gentoo    Biscoe           40.9          13.7               214
+## 164    Gentoo    Biscoe           49.0          16.1               216
+## 165    Gentoo    Biscoe           45.5          13.7               214
+## 166    Gentoo    Biscoe           48.4          14.6               213
+## 167    Gentoo    Biscoe           45.8          14.6               210
+## 168    Gentoo    Biscoe           49.3          15.7               217
+## 169    Gentoo    Biscoe           42.0          13.5               210
+## 170    Gentoo    Biscoe           49.2          15.2               221
+## 171    Gentoo    Biscoe           46.2          14.5               209
+## 172    Gentoo    Biscoe           48.7          15.1               222
+## 173    Gentoo    Biscoe           50.2          14.3               218
+## 174    Gentoo    Biscoe           45.1          14.5               215
+## 175    Gentoo    Biscoe           46.5          14.5               213
+## 176    Gentoo    Biscoe           46.3          15.8               215
+## 177    Gentoo    Biscoe           42.9          13.1               215
+## 178    Gentoo    Biscoe           46.1          15.1               215
+## 179    Gentoo    Biscoe           44.5          14.3               216
+## 180    Gentoo    Biscoe           47.8          15.0               215
+## 181    Gentoo    Biscoe           48.2          14.3               210
+## 182    Gentoo    Biscoe           50.0          15.3               220
+## 183    Gentoo    Biscoe           47.3          15.3               222
+## 184    Gentoo    Biscoe           42.8          14.2               209
+## 185    Gentoo    Biscoe           45.1          14.5               207
+## 186    Gentoo    Biscoe           59.6          17.0               230
+## 187    Gentoo    Biscoe           49.1          14.8               220
+## 188    Gentoo    Biscoe           48.4          16.3               220
+## 189    Gentoo    Biscoe           42.6          13.7               213
+## 190    Gentoo    Biscoe           44.4          17.3               219
+## 191    Gentoo    Biscoe           44.0          13.6               208
+## 192    Gentoo    Biscoe           48.7          15.7               208
+## 193    Gentoo    Biscoe           42.7          13.7               208
+## 194    Gentoo    Biscoe           49.6          16.0               225
+## 195    Gentoo    Biscoe           45.3          13.7               210
+## 196    Gentoo    Biscoe           49.6          15.0               216
+## 197    Gentoo    Biscoe           50.5          15.9               222
+## 198    Gentoo    Biscoe           43.6          13.9               217
+## 199    Gentoo    Biscoe           45.5          13.9               210
+## 200    Gentoo    Biscoe           50.5          15.9               225
+## 201    Gentoo    Biscoe           44.9          13.3               213
+## 202    Gentoo    Biscoe           45.2          15.8               215
+## 203    Gentoo    Biscoe           46.6          14.2               210
+## 204    Gentoo    Biscoe           48.5          14.1               220
+## 205    Gentoo    Biscoe           45.1          14.4               210
+## 206    Gentoo    Biscoe           50.1          15.0               225
+## 207    Gentoo    Biscoe           46.5          14.4               217
+## 208    Gentoo    Biscoe           45.0          15.4               220
+## 209    Gentoo    Biscoe           43.8          13.9               208
+## 210    Gentoo    Biscoe           45.5          15.0               220
+## 211    Gentoo    Biscoe           43.2          14.5               208
+## 212    Gentoo    Biscoe           50.4          15.3               224
+## 213    Gentoo    Biscoe           45.3          13.8               208
+## 214    Gentoo    Biscoe           46.2          14.9               221
+## 215    Gentoo    Biscoe           45.7          13.9               214
+## 216    Gentoo    Biscoe           54.3          15.7               231
+## 217    Gentoo    Biscoe           45.8          14.2               219
+## 218    Gentoo    Biscoe           49.8          16.8               230
+## 219    Gentoo    Biscoe           46.2          14.4               214
+## 220    Gentoo    Biscoe           49.5          16.2               229
+## 221    Gentoo    Biscoe           43.5          14.2               220
+## 222    Gentoo    Biscoe           50.7          15.0               223
+## 223    Gentoo    Biscoe           47.7          15.0               216
+## 224    Gentoo    Biscoe           46.4          15.6               221
+## 225    Gentoo    Biscoe           48.2          15.6               221
+## 226    Gentoo    Biscoe           46.5          14.8               217
+## 227    Gentoo    Biscoe           46.4          15.0               216
+## 228    Gentoo    Biscoe           48.6          16.0               230
+## 229    Gentoo    Biscoe           47.5          14.2               209
+## 230    Gentoo    Biscoe           51.1          16.3               220
+## 231    Gentoo    Biscoe           45.2          13.8               215
+## 232    Gentoo    Biscoe           45.2          16.4               223
+## 233    Gentoo    Biscoe           49.1          14.5               212
+## 234    Gentoo    Biscoe           52.5          15.6               221
+## 235    Gentoo    Biscoe           47.4          14.6               212
+## 236    Gentoo    Biscoe           50.0          15.9               224
+## 237    Gentoo    Biscoe           44.9          13.8               212
+## 238    Gentoo    Biscoe           50.8          17.3               228
+## 239    Gentoo    Biscoe           43.4          14.4               218
+## 240    Gentoo    Biscoe           51.3          14.2               218
+## 241    Gentoo    Biscoe           47.5          14.0               212
+## 242    Gentoo    Biscoe           52.1          17.0               230
+## 243    Gentoo    Biscoe           47.5          15.0               218
+## 244    Gentoo    Biscoe           52.2          17.1               228
+## 245    Gentoo    Biscoe           45.5          14.5               212
+## 246    Gentoo    Biscoe           49.5          16.1               224
+## 247    Gentoo    Biscoe           44.5          14.7               214
+## 248    Gentoo    Biscoe           50.8          15.7               226
+## 249    Gentoo    Biscoe           49.4          15.8               216
+## 250    Gentoo    Biscoe           46.9          14.6               222
+## 251    Gentoo    Biscoe           48.4          14.4               203
+## 252    Gentoo    Biscoe           51.1          16.5               225
+## 253    Gentoo    Biscoe           48.5          15.0               219
+## 254    Gentoo    Biscoe           55.9          17.0               228
+## 255    Gentoo    Biscoe           47.2          15.5               215
+## 256    Gentoo    Biscoe           49.1          15.0               228
+## 257    Gentoo    Biscoe           47.3          13.8               216
+## 258    Gentoo    Biscoe           46.8          16.1               215
+## 259    Gentoo    Biscoe           41.7          14.7               210
+## 260    Gentoo    Biscoe           53.4          15.8               219
+## 261    Gentoo    Biscoe           43.3          14.0               208
+## 262    Gentoo    Biscoe           48.1          15.1               209
+## 263    Gentoo    Biscoe           50.5          15.2               216
+## 264    Gentoo    Biscoe           49.8          15.9               229
+## 265    Gentoo    Biscoe           43.5          15.2               213
+## 266    Gentoo    Biscoe           51.5          16.3               230
+## 267    Gentoo    Biscoe           46.2          14.1               217
+## 268    Gentoo    Biscoe           55.1          16.0               230
+## 269    Gentoo    Biscoe           44.5          15.7               217
+## 270    Gentoo    Biscoe           48.8          16.2               222
+## 271    Gentoo    Biscoe           47.2          13.7               214
+## 272    Gentoo    Biscoe             NA            NA                NA
+## 273    Gentoo    Biscoe           46.8          14.3               215
+## 274    Gentoo    Biscoe           50.4          15.7               222
+## 275    Gentoo    Biscoe           45.2          14.8               212
+## 276    Gentoo    Biscoe           49.9          16.1               213
+## 277 Chinstrap     Dream           46.5          17.9               192
+## 278 Chinstrap     Dream           50.0          19.5               196
+## 279 Chinstrap     Dream           51.3          19.2               193
+## 280 Chinstrap     Dream           45.4          18.7               188
+## 281 Chinstrap     Dream           52.7          19.8               197
+## 282 Chinstrap     Dream           45.2          17.8               198
+## 283 Chinstrap     Dream           46.1          18.2               178
+## 284 Chinstrap     Dream           51.3          18.2               197
+## 285 Chinstrap     Dream           46.0          18.9               195
+## 286 Chinstrap     Dream           51.3          19.9               198
+## 287 Chinstrap     Dream           46.6          17.8               193
+## 288 Chinstrap     Dream           51.7          20.3               194
+## 289 Chinstrap     Dream           47.0          17.3               185
+## 290 Chinstrap     Dream           52.0          18.1               201
+## 291 Chinstrap     Dream           45.9          17.1               190
+## 292 Chinstrap     Dream           50.5          19.6               201
+## 293 Chinstrap     Dream           50.3          20.0               197
+## 294 Chinstrap     Dream           58.0          17.8               181
+## 295 Chinstrap     Dream           46.4          18.6               190
+## 296 Chinstrap     Dream           49.2          18.2               195
+## 297 Chinstrap     Dream           42.4          17.3               181
+## 298 Chinstrap     Dream           48.5          17.5               191
+## 299 Chinstrap     Dream           43.2          16.6               187
+## 300 Chinstrap     Dream           50.6          19.4               193
+## 301 Chinstrap     Dream           46.7          17.9               195
+## 302 Chinstrap     Dream           52.0          19.0               197
+## 303 Chinstrap     Dream           50.5          18.4               200
+## 304 Chinstrap     Dream           49.5          19.0               200
+## 305 Chinstrap     Dream           46.4          17.8               191
+## 306 Chinstrap     Dream           52.8          20.0               205
+## 307 Chinstrap     Dream           40.9          16.6               187
+## 308 Chinstrap     Dream           54.2          20.8               201
+## 309 Chinstrap     Dream           42.5          16.7               187
+## 310 Chinstrap     Dream           51.0          18.8               203
+## 311 Chinstrap     Dream           49.7          18.6               195
+## 312 Chinstrap     Dream           47.5          16.8               199
+## 313 Chinstrap     Dream           47.6          18.3               195
+## 314 Chinstrap     Dream           52.0          20.7               210
+## 315 Chinstrap     Dream           46.9          16.6               192
+## 316 Chinstrap     Dream           53.5          19.9               205
+## 317 Chinstrap     Dream           49.0          19.5               210
+## 318 Chinstrap     Dream           46.2          17.5               187
+## 319 Chinstrap     Dream           50.9          19.1               196
+## 320 Chinstrap     Dream           45.5          17.0               196
+## 321 Chinstrap     Dream           50.9          17.9               196
+## 322 Chinstrap     Dream           50.8          18.5               201
+## 323 Chinstrap     Dream           50.1          17.9               190
+## 324 Chinstrap     Dream           49.0          19.6               212
+## 325 Chinstrap     Dream           51.5          18.7               187
+## 326 Chinstrap     Dream           49.8          17.3               198
+## 327 Chinstrap     Dream           48.1          16.4               199
+## 328 Chinstrap     Dream           51.4          19.0               201
+## 329 Chinstrap     Dream           45.7          17.3               193
+## 330 Chinstrap     Dream           50.7          19.7               203
+## 331 Chinstrap     Dream           42.5          17.3               187
+## 332 Chinstrap     Dream           52.2          18.8               197
+## 333 Chinstrap     Dream           45.2          16.6               191
+## 334 Chinstrap     Dream           49.3          19.9               203
+## 335 Chinstrap     Dream           50.2          18.8               202
+## 336 Chinstrap     Dream           45.6          19.4               194
+## 337 Chinstrap     Dream           51.9          19.5               206
+## 338 Chinstrap     Dream           46.8          16.5               189
+## 339 Chinstrap     Dream           45.7          17.0               195
+## 340 Chinstrap     Dream           55.8          19.8               207
+## 341 Chinstrap     Dream           43.5          18.1               202
+## 342 Chinstrap     Dream           49.6          18.2               193
+## 343 Chinstrap     Dream           50.8          19.0               210
+## 344 Chinstrap     Dream           50.2          18.7               198
+##     body_mass_g    sex year
+## 1          3750   male 2007
+## 2          3800 female 2007
+## 3          3250 female 2007
+## 4            NA   &lt;NA&gt; 2007
+## 5          3450 female 2007
+## 6          3650   male 2007
+## 7          3625 female 2007
+## 8          4675   male 2007
+## 9          3475   &lt;NA&gt; 2007
+## 10         4250   &lt;NA&gt; 2007
+## 11         3300   &lt;NA&gt; 2007
+## 12         3700   &lt;NA&gt; 2007
+## 13         3200 female 2007
+## 14         3800   male 2007
+## 15         4400   male 2007
+## 16         3700 female 2007
+## 17         3450 female 2007
+## 18         4500   male 2007
+## 19         3325 female 2007
+## 20         4200   male 2007
+## 21         3400 female 2007
+## 22         3600   male 2007
+## 23         3800 female 2007
+## 24         3950   male 2007
+## 25         3800   male 2007
+## 26         3800 female 2007
+## 27         3550   male 2007
+## 28         3200 female 2007
+## 29         3150 female 2007
+## 30         3950   male 2007
+## 31         3250 female 2007
+## 32         3900   male 2007
+## 33         3300 female 2007
+## 34         3900   male 2007
+## 35         3325 female 2007
+## 36         4150   male 2007
+## 37         3950   male 2007
+## 38         3550 female 2007
+## 39         3300 female 2007
+## 40         4650   male 2007
+## 41         3150 female 2007
+## 42         3900   male 2007
+## 43         3100 female 2007
+## 44         4400   male 2007
+## 45         3000 female 2007
+## 46         4600   male 2007
+## 47         3425   male 2007
+## 48         2975   &lt;NA&gt; 2007
+## 49         3450 female 2007
+## 50         4150   male 2007
+## 51         3500 female 2008
+## 52         4300   male 2008
+## 53         3450 female 2008
+## 54         4050   male 2008
+## 55         2900 female 2008
+## 56         3700   male 2008
+## 57         3550 female 2008
+## 58         3800   male 2008
+## 59         2850 female 2008
+## 60         3750   male 2008
+## 61         3150 female 2008
+## 62         4400   male 2008
+## 63         3600 female 2008
+## 64         4050   male 2008
+## 65         2850 female 2008
+## 66         3950   male 2008
+## 67         3350 female 2008
+## 68         4100   male 2008
+## 69         3050 female 2008
+## 70         4450   male 2008
+## 71         3600 female 2008
+## 72         3900   male 2008
+## 73         3550 female 2008
+## 74         4150   male 2008
+## 75         3700 female 2008
+## 76         4250   male 2008
+## 77         3700 female 2008
+## 78         3900   male 2008
+## 79         3550 female 2008
+## 80         4000   male 2008
+## 81         3200 female 2008
+## 82         4700   male 2008
+## 83         3800 female 2008
+## 84         4200   male 2008
+## 85         3350 female 2008
+## 86         3550   male 2008
+## 87         3800   male 2008
+## 88         3500 female 2008
+## 89         3950   male 2008
+## 90         3600 female 2008
+## 91         3550 female 2008
+## 92         4300   male 2008
+## 93         3400 female 2008
+## 94         4450   male 2008
+## 95         3300 female 2008
+## 96         4300   male 2008
+## 97         3700 female 2008
+## 98         4350   male 2008
+## 99         2900 female 2008
+## 100        4100   male 2008
+## 101        3725 female 2009
+## 102        4725   male 2009
+## 103        3075 female 2009
+## 104        4250   male 2009
+## 105        2925 female 2009
+## 106        3550   male 2009
+## 107        3750 female 2009
+## 108        3900   male 2009
+## 109        3175 female 2009
+## 110        4775   male 2009
+## 111        3825 female 2009
+## 112        4600   male 2009
+## 113        3200 female 2009
+## 114        4275   male 2009
+## 115        3900 female 2009
+## 116        4075   male 2009
+## 117        2900 female 2009
+## 118        3775   male 2009
+## 119        3350 female 2009
+## 120        3325   male 2009
+## 121        3150 female 2009
+## 122        3500   male 2009
+## 123        3450 female 2009
+## 124        3875   male 2009
+## 125        3050 female 2009
+## 126        4000   male 2009
+## 127        3275 female 2009
+## 128        4300   male 2009
+## 129        3050 female 2009
+## 130        4000   male 2009
+## 131        3325 female 2009
+## 132        3500   male 2009
+## 133        3500 female 2009
+## 134        4475   male 2009
+## 135        3425 female 2009
+## 136        3900   male 2009
+## 137        3175 female 2009
+## 138        3975   male 2009
+## 139        3400 female 2009
+## 140        4250   male 2009
+## 141        3400 female 2009
+## 142        3475   male 2009
+## 143        3050 female 2009
+## 144        3725   male 2009
+## 145        3000 female 2009
+## 146        3650   male 2009
+## 147        4250   male 2009
+## 148        3475 female 2009
+## 149        3450 female 2009
+## 150        3750   male 2009
+## 151        3700 female 2009
+## 152        4000   male 2009
+## 153        4500 female 2007
+## 154        5700   male 2007
+## 155        4450 female 2007
+## 156        5700   male 2007
+## 157        5400   male 2007
+## 158        4550 female 2007
+## 159        4800 female 2007
+## 160        5200   male 2007
+## 161        4400 female 2007
+## 162        5150   male 2007
+## 163        4650 female 2007
+## 164        5550   male 2007
+## 165        4650 female 2007
+## 166        5850   male 2007
+## 167        4200 female 2007
+## 168        5850   male 2007
+## 169        4150 female 2007
+## 170        6300   male 2007
+## 171        4800 female 2007
+## 172        5350   male 2007
+## 173        5700   male 2007
+## 174        5000 female 2007
+## 175        4400 female 2007
+## 176        5050   male 2007
+## 177        5000 female 2007
+## 178        5100   male 2007
+## 179        4100   &lt;NA&gt; 2007
+## 180        5650   male 2007
+## 181        4600 female 2007
+## 182        5550   male 2007
+## 183        5250   male 2007
+## 184        4700 female 2007
+## 185        5050 female 2007
+## 186        6050   male 2007
+## 187        5150 female 2008
+## 188        5400   male 2008
+## 189        4950 female 2008
+## 190        5250   male 2008
+## 191        4350 female 2008
+## 192        5350   male 2008
+## 193        3950 female 2008
+## 194        5700   male 2008
+## 195        4300 female 2008
+## 196        4750   male 2008
+## 197        5550   male 2008
+## 198        4900 female 2008
+## 199        4200 female 2008
+## 200        5400   male 2008
+## 201        5100 female 2008
+## 202        5300   male 2008
+## 203        4850 female 2008
+## 204        5300   male 2008
+## 205        4400 female 2008
+## 206        5000   male 2008
+## 207        4900 female 2008
+## 208        5050   male 2008
+## 209        4300 female 2008
+## 210        5000   male 2008
+## 211        4450 female 2008
+## 212        5550   male 2008
+## 213        4200 female 2008
+## 214        5300   male 2008
+## 215        4400 female 2008
+## 216        5650   male 2008
+## 217        4700 female 2008
+## 218        5700   male 2008
+## 219        4650   &lt;NA&gt; 2008
+## 220        5800   male 2008
+## 221        4700 female 2008
+## 222        5550   male 2008
+## 223        4750 female 2008
+## 224        5000   male 2008
+## 225        5100   male 2008
+## 226        5200 female 2008
+## 227        4700 female 2008
+## 228        5800   male 2008
+## 229        4600 female 2008
+## 230        6000   male 2008
+## 231        4750 female 2008
+## 232        5950   male 2008
+## 233        4625 female 2009
+## 234        5450   male 2009
+## 235        4725 female 2009
+## 236        5350   male 2009
+## 237        4750 female 2009
+## 238        5600   male 2009
+## 239        4600 female 2009
+## 240        5300   male 2009
+## 241        4875 female 2009
+## 242        5550   male 2009
+## 243        4950 female 2009
+## 244        5400   male 2009
+## 245        4750 female 2009
+## 246        5650   male 2009
+## 247        4850 female 2009
+## 248        5200   male 2009
+## 249        4925   male 2009
+## 250        4875 female 2009
+## 251        4625 female 2009
+## 252        5250   male 2009
+## 253        4850 female 2009
+## 254        5600   male 2009
+## 255        4975 female 2009
+## 256        5500   male 2009
+## 257        4725   &lt;NA&gt; 2009
+## 258        5500   male 2009
+## 259        4700 female 2009
+## 260        5500   male 2009
+## 261        4575 female 2009
+## 262        5500   male 2009
+## 263        5000 female 2009
+## 264        5950   male 2009
+## 265        4650 female 2009
+## 266        5500   male 2009
+## 267        4375 female 2009
+## 268        5850   male 2009
+## 269        4875   &lt;NA&gt; 2009
+## 270        6000   male 2009
+## 271        4925 female 2009
+## 272          NA   &lt;NA&gt; 2009
+## 273        4850 female 2009
+## 274        5750   male 2009
+## 275        5200 female 2009
+## 276        5400   male 2009
+## 277        3500 female 2007
+## 278        3900   male 2007
+## 279        3650   male 2007
+## 280        3525 female 2007
+## 281        3725   male 2007
+## 282        3950 female 2007
+## 283        3250 female 2007
+## 284        3750   male 2007
+## 285        4150 female 2007
+## 286        3700   male 2007
+## 287        3800 female 2007
+## 288        3775   male 2007
+## 289        3700 female 2007
+## 290        4050   male 2007
+## 291        3575 female 2007
+## 292        4050   male 2007
+## 293        3300   male 2007
+## 294        3700 female 2007
+## 295        3450 female 2007
+## 296        4400   male 2007
+## 297        3600 female 2007
+## 298        3400   male 2007
+## 299        2900 female 2007
+## 300        3800   male 2007
+## 301        3300 female 2007
+## 302        4150   male 2007
+## 303        3400 female 2008
+## 304        3800   male 2008
+## 305        3700 female 2008
+## 306        4550   male 2008
+## 307        3200 female 2008
+## 308        4300   male 2008
+## 309        3350 female 2008
+## 310        4100   male 2008
+## 311        3600   male 2008
+## 312        3900 female 2008
+## 313        3850 female 2008
+## 314        4800   male 2008
+## 315        2700 female 2008
+## 316        4500   male 2008
+## 317        3950   male 2008
+## 318        3650 female 2008
+## 319        3550   male 2008
+## 320        3500 female 2008
+## 321        3675 female 2009
+## 322        4450   male 2009
+## 323        3400 female 2009
+## 324        4300   male 2009
+## 325        3250   male 2009
+## 326        3675 female 2009
+## 327        3325 female 2009
+## 328        3950   male 2009
+## 329        3600 female 2009
+## 330        4050   male 2009
+## 331        3350 female 2009
+## 332        3450   male 2009
+## 333        3250 female 2009
+## 334        4050   male 2009
+## 335        3800   male 2009
+## 336        3525 female 2009
+## 337        3950   male 2009
+## 338        3650 female 2009
+## 339        3650 female 2009
+## 340        4000   male 2009
+## 341        3400 female 2009
+## 342        3775   male 2009
+## 343        4100   male 2009
+## 344        3775 female 2009
+```
+]
+]
+
+.panel[.panel-name[Conversación]
+
+### ¿Qué diferencias ves?
+
+Puede que notes que un `tibble` imprime:
+- las clases de las variables
+- solo 10 filas
+- solo tantas columnas como quepan en la pantalla
+- los `NA` se resaltan en la consola para que sean fáciles de identificar (resaltado de fuente y estilo en `tibble`)
+
+En un archivo R Markdown esto no suele ser un problema, pero en la consola sí se nota. 
+El método de impresión facilita trabajar con datasets grandes.
+
+]
+
+.panel[.panel-name[Más]
+Hay un par de diferencias principales adicionales, especialmente en **subconjuntos (subsetting)** y **reciclaje (recycling)**. Revísalas en la [`vignette("tibble")`](https://tibble.tidyverse.org/articles/tibble.html)
+
+¡Pruébalo aquí!
+
+```r
+vignette("tibble")
+```
+]
+]
+
+---
+
+
+
+
+
+
+
+
+
+class: penguin-tour
+
+&lt;img src="images/pptx/03-ggplot2.png" width="1200" /&gt;
+
+
+
+---
+background-image: url(images/hex/ggplot2.png)
+background-position: 1050px 50px
+background-size: 80px
+
+# ggplot2: información
+
+.panelset[
+.panel[.panel-name[Resumen general]
+### ¡Empecemos haciendo un gráfico simple de nuestros datos!
+
+### `ggplot2` usa la "Gramática de los Gráficos" (Grammar of Graphics) y apila componentes gráficos en capas para crear un gráfico.
+]
+
+.panel[.panel-name[Hoja de referencia]
+
+<i class="fas  fa-file-pdf "></i> PDF: https://github.com/rstudio/cheatsheets/raw/master/data-visualization-2.1.pdf
+![](https://raw.githubusercontent.com/rstudio/cheatsheets/master/pngs/thumbnails/data-visualization-cheatsheet-thumbs.png)
+]
+
+.panel[.panel-name[Lectura]
+
+.left-column[
+&lt;img src="images/r4ds-cover.png" width="160" /&gt;
+]
+
+.right-column[
+### R for Data Science: [Cap. 3 Visualización de datos](https://r4ds.had.co.nz/data-visualisation.html)
+
+### Documentación del paquete: https://ggplot2.tidyverse.org/
+]
+]
+]
+
+---
+background-image: url(images/hex/ggplot2.png)
+background-position: 1050px 50px
+background-size: 80px
+
+# ggplot2: ejercicio
+
+.panelset[
+.panel[.panel-name[Ver los datos]
+
+.pull-left[
+### Ver el dataset completo:
+
+```r
+View(penguins)
+```
+]
+
+.pull-right[
+### O echar un vistazo con `glimpse`:
+
+```r
+glimpse(penguins)
+```
+
+```
+## Rows: 344
+## Columns: 8
+## $ species           &lt;fct&gt; Adelie, Adelie, Adelie, Adelie, Adelie, Adelie, Adel…
+## $ island            &lt;fct&gt; Torgersen, Torgersen, Torgersen, Torgersen, Torgerse…
+## $ bill_length_mm    &lt;dbl&gt; 39.1, 39.5, 40.3, NA, 36.7, 39.3, 38.9, 39.2, 34.1, …
+## $ bill_depth_mm     &lt;dbl&gt; 18.7, 17.4, 18.0, NA, 19.3, 20.6, 17.8, 19.6, 18.1, …
+## $ flipper_length_mm &lt;int&gt; 181, 186, 195, NA, 193, 190, 181, 195, 193, 190, 186…
+## $ body_mass_g       &lt;int&gt; 3750, 3800, 3250, NA, 3450, 3650, 3625, 4675, 3475, …
+## $ sex               &lt;fct&gt; male, female, female, NA, female, male, female, male…
+## $ year              &lt;int&gt; 2007, 2007, 2007, 2007, 2007, 2007, 2007, 2007, 2007…
+```
+]
+]
+
+.panel[.panel-name[Gráfico de dispersión]
+
+Veamos si la masa corporal varía según el sexo del pingüino
+
+.pull-left[
+
+```r
+ggplot(data = penguins, 
+*      aes(x = sex, y = body_mass_g)) +
+  geom_point()
+```
+]
+
+.pull-right[
+![](Clase_2_files/figure-html/unnamed-chunk-38-1.png)&lt;!-- --&gt;
+]
+]
+
+.panel[.panel-name[Boxplot]
+
+.pull-left[
+
+```r
+ggplot(data = penguins, 
+       aes(x = sex, y = body_mass_g)) +
+* geom_boxplot()
+```
+]
+
+.pull-right[
+![](Clase_2_files/figure-html/unnamed-chunk-40-1.png)&lt;!-- --&gt;
+]
+]
+
+.panel[.panel-name[Por especie]
+
+.pull-left[
+
+```r
+ggplot(data = penguins, 
+       aes(x = sex, y = body_mass_g)) +
+* geom_boxplot(aes(fill = species))
+```
+
+### &lt;br/&gt; ¿Qué notas?
+]
+
+.pull-right[
+![](Clase_2_files/figure-html/unnamed-chunk-42-1.png)&lt;!-- --&gt;
+]
+]
+
+.panel[.panel-name[Conversación]
+
+### Podrías observar...
+
+.pull-left[
+- Los pingüinos Gentoo tienen mayor masa corporal que los pingüinos Adélie y Chinstrap
+- Mayor masa corporal en los pingüinos Gentoo machos en comparación con las hembras
+- El patrón no es tan fácil de distinguir al comparar pingüinos Adélie y Chinstrap
+- ¡No hay *NA* en los puntos de datos de la especie Chinstrap! **sex** estuvo disponible para cada observación
+]
+
+.pull-right[
+![](Clase_2_files/figure-html/unnamed-chunk-43-1.png)&lt;!-- --&gt;
+]
+]
+]
+
+
+---
+
+
+
+
+
+
+
+
+
+class: penguin-tour
+
+&lt;img src="images/pptx/04-dplyr.png" width="1200" /&gt;
+
+
+
+---
+background-image: url(images/hex/dplyr.png)
+background-position: 1050px 50px
+background-size: 80px
+
+# dplyr: información
+
+.panelset[
+.panel[.panel-name[Resumen general]
+
+.pull-left[
+### La transformación de datos te ayuda a poner los datos exactamente en la forma que necesitas. &lt;br/&gt; Con `dplyr` puedes:
+
+- crear nuevas variables
+- crear resúmenes
+- renombrar variables
+- reordenar observaciones
+- ¡...y más!
+]
+.pull-right[
+- Seleccionar observaciones según sus valores con `filter()`.
+- Reordenar las filas con `arrange()`.
+- Seleccionar variables por su nombre con `select()`.
+- Crear nuevas variables como funciones de variables existentes con `mutate()`.
+- Reducir muchos valores a un solo resumen con `summarize()`.
+- `group_by()` hace que las funciones anteriores operen por grupos en lugar de hacerlo sobre todo el dataset. 
+- y `count()` + `add_count()` simplifican `group_by()` + `summarize()` cuando solo quieres contar
+]
+]
+
+.panel[.panel-name[Hoja de referencia]
+
+<i class="fas  fa-file-pdf "></i> PDF: https://github.com/rstudio/cheatsheets/raw/master/data-transformation.pdf
+![](https://raw.githubusercontent.com/rstudio/cheatsheets/master/pngs/thumbnails/data-transformation-cheatsheet-thumbs.png)
+]
+
+.panel[.panel-name[Lectura]
+
+.left-column[
+&lt;img src="images/r4ds-cover.png" width="160" /&gt;
+]
+
+.right-column[
+### R for Data Science: [Cap. 11 Transformación de datos](https://r4ds.had.co.nz/transform.html)
+
+### Documentación del paquete: https://dplyr.tidyverse.org/
+]
+]
+]
+
+---
+background-image: url(images/hex/dplyr.png)
+background-position: 1050px 50px
+background-size: 80px
+
+# dplyr: ejercicio
+
+.panelset[
+
+.panel[.panel-name[Select]
+.center[ 
+### ¿Puedes identificar la diferencia al hacer la misma operación?
+]
+.pull-left[
+
+```r
+select(penguins, species, sex, body_mass_g)
+```
+
+```
+## # A tibble: 344 × 3
+##    species sex    body_mass_g
+##    &lt;fct&gt;   &lt;fct&gt;        &lt;int&gt;
+##  1 Adelie  male          3750
+##  2 Adelie  female        3800
+##  3 Adelie  female        3250
+##  4 Adelie  &lt;NA&gt;            NA
+##  5 Adelie  female        3450
+##  6 Adelie  male          3650
+##  7 Adelie  female        3625
+##  8 Adelie  male          4675
+##  9 Adelie  &lt;NA&gt;          3475
+## 10 Adelie  &lt;NA&gt;          4250
+## # ℹ 334 more rows
+```
+]
+
+.pull-right[
+
+```r
+penguins %&gt;%
+  select(species, sex, body_mass_g)
+```
+
+```
+## # A tibble: 344 × 3
+##    species sex    body_mass_g
+##    &lt;fct&gt;   &lt;fct&gt;        &lt;int&gt;
+##  1 Adelie  male          3750
+##  2 Adelie  female        3800
+##  3 Adelie  female        3250
+##  4 Adelie  &lt;NA&gt;            NA
+##  5 Adelie  female        3450
+##  6 Adelie  male          3650
+##  7 Adelie  female        3625
+##  8 Adelie  male          4675
+##  9 Adelie  &lt;NA&gt;          3475
+## 10 Adelie  &lt;NA&gt;          4250
+## # ℹ 334 more rows
+```
+]
+]
+
+.panel[.panel-name[Arrange]
+
+Podemos usar `arrange()` para ordenar nuestros datos en orden descendente según **body_mass_g**
+
+.pull-left[
+
+```r
+glimpse(penguins)
+```
+
+```
+## Rows: 344
+## Columns: 8
+## $ species           &lt;fct&gt; Adelie, Adelie, Adelie, Adelie, Adelie, Adelie, Adel…
+## $ island            &lt;fct&gt; Torgersen, Torgersen, Torgersen, Torgersen, Torgerse…
+## $ bill_length_mm    &lt;dbl&gt; 39.1, 39.5, 40.3, NA, 36.7, 39.3, 38.9, 39.2, 34.1, …
+## $ bill_depth_mm     &lt;dbl&gt; 18.7, 17.4, 18.0, NA, 19.3, 20.6, 17.8, 19.6, 18.1, …
+## $ flipper_length_mm &lt;int&gt; 181, 186, 195, NA, 193, 190, 181, 195, 193, 190, 186…
+## $ body_mass_g       &lt;int&gt; 3750, 3800, 3250, NA, 3450, 3650, 3625, 4675, 3475, …
+## $ sex               &lt;fct&gt; male, female, female, NA, female, male, female, male…
+## $ year              &lt;int&gt; 2007, 2007, 2007, 2007, 2007, 2007, 2007, 2007, 2007…
+```
+]
+.pull-right[
+
+```r
+penguins %&gt;%
+  select(species, sex, body_mass_g) %&gt;%
+* arrange(desc(body_mass_g))
+```
+
+```
+## # A tibble: 344 × 3
+##    species sex   body_mass_g
+##    &lt;fct&gt;   &lt;fct&gt;       &lt;int&gt;
+##  1 Gentoo  male         6300
+##  2 Gentoo  male         6050
+##  3 Gentoo  male         6000
+##  4 Gentoo  male         6000
+##  5 Gentoo  male         5950
+##  6 Gentoo  male         5950
+##  7 Gentoo  male         5850
+##  8 Gentoo  male         5850
+##  9 Gentoo  male         5850
+## 10 Gentoo  male         5800
+## # ℹ 334 more rows
+```
+]
+]
+
+
+.panel[.panel-name[Group By &amp; Summarize]
+
+.pull-left[
+.middle[Podemos usar `group_by()` para agrupar nuestros datos por **species** y **sex**, y `summarize()` para calcular el promedio de **body_mass_g** para cada grupo.]
+]
+
+.pull-right[
+
+```r
+penguins %&gt;%
+  select(species, sex, body_mass_g) %&gt;%
+* group_by(species, sex) %&gt;%
+* summarize(mean = mean(body_mass_g))
+```
+
+```
+## # A tibble: 8 × 3
+## # Groups:   species [3]
+##   species   sex     mean
+##   &lt;fct&gt;     &lt;fct&gt;  &lt;dbl&gt;
+## 1 Adelie    female 3369.
+## 2 Adelie    male   4043.
+## 3 Adelie    &lt;NA&gt;     NA 
+## 4 Chinstrap female 3527.
+## 5 Chinstrap male   3939.
+## 6 Gentoo    female 4680.
+## 7 Gentoo    male   5485.
+## 8 Gentoo    &lt;NA&gt;     NA
+```
+]
+]
+
+
+.panel[.panel-name[Counting 1]
+Si solo nos interesa _contar_ las observaciones en cada grupo, podemos agrupar y resumir con funciones especiales `count()` y `add_count()`.
+
+----
+
+.pull-left[
+Contar se puede hacer con `group_by()` y `summarize()`, pero es un poco engorroso. 
+
+Implica...
+1. usar `mutate()` para crear una variable intermedia **n_species** que suma todas las observaciones por **species**, y
+2. un paso de `ungroup()`
+]
+
+.pull-right[
+
+```r
+penguins %&gt;% 
+  group_by(species) %&gt;%
+* mutate(n_species = n()) %&gt;%
+* ungroup() %&gt;%
+  group_by(species, sex, n_species) %&gt;%
+  summarize(n = n())
+```
+
+```
+## # A tibble: 8 × 4
+## # Groups:   species, sex [8]
+##   species   sex    n_species     n
+##   &lt;fct&gt;     &lt;fct&gt;      &lt;int&gt; &lt;int&gt;
+## 1 Adelie    female       152    73
+## 2 Adelie    male         152    73
+## 3 Adelie    &lt;NA&gt;         152     6
+## 4 Chinstrap female        68    34
+## 5 Chinstrap male          68    34
+## 6 Gentoo    female       124    58
+## 7 Gentoo    male         124    61
+## 8 Gentoo    &lt;NA&gt;         124     5
+```
+]
+]
+
+.panel[.panel-name[Counting 2]
+Si solo nos interesa _contar_ las observaciones en cada grupo, podemos agrupar y resumir con funciones especiales `count()` y `add_count()`.
+
+----
+
+.pull-left[
+En contraste, `count()` y `add_count()` ofrecen un enfoque simplificado
+
+
+]
+.pull-right[
+
+```r
+penguins %&gt;% 
+  count(species, sex) %&gt;%
+* add_count(species, wt = n,
+*           name = "n_species")
+```
+
+```
+## # A tibble: 8 × 4
+##   species   sex        n n_species
+##   &lt;fct&gt;     &lt;fct&gt;  &lt;int&gt;     &lt;int&gt;
+## 1 Adelie    female    73       152
+## 2 Adelie    male      73       152
+## 3 Adelie    &lt;NA&gt;       6       152
+## 4 Chinstrap female    34        68
+## 5 Chinstrap male      34        68
+## 6 Gentoo    female    58       124
+## 7 Gentoo    male      61       124
+## 8 Gentoo    &lt;NA&gt;       5       124
+```
+]
+]
+
+.panel[.panel-name[Mutate]
+
+.pull-left[
+Podemos ampliar nuestro ejemplo de conteo usando `mutate()` para crear una nueva variable **prop**, que representa la proporción de pingüinos de cada **sex**, agrupado por **species**
+
+.small-text[Ejemplo amablemente [aportado por Alison Hill (@apreshill)](https://github.com/spcanelon/2020-rladies-chi-tidyverse/issues/2)]
+]
+.pull-right[
+
+```r
+penguins %&gt;% 
+  count(species, sex) %&gt;%
+  add_count(species, wt = n, 
+            name = "n_species") %&gt;%
+* mutate(prop = n/n_species*100)
+```
+
+```
+## # A tibble: 8 × 5
+##   species   sex        n n_species  prop
+##   &lt;fct&gt;     &lt;fct&gt;  &lt;int&gt;     &lt;int&gt; &lt;dbl&gt;
+## 1 Adelie    female    73       152 48.0 
+## 2 Adelie    male      73       152 48.0 
+## 3 Adelie    &lt;NA&gt;       6       152  3.95
+## 4 Chinstrap female    34        68 50   
+## 5 Chinstrap male      34        68 50   
+## 6 Gentoo    female    58       124 46.8 
+## 7 Gentoo    male      61       124 49.2 
+## 8 Gentoo    &lt;NA&gt;       5       124  4.03
+```
+]
+]
+
+.panel[.panel-name[Filter]
+
+.pull-left[
+Por último, podemos filtrar filas para mostrar únicamente los resúmenes de pingüinos **Chinstrap** agregando `filter()` a nuestro pipeline]
+
+.pull-right[
+
+```r
+penguins %&gt;% 
+  count(species, sex) %&gt;%
+  add_count(species, wt = n, 
+            name = "n_species") %&gt;%
+  mutate(prop = n/n_species*100) %&gt;%
+* filter(species == "Chinstrap")
+```
+
+```
+## # A tibble: 2 × 5
+##   species   sex        n n_species  prop
+##   &lt;fct&gt;     &lt;fct&gt;  &lt;int&gt;     &lt;int&gt; &lt;dbl&gt;
+## 1 Chinstrap female    34        68    50
+## 2 Chinstrap male      34        68    50
+```
+]
+]
+
+]
+
+
+---
+
+
+
+
+
+
+
+
+
+class: penguin-tour
+
+&lt;img src="images/pptx/05-forcats.png" width="1200" /&gt;
+
+
+
+---
+background-image: url(images/hex/forcats.png)
+background-position: 1050px 50px
+background-size: 80px
+
+# forcats: información
+
+.panelset[
+
+.panel[.panel-name[Resumen general]
+### Nos ayuda a trabajar con **variables categóricas** o factores. 
+
+### Estas son variables que tienen un conjunto fijo y conocido de valores posibles, como **species**, **island** y **sex** en nuestro dataset `penguins`.
+]
+
+.panel[.panel-name[Hoja de referencia]
+
+<i class="fas  fa-file-pdf "></i> PDF: https://github.com/rstudio/cheatsheets/raw/master/factors.pdf
+![](https://raw.githubusercontent.com/rstudio/cheatsheets/master/pngs/thumbnails/forcats-cheatsheet-thumbs.png)
+]
+
+.panel[.panel-name[Lectura]
+
+.left-column[
+&lt;img src="images/r4ds-cover.png" width="160" /&gt;
+]
+
+.right-column[
+### R for Data Science: [Cap. 15 Factores](https://r4ds.had.co.nz/factors.html)
+
+### Documentación del paquete: https://forcats.tidyverse.org/
+]
+]
+]
+
+---
+background-image: url(images/hex/forcats.png)
+background-position: 1050px 50px
+background-size: 80px
+
+# forcats: ejercicio
+
+.panelset[
+.panel[.panel-name[Código]
+.pull-left[
+### Actualmente, la variable **year** en `penguins` es continua desde 2007 hasta 2009.
+
+### Puede haber situaciones en las que eso no sea lo que queremos, y preferimos convertirla en una variable categórica.
+]
+
+.pull-right[
+
+### La función `factor()` es perfecta para esto.
+
+```r
+penguins %&gt;%
+  mutate(year_factor = 
+*          factor(year,
+*                 levels = unique(year)))
+```
+]
+]
+
+.panel[.panel-name[Resultado]
+### El resultado es un nuevo factor **year_factor** con niveles **2007**, **2008** y **2009**
+.pull-left[
+
+```r
+penguins_new &lt;-
+  penguins %&gt;%
+  mutate(year_factor = 
+*          factor(year,
+*                 levels = unique(year)))
+penguins_new
+```
+
+```
+## # A tibble: 344 × 9
+##    species island    bill_length_mm bill_depth_mm flipper_length_mm body_mass_g
+##    &lt;fct&gt;   &lt;fct&gt;              &lt;dbl&gt;         &lt;dbl&gt;             &lt;int&gt;       &lt;int&gt;
+##  1 Adelie  Torgersen           39.1          18.7               181        3750
+##  2 Adelie  Torgersen           39.5          17.4               186        3800
+##  3 Adelie  Torgersen           40.3          18                 195        3250
+##  4 Adelie  Torgersen           NA            NA                  NA          NA
+##  5 Adelie  Torgersen           36.7          19.3               193        3450
+##  6 Adelie  Torgersen           39.3          20.6               190        3650
+##  7 Adelie  Torgersen           38.9          17.8               181        3625
+##  8 Adelie  Torgersen           39.2          19.6               195        4675
+##  9 Adelie  Torgersen           34.1          18.1               193        3475
+## 10 Adelie  Torgersen           42            20.2               190        4250
+## # ℹ 334 more rows
+## # ℹ 3 more variables: sex &lt;fct&gt;, year &lt;int&gt;, year_factor &lt;fct&gt;
+```
+]
+
+.pull-right[
+
+```r
+class(penguins_new$year_factor)
+```
+
+```
+## [1] "factor"
+```
+
+```r
+levels(penguins_new$year_factor)
+```
+
+```
+## [1] "2007" "2008" "2009"
+```
+]
+]
+]
+
+---
+
+
+
+
+
+
+
+
+
+class: penguin-tour
+
+&lt;img src="images/pptx/06-stringr.png" width="1200" /&gt;
+
+
+
+---
+background-image: url(images/hex/stringr.png)
+background-position: 1050px 50px
+background-size: 80px
+
+# stringr: información
+
+.panelset[
+
+.panel[.panel-name[Resumen general]
+
+.pull-left[
+### `stringr` nos ayuda a manipular cadenas de texto. El paquete incluye muchas funciones para trabajar con **expresiones regulares**, que son un lenguaje conciso para describir patrones en texto.
+]
+
+.pull-right[
+### Estas funciones nos ayudan a
+
+- detectar coincidencias
+- extraer/subconjuntar cadenas
+- gestionar longitudes de texto
+- modificar (mutar) cadenas
+- unir y separar cadenas
+- ordenar cadenas
+- ...y más
+]
+
+]
+
+.panel[.panel-name[Hoja de referencia]
+
+<i class="fas  fa-file-pdf "></i> PDF: https://github.com/rstudio/cheatsheets/raw/master/strings.pdf
+![](https://raw.githubusercontent.com/rstudio/cheatsheets/master/pngs/thumbnails/strings-cheatsheet-thumbs.png)
+]
+
+.panel[.panel-name[Lectura]
+
+.left-column[
+&lt;img src="images/r4ds-cover.png" width="160" /&gt;
+]
+
+.right-column[
+### R for Data Science: [Cap. 14 Cadenas de texto](https://r4ds.had.co.nz/strings.html)
+
+### Documentación del paquete: https://stringr.tidyverse.org/
+]
+]
+]
+
+---
+background-image: url(images/hex/stringr.png)
+background-position: 1050px 50px
+background-size: 80px
+
+# stringr: ejercicio
+
+.panelset[
+.panel[.panel-name[Mutate]
+
+### ¿Qué hace este chunk?
+
+```r
+penguins %&gt;%
+  select(species, island) %&gt;%
+* mutate(ISLAND = str_to_upper(island))
+```
+
+```
+## # A tibble: 344 × 3
+##    species island    ISLAND   
+##    &lt;fct&gt;   &lt;fct&gt;     &lt;chr&gt;    
+##  1 Adelie  Torgersen TORGERSEN
+##  2 Adelie  Torgersen TORGERSEN
+##  3 Adelie  Torgersen TORGERSEN
+##  4 Adelie  Torgersen TORGERSEN
+##  5 Adelie  Torgersen TORGERSEN
+##  6 Adelie  Torgersen TORGERSEN
+##  7 Adelie  Torgersen TORGERSEN
+##  8 Adelie  Torgersen TORGERSEN
+##  9 Adelie  Torgersen TORGERSEN
+## 10 Adelie  Torgersen TORGERSEN
+## # ℹ 334 more rows
+```
+]
+
+.panel[.panel-name[Join]
+
+### ¿Y este otro?
+
+```r
+penguins %&gt;%
+  select(species, island) %&gt;%
+  mutate(ISLAND = str_to_upper(island)) %&gt;%
+* mutate(species_island = str_c(species, ISLAND, sep = "_"))
+```
+
+```
+## # A tibble: 344 × 4
+##    species island    ISLAND    species_island  
+##    &lt;fct&gt;   &lt;fct&gt;     &lt;chr&gt;     &lt;chr&gt;           
+##  1 Adelie  Torgersen TORGERSEN Adelie_TORGERSEN
+##  2 Adelie  Torgersen TORGERSEN Adelie_TORGERSEN
+##  3 Adelie  Torgersen TORGERSEN Adelie_TORGERSEN
+##  4 Adelie  Torgersen TORGERSEN Adelie_TORGERSEN
+##  5 Adelie  Torgersen TORGERSEN Adelie_TORGERSEN
+##  6 Adelie  Torgersen TORGERSEN Adelie_TORGERSEN
+##  7 Adelie  Torgersen TORGERSEN Adelie_TORGERSEN
+##  8 Adelie  Torgersen TORGERSEN Adelie_TORGERSEN
+##  9 Adelie  Torgersen TORGERSEN Adelie_TORGERSEN
+## 10 Adelie  Torgersen TORGERSEN Adelie_TORGERSEN
+## # ℹ 334 more rows
+```
+]
+]
+
+---
+
+
+
+
+
+
+
+
+
+class: penguin-tour
+
+&lt;img src="images/pptx/07-tidyr.png" width="1200" /&gt;
+
+
+
+---
+background-image: url(images/hex/tidyr.png)
+background-position: 1050px 50px
+background-size: 80px
+
+# tidyr: información
+
+.panelset[
+
+.panel[.panel-name[Resumen general]
+[De R for Data Science](https://r4ds.had.co.nz/tidy-data.html):
+
+&gt; Hay tres reglas interrelacionadas que hacen que un dataset sea tidy (ordenado):
+
+&gt; - Cada variable debe tener su propia columna.
+&gt; - Cada observación debe tener su propia fila.
+&gt; - Cada valor debe tener su propia celda.
+![](https://d33wubrfki0l68.cloudfront.net/6f1ddb544fc5c69a2478e444ab8112fb0eea23f8/91adc/images/tidy-1.png)
+
+]
+
+.panel[.panel-name[Hoja de referencia]
+
+<i class="fas  fa-file-pdf "></i> PDF: https://github.com/rstudio/cheatsheets/raw/master/data-import.pdf
+![](https://raw.githubusercontent.com/rstudio/cheatsheets/master/pngs/thumbnails/data-import-cheatsheet-thumbs.png)
+]
+
+.panel[.panel-name[Lectura]
+
+.left-column[
+&lt;img src="images/r4ds-cover.png" width="160" /&gt;
+]
+
+.right-column[
+### R for Data Science: [Cap. 12 Datos tidy](https://r4ds.had.co.nz/tidy-data.html)
+
+### Documentación del paquete: https://tidyr.tidyverse.org/
+]
+]
+]
+
+---
+background-image: url(images/hex/tidyr.png)
+background-position: 1050px 50px
+background-size: 80px
+
+# tidyr: ejercicio
+
+.panelset[
+.panel[.panel-name[Des-ordenando (Un-tidying)]
+
+### ¡Ambos datasets de pingüinos ya están en formato tidy!
+
+Podemos fingir que `penguins` no estuviera tidy y que, en cambio, se viera como `untidy_penguins` abajo, donde **body_mass_g** se registró por separado para pingüinos *male*, *female* y con **sex** igual a *NA*.
+
+
+```r
+untidy_penguins &lt;- 
+  penguins %&gt;% pivot_wider(names_from = sex, values_from = body_mass_g)
+untidy_penguins
+```
+
+```
+## # A tibble: 344 × 9
+##    species island    bill_length_mm bill_depth_mm flipper_length_mm  year  male
+##    &lt;fct&gt;   &lt;fct&gt;              &lt;dbl&gt;         &lt;dbl&gt;             &lt;int&gt; &lt;int&gt; &lt;int&gt;
+##  1 Adelie  Torgersen           39.1          18.7               181  2007  3750
+##  2 Adelie  Torgersen           39.5          17.4               186  2007    NA
+##  3 Adelie  Torgersen           40.3          18                 195  2007    NA
+##  4 Adelie  Torgersen           NA            NA                  NA  2007    NA
+##  5 Adelie  Torgersen           36.7          19.3               193  2007    NA
+##  6 Adelie  Torgersen           39.3          20.6               190  2007  3650
+##  7 Adelie  Torgersen           38.9          17.8               181  2007    NA
+##  8 Adelie  Torgersen           39.2          19.6               195  2007  4675
+##  9 Adelie  Torgersen           34.1          18.1               193  2007    NA
+## 10 Adelie  Torgersen           42            20.2               190  2007    NA
+## # ℹ 334 more rows
+## # ℹ 2 more variables: female &lt;int&gt;, `NA` &lt;int&gt;
+```
+
+]
+
+.panel[.panel-name[Volver a ordenar (Re-tidying)]
+
+### ¡Ahora dejémoslo tidy de nuevo!
+
+Usaremos la ayuda de `pivot_longer()`
+
+
+```r
+untidy_penguins %&gt;%
+* pivot_longer(cols = male:`NA`,
+*              names_to = "sex",
+*              values_to = "body_mass_g")
+```
+
+```
+## # A tibble: 1,032 × 8
+##    species island    bill_length_mm bill_depth_mm flipper_length_mm  year sex   
+##    &lt;fct&gt;   &lt;fct&gt;              &lt;dbl&gt;         &lt;dbl&gt;             &lt;int&gt; &lt;int&gt; &lt;chr&gt; 
+##  1 Adelie  Torgersen           39.1          18.7               181  2007 male  
+##  2 Adelie  Torgersen           39.1          18.7               181  2007 female
+##  3 Adelie  Torgersen           39.1          18.7               181  2007 NA    
+##  4 Adelie  Torgersen           39.5          17.4               186  2007 male  
+##  5 Adelie  Torgersen           39.5          17.4               186  2007 female
+##  6 Adelie  Torgersen           39.5          17.4               186  2007 NA    
+##  7 Adelie  Torgersen           40.3          18                 195  2007 male  
+##  8 Adelie  Torgersen           40.3          18                 195  2007 female
+##  9 Adelie  Torgersen           40.3          18                 195  2007 NA    
+## 10 Adelie  Torgersen           NA            NA                  NA  2007 male  
+## # ℹ 1,022 more rows
+## # ℹ 1 more variable: body_mass_g &lt;int&gt;
+```
+]
+]
+
+---
+
+
+
+
+
+
+
+
+
+class: penguin-tour
+
+&lt;img src="images/pptx/08-purrr.png" width="1200" /&gt;
+
+
+
+---
+background-image: url(images/hex/purrr.png)
+background-position: 1050px 50px
+background-size: 80px
+
+# purrr: información
+
+.panelset[
+
+.panel[.panel-name[Resumen general]
+.pull-left[
+### Proporciona herramientas para trabajar con funciones y vectores 
+
+### La familia de funciones de `purrr` nos ayuda a reemplazar los *for loops*, haciendo que nuestro código sea más fácil de leer y más conciso.
+]
+
+.pull-right[
+### Con `purrr` puedes
+
+- Iterar sobre una sola entrada con `map()`
+- Iterar sobre dos entradas en paralelo con `map2()`
+- Iterar con múltiples argumentos con `pmap()`
+- Iterar con múltiples argumentos y funciones con `invoke_map()`
+- Llamar una función por sus efectos secundarios con `walk()`, `walk2()` y `pwalk()`
+]
+]
+
+.panel[.panel-name[Hoja de referencia]
+
+<i class="fas  fa-file-pdf "></i> PDF: https://github.com/rstudio/cheatsheets/raw/master/purrr.pdf
+![](https://raw.githubusercontent.com/rstudio/cheatsheets/master/pngs/thumbnails/purrr-cheatsheet-thumbs.png)
+]
+
+.panel[.panel-name[Lectura]
+
+.left-column[
+&lt;img src="images/r4ds-cover.png" width="160" /&gt;
+]
+
+.right-column[
+### R for Data Science: [Cap. 21 Iteración](https://r4ds.had.co.nz/iteration.html)
+
+### Documentación del paquete: https://purrr.tidyverse.org/
+]
+]
+]
+
+---
+background-image: url(images/hex/purrr.png)
+background-position: 1050px 50px
+background-size: 80px
+
+# purrr: ejercicio
+
+.panelset[
+.panel[.panel-name[¿Hora de un cambio?]
+
+.pull-left[
+### Ok, nos encanta el boxplot anterior que muestra **body_mass_g** por **sex** y coloreado por **species**... ¡pero cambiemos los colores para mantener el tema Antártico!
+
+### Soy muy fan de las paletas de color del paquete `nord` 📦
+]
+.pull-right[
+![](https://raw.githubusercontent.com/jkaupp/nord/master/man/figures/README-palettes-1.png)
+]
+]
+
+.panel[.panel-name[Objetivo]
+
+.pull-left[
+### Convirtamos este gráfico
+![](Clase_2_files/figure-html/unnamed-chunk-115-1.png)&lt;!-- --&gt;
+]
+
+.pull-right[
+### ¡En este!
+![](Clase_2_files/figure-html/unnamed-chunk-116-1.png)&lt;!-- --&gt;
+
+.panel[.panel-name[Opción 1]
+
+.pull-left[
+
+```r
+library(nord)
+
+# puedes elegir colores usando 
+# los códigos hex
+nord::nord_palettes$frost
+```
+
+```
+## [1] "#8FBCBB" "#88C0D0" "#81A1C1" "#5E81AC"
+```
+
+
+```r
+# y asignarlos usando la función
+# `scale_fill_manual()`
+penguins %&gt;%
+  ggplot(aes(x = sex, y = body_mass_g)) +
+  geom_boxplot(aes(fill = species)) +
+* scale_fill_manual(values = c("#8FBCBB", "#88C0D0", "#81A1C1"))
+```
+]
+
+.pull-right[
+![](Clase_2_files/figure-html/unnamed-chunk-119-1.png)&lt;!-- --&gt;
+]
+]
+
+
+.panel[.panel-name[Opciones 2 y 3]
+
+.pull-left[
+...pero quizá prefieras usar el nombre de la paleta &lt;br/&gt;
+
+```r
+penguins %&gt;%
+  ggplot(aes(x = sex, y = body_mass_g)) +
+  geom_boxplot(aes(fill = species)) +
+* scale_fill_manual(values = nord::nord_palettes$frost)
+```
+
+![](Clase_2_files/figure-html/unnamed-chunk-120-1.png)&lt;!-- --&gt;
+]
+
+.pull-right[
+Y algunos paquetes de paletas también traen sus propias funciones, como `scale_fill_nord()`
+
+```r
+penguins %&gt;%
+  ggplot(aes(x = sex, y = body_mass_g)) +
+  geom_boxplot(aes(fill = species)) +
+* nord::scale_fill_nord(palette = "frost")
+```
+
+![](Clase_2_files/figure-html/unnamed-chunk-121-1.png)&lt;!-- --&gt;
+]
+]
+
+.panel[.panel-name[¿Purrr?]
+
+.pull-left[
+El paquete `prismatic` 📦 nos ayuda a **ver** los colores que corresponden a cada código hex (casi siempre), con la función `color()`
+
+
+```r
+library(prismatic)
+```
+
+
+```r
+prismatic::color(nord::nord_palettes$frost)
+```
+![](images/nord_frost.png)
+]
+
+.pull-right[
+La función `map()` de `purrr` puede ayudarnos a iterar `color()` sobre todas las paletas en un paquete de paletas como `nord`:
+
+
+```r
+nord::nord_palettes %&gt;% map(prismatic::color)
+```
+
+![](images/nord_multiple.png)
+]
+]
+]
+]
+
+.panel[.panel-name[¡Más paletas!]
+
+.pull-left[
+### 🎨 Repositorio [r-color-palettes](https://github.com/EmilHvitfeldt/r-color-palettes) de Emil Hvitfeldt
+
+### ¡Como esta temática de Wes Anderson! Y muchas, muchas más. 🤩
+]
+
+.pull-right[
+![](images/wesanderson_example.png)
+]
+]
+
+]
+
+---
+
+
+
+
+
+
+
+
+
+
+
+background-image: url(images/hex/lubridate.png)
+background-position: 1050px 50px
+background-size: 80px
+
+# lubridate: información
+
+.panelset[
+
+.panel[.panel-name[Resumen general]
+.pull-left[
+### `lubridate` facilita trabajar con **fechas y tiempos**.
+
+### En datos reales (y financieros), casi siempre hay tiempo: fecha de transacción, mes contable, trimestre, ventanas móviles, retornos diarios, etc.
+]
+.pull-right[
+### Con `lubridate` puedes
+
+- **parsear** fechas desde texto: `ymd()`, `mdy()`, `dmy()`
+- **extraer** componentes: `year()`, `month()`, `day()`, `wday()`
+- **crear** fechas: `make_date()`
+- **sumar/restar** periodos: `days()`, `months()`, `years()`
+- **agrupar** por tiempo: `floor_date()`, `ceiling_date()`
+- medir diferencias: `interval()`, `as.duration()`
+]
+]
+
+.panel[.panel-name[Cheatsheet]
+
+<i class="fas  fa-file-pdf "></i> PDF: https://raw.githubusercontent.com/rstudio/cheatsheets/main/lubridate.pdf
+![](https://raw.githubusercontent.com/rstudio/cheatsheets/main/pngs/thumbnails/lubridate-cheatsheet-thumbs.png)
+]
+
+.panel[.panel-name[Lectura]
+
+.left-column[
+&lt;img src="images/r4ds-cover.png" width="160" /&gt;
+]
+
+.right-column[
+### R for Data Science: [Fechas y tiempos](https://r4ds.hadley.nz/datetimes.html)
+
+### Documentación del paquete: https://lubridate.tidyverse.org/
+]
+]
+]
+
+---
+background-image: url(images/hex/lubridate.png)
+background-position: 1050px 50px
+background-size: 80px
+
+# lubridate: ejercicio
+
+.panelset[
+
+.panel[.panel-name[Setup]
+
+
+```r
+library(tidyverse)
+library(lubridate)
+```
+]
+
+.panel[.panel-name[Parsear fechas]
+
+### Parsear texto a fecha (Date)
+
+```r
+fechas &lt;- tibble(
+  f_ymd = c("2026-02-17", "2025-12-26"),
+  f_mdy = c("02/17/2026", "12/26/2025"),
+  f_dmy = c("17-02-2026", "26-12-2025")
+)
+
+fechas %&gt;%
+  mutate(
+*   date_ymd = ymd(f_ymd),
+*   date_mdy = mdy(f_mdy),
+*   date_dmy = dmy(f_dmy)
+  )
+```
+
+```
+## # A tibble: 2 × 6
+##   f_ymd      f_mdy      f_dmy      date_ymd   date_mdy   date_dmy  
+##   &lt;chr&gt;      &lt;chr&gt;      &lt;chr&gt;      &lt;date&gt;     &lt;date&gt;     &lt;date&gt;    
+## 1 2026-02-17 02/17/2026 17-02-2026 2026-02-17 2026-02-17 2026-02-17
+## 2 2025-12-26 12/26/2025 26-12-2025 2025-12-26 2025-12-26 2025-12-26
+```
+]
+
+.panel[.panel-name[Crear fechas]
+
+### Crear fechas a partir de componentes
+
+```r
+tibble(
+  year = c(2025, 2026),
+  month = c(12, 2),
+  day = c(26, 17)
+) %&gt;%
+* mutate(fecha = make_date(year, month, day))
+```
+
+```
+## # A tibble: 2 × 4
+##    year month   day fecha     
+##   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;date&gt;    
+## 1  2025    12    26 2025-12-26
+## 2  2026     2    17 2026-02-17
+```
+]
+
+.panel[.panel-name[Extraer componentes]
+
+### Extraer componentes (útil para agrupar por mes/trimestre)
+
+```r
+fechas %&gt;%
+  mutate(date = ymd(f_ymd)) %&gt;%
+  transmute(
+    date,
+*   anio = year(date),
+*   mes_num = month(date),
+*   mes_lbl = month(date, label=TRUE),
+*   dia = day(date),
+*   dia_sem = wday(date, label=TRUE)
+  )
+```
+
+```
+## # A tibble: 2 × 6
+##   date        anio mes_num mes_lbl   dia dia_sem
+##   &lt;date&gt;     &lt;dbl&gt;   &lt;dbl&gt; &lt;ord&gt;   &lt;int&gt; &lt;ord&gt;  
+## 1 2026-02-17  2026       2 feb        17 mar    
+## 2 2025-12-26  2025      12 dic        26 vie
+```
+]
+
+.panel[.panel-name[Sumar y restar]
+
+### Sumar/restar periodos (ojo: meses no siempre tienen igual duración)
+
+```r
+d0 &lt;- ymd("2026-02-17")
+tibble(
+  d0 = d0,
+* d_mas_10_dias = d0 + days(10),
+* d_menos_1_mes = d0 - months(1),
+* d_mas_1_anio  = d0 + years(1)
+)
+```
+
+```
+## # A tibble: 1 × 4
+##   d0         d_mas_10_dias d_menos_1_mes d_mas_1_anio
+##   &lt;date&gt;     &lt;date&gt;        &lt;date&gt;        &lt;date&gt;      
+## 1 2026-02-17 2026-02-27    2026-01-17    2027-02-17
+```
+]
+
+.panel[.panel-name[Agrupar por tiempo]
+
+### Redondear fechas para agrupar (mensual, semanal, etc.)
+
+```r
+set.seed(1)
+serie &lt;- tibble(
+  fecha = ymd("2026-01-01") + days(sample(0:59, 30, replace = TRUE)),
+  kpi = rnorm(30, mean = 100, sd = 10)
+)
+
+serie %&gt;%
+  mutate(
+*   mes = floor_date(fecha, unit = "month"),
+*   semana = floor_date(fecha, unit = "week")
+  ) %&gt;%
+  group_by(mes) %&gt;%
+  summarise(kpi_prom = mean(kpi), .groups = "drop")
+```
+
+```
+## # A tibble: 2 × 2
+##   mes        kpi_prom
+##   &lt;date&gt;        &lt;dbl&gt;
+## 1 2026-01-01    101. 
+## 2 2026-02-01     99.0
+```
+]
+
+.panel[.panel-name[Intervalos y duración]
+
+### Diferencias de tiempo: intervalos y duración
+
+```r
+inicio &lt;- ymd("2026-01-15")
+fin    &lt;- ymd("2026-02-17")
+
+*int &lt;- interval(inicio, fin)
+
+tibble(
+  inicio = inicio,
+  fin = fin,
+* dias = as.numeric(fin - inicio),
+* duracion = as.duration(int),
+* semanas_aprox = as.numeric(duracion, "weeks")
+)
+```
+
+```
+## # A tibble: 1 × 5
+##   inicio     fin         dias duracion               semanas_aprox
+##   &lt;date&gt;     &lt;date&gt;     &lt;dbl&gt; &lt;Duration&gt;                     &lt;dbl&gt;
+## 1 2026-01-15 2026-02-17    33 2851200s (~4.71 weeks)          4.71
+```
+]
+
+
+]
+
+---
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+class: about-me, middle, center
+
+# Funciones de Estructura
+
+## dplyr
+
+---
+
+
+
+# Agenda
+
+--
+
+- Introducción (por qué transformar datos en finanzas)
+
+--
+
+- Filtrar filas con `filter()`
+
+--
+
+- Ordenar filas con `arrange()`
+
+--
+
+- Seleccionar columnas con `select()`
+
+--
+
+- Crear variables con `mutate()`
+
+--
+
+- Resúmenes por grupos con `summarize()`
+
+--
+
+- `mutate()` por grupos (y filtros por grupos)
+
+---
+
+
+## Introducción
+
+### La transformación de datos te ayuda a llevar los datos a la forma exacta que necesitas para decidir.
+
+--
+
+En analítica financiera esto es el pan de cada día: antes de estimar riesgo, performance, elasticidades o construir tableros, **primero hay que “dejar listo” el dataset**.
+
+--
+
+Con transformación de datos puedes:
+
+- crear nuevas variables (KPIs, spreads, retornos, dummies, flags)
+- construir resúmenes (promedios, percentiles, tasas)
+- renombrar variables (estandarizar nombres)
+- reordenar observaciones (ranking, top/bottom)
+- ...¡y más!
+
+
+---
+
+### Dataset de ejemplo: `nycflights13` 📦
+
+Aunque el dataset es de vuelos (operación/logística), lo usaremos como **análogía financiera**:
+
+- cada vuelo = “transacción/operación” (un registro de evento)
+- `dep_delay` / `arr_delay` = “latencia / desviación del proceso” (costo operativo / riesgo de incumplimiento)
+- `carrier` = “contraparte / proveedor” (segmentación por entidad)
+- `distance` = “tamaño/exposición” (proxy de escala)
+- tiempo (mes/día/hora) = “estacionalidad / ciclos”
+
+Datos: 336,776 vuelos que salieron de NYC en 2013 (Bureau of Transportation Statistics, EE. UU.)
+
+---
+
+## Introducción
+
+
+```r
+flights
+```
+
+```
+## # A tibble: 336,776 × 19
+##     year month   day dep_time sched_dep_time dep_delay arr_time sched_arr_time
+##    &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;          &lt;int&gt;
+##  1  2013     1     1      517            515         2      830            819
+##  2  2013     1     1      533            529         4      850            830
+##  3  2013     1     1      542            540         2      923            850
+##  4  2013     1     1      544            545        -1     1004           1022
+##  5  2013     1     1      554            600        -6      812            837
+##  6  2013     1     1      554            558        -4      740            728
+##  7  2013     1     1      555            600        -5      913            854
+##  8  2013     1     1      557            600        -3      709            723
+##  9  2013     1     1      557            600        -3      838            846
+## 10  2013     1     1      558            600        -2      753            745
+## # ℹ 336,766 more rows
+## # ℹ 11 more variables: arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;, flight &lt;int&gt;,
+## #   tailnum &lt;chr&gt;, origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;,
+## #   hour &lt;dbl&gt;, minute &lt;dbl&gt;, time_hour &lt;dttm&gt;
+```
+
+---
+
+## Introducción
+
+
+```r
+head(flights, 4)
+```
+
+```
+## # A tibble: 4 × 19
+##    year month   day dep_time sched_dep_time dep_delay arr_time sched_arr_time
+##   &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;          &lt;int&gt;
+## 1  2013     1     1      517            515         2      830            819
+## 2  2013     1     1      533            529         4      850            830
+## 3  2013     1     1      542            540         2      923            850
+## 4  2013     1     1      544            545        -1     1004           1022
+## # ℹ 11 more variables: arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;, flight &lt;int&gt;,
+## #   tailnum &lt;chr&gt;, origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;,
+## #   hour &lt;dbl&gt;, minute &lt;dbl&gt;, time_hour &lt;dttm&gt;
+```
+
+--
+
+.pull-left[
+Tipos comunes que verás (¡igual que en bases financieras!):
+
+- `int`: enteros (conteos, IDs)
+- `dbl`: números reales (montos, tasas, retornos)
+- `chr`: texto (categorías, códigos)
+- `dttm`: fecha-hora (timestamp: trade time, corte contable)
+]
+
+--
+
+.pull-right[
+- `lgl`: lógico (TRUE/FALSE) (flags: default, fraude, activo)
+- `fctr`: factores (categorías) (segmentos, rating)
+- `date`: fechas (cierre, vencimiento)
+]
+
+---
+
+## Introducción
+
+### Fundamentos de **dplyr** (lo que más usarás en la práctica)
+
+- Seleccionar observaciones por valores (`filter()`).
+- Reordenar filas (`arrange()`).
+- Seleccionar variables por nombre (`select()`).
+- Crear variables nuevas a partir de existentes (`mutate()`).
+- Colapsar muchos valores en un resumen (`summarize()`).
+--
+
+- **+** `group_by()` para que todo lo anterior funcione **por grupos** (por entidad, sector, producto, portafolio, mes, etc.)
+
+### ¿Cómo funcionan?
+
+1. El primer argumento es un data frame
+2. Los demás argumentos describen qué hacer con el data frame
+3. El resultado es un **nuevo** data frame (ideal para pipelines reproducibles)
+
+---
+
+## Filtrar filas con `filter()`
+
+Permite quedarte con observaciones según condiciones.
+
+En finanzas: “tráeme solo estas fechas”, “solo este portafolio”, “solo defaults”, “solo operaciones con spread &gt; X”.
+
+--
+
+
+```r
+filter(flights, month == 1, day == 1)
+```
+
+```
+## # A tibble: 842 × 19
+##     year month   day dep_time sched_dep_time dep_delay arr_time sched_arr_time
+##    &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;          &lt;int&gt;
+##  1  2013     1     1      517            515         2      830            819
+##  2  2013     1     1      533            529         4      850            830
+##  3  2013     1     1      542            540         2      923            850
+##  4  2013     1     1      544            545        -1     1004           1022
+##  5  2013     1     1      554            600        -6      812            837
+##  6  2013     1     1      554            558        -4      740            728
+##  7  2013     1     1      555            600        -5      913            854
+##  8  2013     1     1      557            600        -3      709            723
+##  9  2013     1     1      557            600        -3      838            846
+## 10  2013     1     1      558            600        -2      753            745
+## # ℹ 832 more rows
+## # ℹ 11 more variables: arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;, flight &lt;int&gt;,
+## #   tailnum &lt;chr&gt;, origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;,
+## #   hour &lt;dbl&gt;, minute &lt;dbl&gt;, time_hour &lt;dttm&gt;
+```
+
+---
+
+### Comparaciones
+
+R trae los operadores estándar:
+
+- `&gt;`
+- `&gt;=`
+- `&lt;`
+- `&lt;=`
+- `!=` (distinto)
+- `==` (igual)
+
+(En finanzas: filtros por monto, tasa, retorno, VaR, rating, etc.)
+
+---
+
+### Operadores lógicos
+
+- `&amp;` es "y" (AND)
+- `|` es "o" (OR)
+- `!` es "no" (NOT)
+
+.center[
+&lt;img src="https://d33wubrfki0l68.cloudfront.net/01f4b6d39d2be8269740a3ad7946faa79f7243cf/8369a/diagrams/transform-logical.png" height="400" /&gt;
+]
+
+---
+
+### Valores faltantes (Missing values)
+
+- Valores faltantes (`NA`) representan un valor desconocido.
+
+--
+
+- Son “contagiosos” 🦠: casi cualquier operación con algo desconocido tiende a producir desconocido.
+
+--
+
+### Importante porque...
+
+`filter()` **solo** conserva filas donde la condición es `TRUE`.
+
+Si la condición da `FALSE` o `NA`, la fila NO queda.
+
+--
+
+Si quieres conservar `NA`, debes pedirlo explícitamente:
+
+
+```r
+filter(df, is.na(x) | x &gt; 1)
+```
+
+(En finanzas: ojo con `NA` en precios, retornos, spreads: si no los tratas, puedes sesgar análisis y KPIs.)
+
+---
+
+### Ejemplo: encontrar “contrapartes” específicas (carriers)
+
+En finanzas esto sería: “qué operaciones están asociadas a estas entidades / emisores / brokers”.
+
+
+```
+## # A tibble: 2 × 19
+##    year month   day dep_time sched_dep_time dep_delay arr_time sched_arr_time
+##   &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;          &lt;int&gt;
+## 1  2013     1     1      517            515         2      830            819
+## 2  2013     1     1      533            529         4      850            830
+## # ℹ 11 more variables: arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;, flight &lt;int&gt;,
+## #   tailnum &lt;chr&gt;, origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;,
+## #   hour &lt;dbl&gt;, minute &lt;dbl&gt;, time_hour &lt;dttm&gt;
+```
+
+--
+
+
+```
+##  [1] "UA" "AA" "B6" "DL" "EV" "MQ" "US" "WN" "VX" "FL" "AS" "9E" "F9" "HA" "YV"
+## [16] "OO"
+```
+
+--
+
+
+```r
+# opción 1 (incorrecta)
+flights %&gt;% filter(carrier = "UA" | "AA" | "DL")
+
+# opción 2 (incorrecta)
+flights %&gt;% filter(carrier == "UA" | "AA" | "DL")
+
+# opción 3 (correcta, pero más larga)
+flights %&gt;% filter(carrier == "UA" | carrier == "AA" | carrier == "DL")
+
+# opción 4 (correcta, recomendada)
+flights %&gt;% filter(carrier %in% c("UA", "AA", "DL"))
+```
+
+---
+
+#### Ejemplo: United, American o Delta (error típico)
+
+
+```r
+flights %&gt;% filter(carrier = "UA" | "AA" | "DL")
+```
+
+&gt; Error: Problem with `filter()` input `..1`. x Input `..1` is named.  
+&gt; ℹ Esto suele pasar cuando usas `=` en lugar de `==`.  
+&gt; ℹ ¿Quisiste decir `carrier == "UA" | "AA" | "DL"`?
+
+---
+
+#### Ejemplo: United, American o Delta (segundo error típico)
+
+
+```r
+flights %&gt;% filter(carrier == "UA" | "AA" | "DL")
+```
+
+&gt; Error: Problem with `filter()` input `..1`.  
+&gt; x operaciones solo son posibles para tipos numéricos, lógicos o complejos  
+&gt; ℹ Input `..1` es `carrier == "UA" | "AA" | "DL"`.
+
+---
+
+#### Ejemplo: forma correcta (explícita)
+
+
+```r
+flights %&gt;% filter(carrier == "UA" | carrier == "AA" | carrier == "DL")
+```
+
+```
+## # A tibble: 139,504 × 19
+##     year month   day dep_time sched_dep_time dep_delay arr_time sched_arr_time
+##    &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;          &lt;int&gt;
+##  1  2013     1     1      517            515         2      830            819
+##  2  2013     1     1      533            529         4      850            830
+##  3  2013     1     1      542            540         2      923            850
+##  4  2013     1     1      554            600        -6      812            837
+##  5  2013     1     1      554            558        -4      740            728
+##  6  2013     1     1      558            600        -2      753            745
+##  7  2013     1     1      558            600        -2      924            917
+##  8  2013     1     1      558            600        -2      923            937
+##  9  2013     1     1      559            600        -1      941            910
+## 10  2013     1     1      559            600        -1      854            902
+## # ℹ 139,494 more rows
+## # ℹ 11 more variables: arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;, flight &lt;int&gt;,
+## #   tailnum &lt;chr&gt;, origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;,
+## #   hour &lt;dbl&gt;, minute &lt;dbl&gt;, time_hour &lt;dttm&gt;
+```
+
+---
+
+#### Ejemplo: forma correcta (recomendada con `%in%`)
+
+
+```r
+flights %&gt;% filter(carrier %in% c("UA", "AA", "DL"))
+```
+
+```
+## # A tibble: 139,504 × 19
+##     year month   day dep_time sched_dep_time dep_delay arr_time sched_arr_time
+##    &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;          &lt;int&gt;
+##  1  2013     1     1      517            515         2      830            819
+##  2  2013     1     1      533            529         4      850            830
+##  3  2013     1     1      542            540         2      923            850
+##  4  2013     1     1      554            600        -6      812            837
+##  5  2013     1     1      554            558        -4      740            728
+##  6  2013     1     1      558            600        -2      753            745
+##  7  2013     1     1      558            600        -2      924            917
+##  8  2013     1     1      558            600        -2      923            937
+##  9  2013     1     1      559            600        -1      941            910
+## 10  2013     1     1      559            600        -1      854            902
+## # ℹ 139,494 more rows
+## # ℹ 11 more variables: arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;, flight &lt;int&gt;,
+## #   tailnum &lt;chr&gt;, origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;,
+## #   hour &lt;dbl&gt;, minute &lt;dbl&gt;, time_hour &lt;dttm&gt;
+```
+
+---
+
+## Ordenar filas con `arrange()`
+
+### Cambia el orden de las filas
+
+Toma un data frame y lo ordena por una o más columnas (o expresiones).
+
+--
+
+- por defecto ordena de menor a mayor (ascendente)
+- `desc()` ordena de mayor a menor (descendente)
+
+--
+
+- **Nota:** los `NA` siempre quedan al final
+
+(En finanzas: rankings de retornos, riesgos, drawdowns, spreads, moras.)
+
+---
+
+### Ejemplo: ordenar para encontrar las “operaciones” más críticas
+
+En finanzas: “top pérdidas”, “mayores retrasos”, “mayor exposición”.
+
+
+```r
+flights
+```
+
+```
+## # A tibble: 336,776 × 19
+##     year month   day dep_time sched_dep_time dep_delay arr_time sched_arr_time
+##    &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;          &lt;int&gt;
+##  1  2013     1     1      517            515         2      830            819
+##  2  2013     1     1      533            529         4      850            830
+##  3  2013     1     1      542            540         2      923            850
+##  4  2013     1     1      544            545        -1     1004           1022
+##  5  2013     1     1      554            600        -6      812            837
+##  6  2013     1     1      554            558        -4      740            728
+##  7  2013     1     1      555            600        -5      913            854
+##  8  2013     1     1      557            600        -3      709            723
+##  9  2013     1     1      557            600        -3      838            846
+## 10  2013     1     1      558            600        -2      753            745
+## # ℹ 336,766 more rows
+## # ℹ 11 more variables: arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;, flight &lt;int&gt;,
+## #   tailnum &lt;chr&gt;, origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;,
+## #   hour &lt;dbl&gt;, minute &lt;dbl&gt;, time_hour &lt;dttm&gt;
+```
+
+---
+
+#### Ordenar para encontrar vuelos más demorados
+
+
+```r
+arrange(flights, desc(dep_delay))
+```
+
+
+```
+## # A tibble: 3 × 19
+##    year month   day dep_time sched_dep_time dep_delay arr_time sched_arr_time
+##   &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;          &lt;int&gt;
+## 1  2013     1     9      641            900      1301     1242           1530
+## 2  2013     6    15     1432           1935      1137     1607           2120
+## 3  2013     1    10     1121           1635      1126     1239           1810
+## # ℹ 11 more variables: arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;, flight &lt;int&gt;,
+## #   tailnum &lt;chr&gt;, origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;,
+## #   hour &lt;dbl&gt;, minute &lt;dbl&gt;, time_hour &lt;dttm&gt;
+```
+
+--
+#### Encontrar los vuelos que salieron más temprano (menor retraso)
+
+
+```r
+arrange(flights, dep_delay)
+```
+
+
+```
+## # A tibble: 3 × 19
+##    year month   day dep_time sched_dep_time dep_delay arr_time sched_arr_time
+##   &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;          &lt;int&gt;
+## 1  2013    12     7     2040           2123       -43       40           2352
+## 2  2013     2     3     2022           2055       -33     2240           2338
+## 3  2013    11    10     1408           1440       -32     1549           1559
+## # ℹ 11 more variables: arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;, flight &lt;int&gt;,
+## #   tailnum &lt;chr&gt;, origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;,
+## #   hour &lt;dbl&gt;, minute &lt;dbl&gt;, time_hour &lt;dttm&gt;
+```
+
+---
+
+## Seleccionar columnas con `select()`
+
+A veces llegan datasets con cientos o miles de variables 😬.
+
+--
+
+`select()` te deja quedarte solo con lo relevante (muy útil para KPIs y tableros). 🎉
+
+--
+
+#### Funciones helper útiles
+
+- `starts_with("abc")`: nombres que empiezan con “abc”.
+- `ends_with("xyz")`: nombres que terminan con “xyz”.
+- `contains("ijk")`: nombres que contienen “ijk”.
+- `matches("(.)\\1")`: usa regex (más en Cap. 14: Strings)
+- `num_range("x", 1:3)`: x1, x2, x3.
+
+--
+
+- ⭐ `everything()`: útil para mover unas variables al inicio del data frame
+
+---
+
+### Ejemplo: selecciona `dep_time`, `dep_delay`, `arr_time`, `arr_delay`
+
+(Piénsalo como: time-stamps y métricas de “desviación”.)
+
+
+```r
+flights
+```
+
+```
+## # A tibble: 336,776 × 19
+##     year month   day dep_time sched_dep_time dep_delay arr_time sched_arr_time
+##    &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;          &lt;int&gt;
+##  1  2013     1     1      517            515         2      830            819
+##  2  2013     1     1      533            529         4      850            830
+##  3  2013     1     1      542            540         2      923            850
+##  4  2013     1     1      544            545        -1     1004           1022
+##  5  2013     1     1      554            600        -6      812            837
+##  6  2013     1     1      554            558        -4      740            728
+##  7  2013     1     1      555            600        -5      913            854
+##  8  2013     1     1      557            600        -3      709            723
+##  9  2013     1     1      557            600        -3      838            846
+## 10  2013     1     1      558            600        -2      753            745
+## # ℹ 336,766 more rows
+## # ℹ 11 more variables: arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;, flight &lt;int&gt;,
+## #   tailnum &lt;chr&gt;, origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;,
+## #   hour &lt;dbl&gt;, minute &lt;dbl&gt;, time_hour &lt;dttm&gt;
+```
+
+---
+
+#### Forma 1 (explícita)
+
+
+```r
+select(flights, dep_time, dep_delay, arr_time, arr_delay)
+```
+
+```
+## # A tibble: 336,776 × 4
+##    dep_time dep_delay arr_time arr_delay
+##       &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;     &lt;dbl&gt;
+##  1      517         2      830        11
+##  2      533         4      850        20
+##  3      542         2      923        33
+##  4      544        -1     1004       -18
+##  5      554        -6      812       -25
+##  6      554        -4      740        12
+##  7      555        -5      913        19
+##  8      557        -3      709       -14
+##  9      557        -3      838        -8
+## 10      558        -2      753         8
+## # ℹ 336,766 more rows
+```
+
+---
+
+#### Forma 2 (por prefijos)
+
+
+```r
+select(flights, starts_with("dep") | starts_with("arr"))
+```
+
+```
+## # A tibble: 336,776 × 4
+##    dep_time dep_delay arr_time arr_delay
+##       &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;     &lt;dbl&gt;
+##  1      517         2      830        11
+##  2      533         4      850        20
+##  3      542         2      923        33
+##  4      544        -1     1004       -18
+##  5      554        -6      812       -25
+##  6      554        -4      740        12
+##  7      555        -5      913        19
+##  8      557        -3      709       -14
+##  9      557        -3      838        -8
+## 10      558        -2      753         8
+## # ℹ 336,766 more rows
+```
+
+---
+
+#### Forma 3 (por sufijos) — Ojo
+
+
+```r
+select(flights, ends_with("time") | ends_with("delay"))
+```
+
+```
+## # A tibble: 336,776 × 7
+##    dep_time sched_dep_time arr_time sched_arr_time air_time dep_delay arr_delay
+##       &lt;int&gt;          &lt;int&gt;    &lt;int&gt;          &lt;int&gt;    &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+##  1      517            515      830            819      227         2        11
+##  2      533            529      850            830      227         4        20
+##  3      542            540      923            850      160         2        33
+##  4      544            545     1004           1022      183        -1       -18
+##  5      554            600      812            837      116        -6       -25
+##  6      554            558      740            728      150        -4        12
+##  7      555            600      913            854      158        -5        19
+##  8      557            600      709            723       53        -3       -14
+##  9      557            600      838            846      140        -3        -8
+## 10      558            600      753            745      138        -2         8
+## # ℹ 336,766 more rows
+```
+
+## No del todo. ¿Por qué?
+
+(Respuesta: `|` aquí no se usa así dentro de `select()`; lo correcto sería algo como  
+`select(flights, ends_with("time"), ends_with("delay"))`.)
+
+---
+
+## Agregar variables con `mutate()`
+
+Sirve para crear nuevas columnas como funciones de columnas existentes.
+
+--
+
+- por defecto agrega columnas al final del dataset
+
+--
+
+- si solo quieres conservar las nuevas variables, usa `transmute()`
+
+(En finanzas: retornos, spreads, ratios, flags, cambios porcentuales, normalizaciones.)
+
+---
+
+### Agregar variables con `mutate()`
+
+.pull-left[
+Operadores aritméticos
+
+- `+`
+- `-`
+- `*`
+- `/`
+- `^`
+- `sum()`
+]
+
+--
+
+.pull-right[
+Aritmética modular y funciones
+
+- `%/%` (división entera)
+- `%%` (residuo)
+- `log()`
+- `log2()`
+- `log10()`
+]
+
+--
+
+.pull-left[
+Otros súper usados
+
+- comparaciones lógicas: `&lt;`, `&lt;=`, `&gt;`, `&gt;=`, `!=`
+- rezagos/adelantos: `lead()` y `lag()` (clave en series financieras)
+- rankings: `min_rank()`, `row_number()`, `dense_rank()`, etc.
+]
+
+---
+
+## Resúmenes por grupos con `summarize()`
+
+Colapsa un data frame en un resumen (una fila por grupo) y es más potente con `group_by()`.
+
+--
+
+En finanzas: KPIs por emisor, sector, portafolio, mes, producto, oficina, trader, etc.
+
+--
+
+Arguablemente es **lo más** útil cuando se usa con el pipe `%&gt;%`.
+
+--
+
+De esto:
+
+
+```r
+by_dest &lt;- group_by(flights, dest)
+delay_tbl &lt;- summarize(by_dest,
+                       count = n(),
+                       dis   = mean(distance, na.rm = TRUE),
+                       delay = mean(arr_delay, na.rm = TRUE))
+```
+
+--
+¡A esto! 🎉
+
+
+```r
+flights %&gt;% 
+  group_by(dest) %&gt;% 
+  summarize(count = n(),
+            dis   = mean(distance, na.rm = TRUE),
+            delay = mean(arr_delay, na.rm = TRUE))
+```
+
+#### ¡Identifica las diferencias!
+
+---
+
+## `mutate()` por grupos (y filtros por grupos)
+
+Esto es muy útil cuando quieres filtrar por “popularidad” o “tamaño” del grupo.
+
+En finanzas: “quedarme con emisores con al menos N observaciones”, “productos con suficiente historial”, etc.
+
+--
+
+Ejemplo:
+
+
+```r
+popular_dests &lt;- flights %&gt;%
+  group_by(dest) %&gt;%
+  filter(n() &gt; 365)
+```
+
+### ¿Qué hace?
+
+(Respuesta: conserva solo destinos con más de 365 vuelos en el año; grupos con suficiente volumen para análisis estable.)
+
+
+---
+
+
+
+
+
+
+
+
+
+
+
+
+
+class: about-me, middle, center
+
+# EDA
+
+
+
+
+
+---
+
+# Objetivo del EDA
+
+Vamos a usar EDA **con mentalidad financiera** para responder preguntas reales:
+
+- ¿Qué estrategia “se comporta mejor” **y con qué riesgo**?
+- ¿Dónde están las **colas** (pérdidas extremas) y los **outliers**?
+- ¿Qué tanto se “mueven juntas” las estrategias? (**correlación vs dependencia**)
+- ¿Qué tan **incierto** es un KPI (media, percentil 5%)? (**bootstrap**)
+- ¿Qué cambia en el tiempo? (**volatilidad rolling, drawdowns**)
+
+---
+
+# Dataset (contexto financiero)
+
+Usaremos los retornos mensuales del dataset **EDHEC** (PerformanceAnalytics):
+
+- Colección de índices de estrategias tipo *hedge funds* (p. ej., *Convertible Arb*, *Event Driven*, *CTA Global*, etc.)
+- No lo tratamos como “vuelos”, sino como un *universo de estrategias* para **asignación y gestión de riesgo**
+- Variable central: `ret` (retorno mensual), por `strategy`
+
+&gt; Interpretación: no buscamos “la mejor estrategia” en abstracto, sino **trade-offs**: retorno vs dispersión vs cola izquierda.
+
+
+---
+
+El dataset EDHEC no son “acciones individuales”. Es una colección de series de tiempo (retornos mensuales) que representan índices de desempeño de distintos estilos de inversión, típicos de la industria alternativa (muy usada por fondos institucionales).
+
+- Cada columna (strategy) es un estilo.
+
+- Cada fila (mes) es el retorno de ese estilo en ese mes.
+
+----
+
+### ¿Qué es un hedge fund?
+
+Un hedge fund es un vehículo de inversión (un “fondo”) que suele tener más libertad que un fondo tradicional:
+
+- puede usar ventas en corto (ganar si el precio cae),
+
+- puede usar apalancamiento,
+
+- puede operar con derivados,
+
+- puede buscar retornos “más allá” del mercado accionario,
+
+- y suele enfocarse en estrategias long/short, arbitraje, event-driven, macro, etc.
+
+No significa “seguro” (la palabra hedge confunde). Significa: flexible y con herramientas para intentar ganar en distintos escenarios.
+
+
+---
+
+# ¿Qué son “estrategias tipo hedge fund”? (intuición de 4 ejemplos)
+
+&gt; *Convertible Arbitrage:* explotar desalineaciones entre un bono convertible y la acción subyacente (arbitraje).
+
+&gt; *Event Driven / Merger Arbitrage:* operar alrededor de eventos corporativos (fusiones, adquisiciones, reestructuraciones). Mucho riesgo “de salto”.
+
+&gt; *Equity Market Neutral:* construir posiciones para minimizar exposición al mercado (beta ≈ 0) y ganar por selección relativa.
+
+&gt; *CTA Global (Managed Futures):* estrategias sistemáticas en futuros (tendencias), puede diversificar bien en crisis… pero depende del régimen.
+
+`En clase no necesitamos dominar el detalle operativo; lo importante es que cada estrategia tiene un “perfil de riesgo” distinto.`
+
+
+---
+
+# ¿Por qué esto sirve para EDA financiero?
+
+Porque en finanzas rara vez basta con *“promedio”:
+
+- Dos estrategias pueden tener misma media, pero una tiene colas pesadas *(crashes).*
+
+- Otra puede tener outliers frecuentes o asimetría *(más caídas que subidas).*
+
+- Otra puede tener riesgo que cambia con el tiempo *(volatilidad rolling).*
+
+&gt; Entonces EDA aquí es para responder:
+
+### ¿qué estoy comprando en términos de distribución del riesgo?
+
+---
+
+# ¿Por qué esto sirve para EDA financiero?
+
+**Qué significa la frase “trade-offs”**
+
+No buscamos “la mejor estrategia” en abstracto porque siempre hay intercambio:
+
+&gt; Retorno esperado vs volatilidad
+
+&gt; Retorno vs cola izquierda (pérdidas extremas)
+
+&gt; Estabilidad vs picos de drawdown
+
+&gt; Diversificación vs dependencia en crisis
+
+
+`“Si una estrategia tiene buena media pero una cola izquierda muy negativa, como gestor tengo que preguntarme si ese retorno compensa el riesgo de un mes catastrófico.”`
+
+---
+
+# Cargar y pasar a formato tidy
+
+
+```r
+data(edhec, package = "PerformanceAnalytics")
+R_xts &lt;- edhec
+
+R_wide &lt;- data.frame(
+  date = as.Date(index(R_xts)),
+  coredata(R_xts),
+  check.names = FALSE
+)
+
+R_tbl &lt;- R_wide %&gt;%
+  pivot_longer(-date, names_to = "strategy", values_to = "ret") %&gt;%
+  mutate(strategy = as.character(strategy),
+         ret = as.numeric(ret)) %&gt;%
+  filter(is.finite(ret))
+
+R_tbl
+```
+
+```
+## # A tibble: 3,575 × 3
+##    date       strategy                  ret
+##    &lt;date&gt;     &lt;chr&gt;                   &lt;dbl&gt;
+##  1 1997-01-31 Convertible Arbitrage  0.0119
+##  2 1997-01-31 CTA Global             0.0393
+##  3 1997-01-31 Distressed Securities  0.0178
+##  4 1997-01-31 Emerging Markets       0.0791
+##  5 1997-01-31 Equity Market Neutral  0.0189
+##  6 1997-01-31 Event Driven           0.0213
+##  7 1997-01-31 Fixed Income Arbitrage 0.0191
+##  8 1997-01-31 Global Macro           0.0573
+##  9 1997-01-31 Long/Short Equity      0.0281
+## 10 1997-01-31 Merger Arbitrage       0.015 
+## # ℹ 3,565 more rows
+```
+
+---
+
+# EDA 1: distribuciones por grupo (forma, asimetría, colas)
+
+**Pregunta financiera:** ¿qué estrategias tienen **más dispersión** y **colas** más pesadas?
+
+- Si el centro parece similar, la decisión cambia por **cola izquierda** (pérdidas)
+- La media “bonita” puede esconder **tail risk**
+
+---
+
+class: center, middle
+
+&lt;img src="01_ridge.png" width="95%" /&gt;
+
+---
+
+# Lectura rápida del ridgeline
+
+- **Ancho** = dispersión (volatilidad “promedio”)
+- **Sesgo** = asimetría (más probabilidad de caídas o de subidas)
+- **Colas** = eventos extremos (crisis, shocks, quiebres de liquidez)
+
+**Discusión:**
+
+1) ¿Qué estrategia se ve más “apretada”?  
+2) ¿Cuál parece tener cola izquierda más fuerte?  
+3) ¿Cuál parece más “asimétrica”?
+
+---
+
+# EDA 2: Raincloud (distribución + mediana + outliers)
+
+**Por qué sirve en finanzas:** combina en un solo gráfico
+
+- densidad (forma)
+- caja/mediana (centro y dispersión robusta)
+- puntos (outliers y cola)
+
+---
+
+class: center, middle
+
+&lt;img src="02_raincloud.png" width="95%" /&gt;
+
+---
+
+# Interpretación (lo que quiero que se lleven)
+
+- Los *outliers* no son “errores”: en finanzas suelen ser **eventos de cola**
+- Dos estrategias con media similar pueden tener:
+  - **colas distintas** → riesgo distinto
+  - **incertidumbre distinta** → precisión del KPI distinta
+
+---
+
+# EDA 3: ECDF enfocada en cola izquierda
+
+ECDF (Empirical Cumulative Distribution Function)
+
+**Lectura directa:** En palabras simples: para cada umbral `\(x\)`, la ECDF te dice qué proporción de meses tuvo retornos `\(\le x\)`
+
+
+$$
+F(x) = P(\text{Retorno} \le x)
+$$
+
+En riesgo, queremos comparar **probabilidad de caer por debajo de umbrales**.
+
+----
+
+*Por qué nos sirve en finanzas:*
+
+- No asume normalidad (no “fuerza” una distribución).
+
+- Es perfecta para mirar cola izquierda: pérdidas y shocks.
+
+- Te deja comparar estrategias en términos de: “¿qué tan frecuente es perder más de X%?”
+
+
+`“La ECDF es como un contador acumulado de meses malos: a medida que muevo el umbral x, veo cuántas observaciones quedan por debajo.”`
+
+
+---
+
+class: center, middle
+
+&lt;img src="03_ecdf.png" width="90%" /&gt;
+
+---
+
+# Cómo leer la ECDF como financiero
+
+- Para un mismo \(x&lt;0\): la curva **más arriba** tiene **más probabilidad** de pérdidas `\(\le x\)`
+- Esto conecta con KPIs como:
+  - `\(p5 / (VaR_{95})\)` (cola)
+  - *downside frequency* (frecuencia de meses malos)
+
+----
+
+- Para un mismo x &lt; 0: la curva más arriba implica más probabilidad de pérdidas `\(\le x\)` → peor downside.
+
+- Si dos curvas se cruzan: una puede ser peor en pérdidas moderadas y otra peor en pérdidas extremas (trade-off de cola).
+
+
+&gt; “Si x=−5% una estrategia tiene F(x)=0.12, significa que en ~12% de los meses perdió 5% o más. Eso ya es un KPI de riesgo.”
+
+**Mini‑pregunta:** ¿qué estrategia “domina” en riesgo downside?
+
+
+
+
+
+---
+
+# EDA 4: QQ‑plot (¿normalidad? ¿colas pesadas?)
+
+**Por qué importa:**
+- Si hay cola pesada, **VaR normal** tiende a subestimar pérdidas extremas
+- En retornos financieros, la “no normalidad” es la regla, no la excepción
+
+---
+
+class: center, middle
+
+&lt;img src="04_qq.png" width="95%" /&gt;
+
+---
+
+# Regla visual para QQ
+
+- Si sigue la diagonal → “parecido a normal”
+- Si se curva en las colas → **colas pesadas** (extremos más frecuentes)
+
+**Toma de decisión:** cuando hay cola pesada, prioriza:
+- percentiles/quantiles
+- robustez
+- bootstrap
+- medidas downside (VaR/ES, drawdown)
+
+---
+
+# EDA 5: “peores retornos” (top 10 pérdidas)
+
+**Idea:** ver el *tail risk* sin suponer distribuciones.
+
+- Útil para *stress thinking*: “¿qué tan feo se puede poner?”
+- Complementa VaR/ES (que son resúmenes)
+
+
+----
+
+&gt; Si una estrategia tiene puntos más a la izquierda → tuvo eventos extremos más severos (peor cola izquierda).
+
+&gt; Si los 10 puntos están muy “regados” → la cola tiene variedad de pérdidas (no es solo un evento aislado).
+
+&gt; Si los 10 puntos están muy “juntos” → el tail es más “estable” (las peores pérdidas son parecidas entre sí).
+
+
+
+`Este gráfico es un ‘escáner’ de severidad: no me dice cuándo pasó, me dice qué tan malo puede ser en los peores 10 meses.` &gt;&gt;&gt; Interesante que identifiquen los meses! 
+
+---
+
+class: center, middle
+
+&lt;img src="05_p_worst.png" width="95%" /&gt;
+
+---
+
+# Correlación vs Dependencia (cuidado)
+
+**Correlación (Pearson)** mide linealidad promedio, pero en finanzas:
+
+- Puede ocultar dependencia **en crisis** (cola)
+- Puede cambiar por **régimen** (tranquilo vs turbulento)
+- No distingue bien relaciones no lineales
+
+**Mensaje clave:** *“baja correlación” no significa “independencia”*.
+
+---
+
+class: center, middle
+
+&lt;img src="08_correlacion_pearson.png" width="92%" /&gt;
+
+---
+
+# Qué mirar en la matriz de correlación
+
+- Bloques “azules” intensos → estrategias que se mueven juntas
+- Estrategias con correlación baja pueden **co‑caer** en crisis (dep. en cola)
+- Esto se conecta con diversificación y construcción de portafolio
+
+**Pregunta:** ¿qué par te sugiere “diversificación” y cuál te sugiere “redundancia”?
+
+---
+
+# EDA temporal: volatilidad rolling y cambios de régimen
+
+Volatilidad tiende a agruparse (*volatility clustering*).
+
+- En crisis, la distribución cambia (colas se engrosan)
+- *Rolling SD* ayuda a ver “cuándo” un riesgo se dispara
+
+
+----
+
+“Rolling” (o ventana móvil) significa que no calculas la volatilidad con todo el historial, sino con los últimos `\(k\)` meses y vas “deslizando” esa ventana mes a mes.
+
+
+### ¿Para qué sirve (finanzas)?
+
+Porque el riesgo no es constante:
+
+- En periodos tranquilos, la volatilidad suele ser baja.
+
+- En crisis, la volatilidad sube y se queda alta un rato (eso es volatility clustering).
+
+- Entonces, un solo número de volatilidad “promedio” puede mentir: mezcla épocas tranquilas con crisis.
+
+
+
+---
+
+class: center, middle
+
+&lt;img src="06_roll_sd.png" width="92%" /&gt;
+
+---
+
+# Lectura del rolling SD
+
+- Picos fuertes ≈ periodos tipo crisis (2008–2009 se nota)
+- No es solo nivel: también importa **duración** del régimen
+- Sirve para:
+  - ajustar límites de riesgo
+  - recalibrar VaR/ES
+  - decidir rebalanceo
+
+
+&gt; Rolling SD te responde: “¿Cuándo se disparó el riesgo y cuánto duró ese régimen?”
+
+---
+
+# Performance summary (retorno + drawdown + riesgo)
+
+En la práctica, muchos *dashboards* de portafolio miran:
+
+**1) Retorno acumulado**
+
+2) Retorno mensual (dispersión y shocks)  
+
+3) Drawdown (profundidad y recuperación)
+
+
+----
+
+### 1) Arriba: Cumulative Return (crecimiento acumulado)
+
+- Es cómo crece $1 (o 100) invertido en cada estrategia.
+
+- Aquí el eje Y es retorno acumulado: empieza en 0. Si llega a 3.0, es +300% acumulado.
+
+- Sirve para ver tendencia de largo plazo y si hay caídas grandes y recuperaciones.
+
+&gt; “Aquí veo quién crece más y quién sufrió quiebres grandes en la trayectoria.”
+
+
+---
+
+
+# Performance summary (retorno + drawdown + riesgo)
+
+En la práctica, muchos *dashboards* de portafolio miran:
+
+1) Retorno acumulado
+
+**2) Retorno mensual (dispersión y shocks)  **
+
+3) Drawdown (profundidad y recuperación)
+
+
+----
+
+### 2) Medio: Monthly Return (retorno mensual)
+
+- Cada barrita es el retorno de ese mes.
+
+- Muestra volatilidad y meses extremos (colas).
+
+- En crisis ves barras negativas grandes (shocks).
+
+&gt; “Este panel me recuerda que la curva de arriba se construye con meses buenos y malos; aquí se ven los extremos.”
+
+
+---
+
+
+
+# Performance summary (retorno + drawdown + riesgo)
+
+En la práctica, muchos *dashboards* de portafolio miran:
+
+1) Retorno acumulado
+
+2) Retorno mensual (dispersión y shocks)  
+
+**3) Drawdown (profundidad y recuperación)**
+
+
+----
+
+### 3) Abajo: Drawdown
+
+Drawdown = caída desde el máximo histórico (peak) hasta el valor actual.
+
+- Siempre es 0 o negativo.
+
+- 0 cuando estás en máximo histórico.
+
+- -0.25 significa que estás 25% por debajo de tu máximo.
+
+&gt; “El drawdown es la pérdida ‘desde el pico’. No mide variación mensual: mide cuánto me he alejado del mejor momento que llevaba.”
+
+
+
+
+---
+
+class: center, middle
+
+&lt;img src="07_chart_Performance Summary.png" width="95%" /&gt;
+
+---
+
+# Inferencia “ligera”: Bootstrap para KPIs
+
+En gestión, el KPI no es solo el punto (media/p5):
+
+- ¿qué tan preciso es?
+- ¿qué pasa si el histórico cambia un poco?
+- ¿la diferencia entre estrategias es “real” o ruido?
+
+
+&gt; Bootstrap = re‑muestreo para aproximar incertidumbre sin supuestos fuertes.
+
+
+Bootstrap es una técnica para *simular muchos “históricos alternativos”* a partir del histórico que ya tenemos, para *medir incertidumbre.*
+
+
+
+
+
+
+
+---
+
+# KPI con incertidumbre: media (IC bootstrap 95%)
+
+
+### ¿Qué se está re-muestreando?
+
+Se re-muestran los retornos mensuales (las observaciones) de una estrategia:
+
+- Tomo la misma cantidad de meses que tengo (por ejemplo 275),
+
+- pero los vuelvo a “armar” re-sorteando meses del mismo histórico, permitiendo repetidos,
+
+- y con cada histórico “reconstruido” recalculo el KPI.
+
+&gt; Esto produce una distribución del KPI (no solo un punto): una nube de medias, una nube de p5, etc.
+
+&gt; Obtienes: Una idea de qué tanto puede variar el KPI solo por azar muestral. No te quedas con “la media es 0.5%”, sino con “la media suele estar entre X y Y la mayoría de las veces”.
+
+---
+
+# KPI con incertidumbre: media (IC bootstrap 95%)
+
+### ¿Para qué sirve en finanzas?
+
+- Construir bandas de incertidumbre (intervalos) para KPIs.
+
+- Detectar KPIs frágiles: cambian mucho con pequeñas variaciones del historial.
+
+- Comparar estrategias: si las distribuciones de KPI se traslapan mucho, la “diferencia” puede ser ruido más que señal.
+
+`“El bootstrap responde: si mi muestra hubiera sido ligeramente distinta, ¿este KPI seguiría diciendo lo mismo?”`
+
+**Lectura:** punto = estimación, barra = incertidumbre.
+
+- Si los IC se traslapan mucho, “ranking” es frágil
+- Si un IC cruza 0, cuidado con prometer “retorno positivo”
+
+---
+
+class: center, middle
+
+&lt;img src="09_boot_ci_mean.png" width="92%" /&gt;
+
+---
+
+# KPI con incertidumbre: percentil 5% (cola)
+
+**p5** responde a: “en un mes malo, ¿qué tan malo puede ser?”
+
+- Más negativo → peor downside
+- IC ayuda a comparar sin vender humo
+
+---
+
+class: center, middle
+
+&lt;img src="10_boot_ci_p05.png" width="92%" /&gt;
+
+---
+
+# Visuales con incertidumbre (takeaways)
+
+Cuando reportes KPIs financieros, intenta que siempre haya:
+
+- punto + barra (IC/percentiles)
+- comparación por grupos (estrategias/activos/segmentos)
+- lectura enfocada en decisión (¿qué haría yo con esto?)
+
+---
+
+# Código R - EDA Financiero
+
+
+```r
+library(tidyverse)
+library(PerformanceAnalytics)
+library(xts)
+library(zoo)
+library(ggridges)
+library(ggdist)
+library(patchwork)
+library(scales)
+library(GGally)
+library(moments)
+
+set.seed(123)
+
+# 1) Cargar datos --------------------------------------------
+data(edhec, package = "PerformanceAnalytics")
+R_xts &lt;- edhec
+
+# 1) Wide limpio (data.frame) + nombres correctos
+R_wide &lt;- data.frame(
+  date = as.Date(index(R_xts)),
+  coredata(R_xts),
+  check.names = FALSE
+)
+
+# 2) Long limpio (ret numérico)
+R_tbl &lt;- R_wide %&gt;%
+  pivot_longer(-date, names_to = "strategy", values_to = "ret") %&gt;%
+  mutate(
+    strategy = as.character(strategy),
+    ret = as.numeric(ret)
+  ) %&gt;%
+  filter(is.finite(ret))
+
+# 3) Top N estrategias por volatilidad (sd)
+topN &lt;- 8
+top_strat &lt;- R_tbl %&gt;%
+  group_by(strategy) %&gt;%
+  summarise(sd_ret = sd(ret), .groups = "drop") %&gt;%
+  arrange(desc(sd_ret)) %&gt;%
+  slice_head(n = topN) %&gt;%
+  pull(strategy)
+
+R_top &lt;- R_tbl %&gt;% filter(strategy %in% top_strat)
+
+# 3) KPIs básicos + colas (pero serios) ----------------------
+kpi_tbl &lt;- R_tbl %&gt;%
+  group_by(strategy) %&gt;%
+  summarise(
+    n = n(),
+    mean = mean(ret, na.rm = TRUE),
+    med  = median(ret, na.rm = TRUE),
+    sd   = sd(ret, na.rm = TRUE),
+    skew = moments::skewness(ret, na.rm = TRUE),
+    kurt = moments::kurtosis(ret, na.rm = TRUE),
+    p01  = quantile(ret, 0.01, na.rm = TRUE),
+    p05  = quantile(ret, 0.05, na.rm = TRUE),
+    p50  = quantile(ret, 0.50, na.rm = TRUE),
+    p95  = quantile(ret, 0.95, na.rm = TRUE),
+    p99  = quantile(ret, 0.99, na.rm = TRUE),
+    min  = min(ret, na.rm = TRUE),
+    max  = max(ret, na.rm = TRUE),
+    .groups = "drop"
+  ) %&gt;%
+  arrange(p05)
+
+kpi_tbl
+
+# 4) Distribución / colas / no-normalidad --------------------
+# 4.1 Ridgelines (densidades apiladas) para comparar estrategias
+
+ord &lt;- R_top %&gt;%
+  group_by(strategy) %&gt;%
+  summarise(sd_ret = sd(ret), .groups = "drop") %&gt;%
+  arrange(desc(sd_ret)) %&gt;%
+  pull(strategy)
+
+R_top2 &lt;- R_top %&gt;%
+  mutate(strategy_ord = factor(strategy, levels = ord))
+
+p_ridge &lt;- ggplot(R_top2, aes(x = ret, y = strategy_ord, fill = strategy_ord)) +
+  geom_density_ridges(alpha = 0.65, scale = 1.2, rel_min_height = 0.01, color = "white") +
+  theme_minimal(base_size = 12) +
+  guides(fill = "none") +
+  labs(
+    title = "Distribución de retornos (ridgelines)",
+    subtitle = "Comparación visual de forma, asimetría y colas entre estrategias",
+    x = "Retorno mensual", y = NULL
+  ) +
+  scale_x_continuous(labels = percent_format(accuracy = 1))
+
+p_ridge
+
+# 4.2 Raincloud (halfeye + box + puntos) — EDA de alta calidad
+p_rain &lt;- R_top %&gt;%
+  ggplot(aes(x = fct_reorder(strategy, ret, .fun = median), y = ret)) +
+  ggdist::stat_halfeye(
+    adjust = 0.7, width = 0.6, .width = c(0.5, 0.8, 0.95)
+  ) +
+  geom_boxplot(width = 0.15, outlier.alpha = 0.35) +
+  geom_point(alpha = 0.15, position = position_jitter(width = 0.1), size = 0.8) +
+  coord_flip() +
+  theme_minimal(base_size = 12) +
+  labs(
+    title = "Raincloud plot: distribución + mediana + incertidumbre",
+    subtitle = "Útil para ver colas, dispersión y outliers por estrategia",
+    x = NULL, y = "Retorno mensual"
+  ) +
+  scale_y_continuous(labels = percent_format(accuracy = 1))
+
+# 4.3 ECDF (cola izquierda enfocada)
+p_ecdf &lt;- R_top %&gt;%
+  ggplot(aes(x = ret, color = strategy)) +
+  stat_ecdf(size = 0.9, alpha = 0.9) +
+  theme_minimal(base_size = 12) +
+  labs(
+    title = "ECDF: enfoque en cola izquierda (riesgo de pérdidas)",
+    subtitle = "Lectura directa: P(Retorno ≤ x). Comparación de downside risk",
+    x = "Retorno mensual", y = "Probabilidad acumulada"
+  ) +
+  scale_x_continuous(labels = percent_format(accuracy = 1)) +
+  guides(color = guide_legend(ncol = 2))
+
+# 4.4 Q-Q plot vs Normal (por estrategia) para mostrar no-normalidad
+# Nota: muchas facetas pueden saturar; usa top 6-8
+qq_data &lt;- R_top %&gt;%
+  group_by(strategy) %&gt;%
+  mutate(
+    z = (ret - mean(ret)) / sd(ret),
+    q_theo = qnorm(ppoints(n())),
+    q_emp  = sort(z),
+    q_theo_sorted = sort(q_theo)
+  ) %&gt;%
+  summarise(q_theo = q_theo_sorted, q_emp = q_emp, .groups = "drop_last") %&gt;%
+  ungroup()
+
+p_qq &lt;- qq_data %&gt;%
+  ggplot(aes(x = q_theo, y = q_emp)) +
+  geom_point(alpha = 0.6, size = 0.8) +
+  geom_abline(slope = 1, intercept = 0, linetype = 2) +
+  facet_wrap(~strategy, scales = "free", ncol = 4) +
+  theme_minimal(base_size = 11) +
+  labs(
+    title = "Q–Q plot vs Normal (z-scores)",
+    subtitle = "Desviaciones en colas =&gt; no-normalidad (muy típico en retornos)",
+    x = "Cuantiles teóricos (Normal)", y = "Cuantiles empíricos (retornos estandarizados)"
+  )
+
+# Mostrar bloque de distribuciones
+print(p_ridge)
+print(p_rain)
+print(p_ecdf)
+print(p_qq)
+
+# 5) Outliers y eventos extremos -----------------------------
+# 5.1 Outliers robustos por estrategia usando MAD (más financiero que z-score)
+out_tbl &lt;- R_tbl %&gt;%
+  group_by(strategy) %&gt;%
+  mutate(
+    med = median(ret),
+    mad = mad(ret, constant = 1),  # constante 1 para escala tipo MAD cruda
+    robust_z = (ret - med) / (mad + 1e-12),
+    outlier_mad = abs(robust_z) &gt; 5
+  ) %&gt;%
+  summarise(
+    outliers = sum(outlier_mad),
+    out_rate = mean(outlier_mad),
+    worst_1 = min(ret),
+    worst_5 = quantile(ret, 0.05),
+    .groups = "drop"
+  ) %&gt;%
+  arrange(desc(out_rate))
+
+print(out_tbl)
+
+# 5.2 Peores 10 retornos por estrategia (evento-riesgo)
+worst10 &lt;- R_tbl %&gt;%
+  group_by(strategy) %&gt;%
+  slice_min(ret, n = 10, with_ties = FALSE) %&gt;%
+  ungroup()
+
+p_worst &lt;- worst10 %&gt;%
+  ggplot(aes(x = ret, y = fct_reorder(strategy, ret, .fun = min))) +
+  geom_point(alpha = 0.7) +
+  theme_minimal(base_size = 12) +
+  labs(
+    title = "Peores retornos (top 10) por estrategia",
+    subtitle = "Vista rápida del tail risk (event risk)",
+    x = "Retorno mensual", y = NULL
+  ) +
+  scale_x_continuous(labels = percent_format(accuracy = 1))
+
+print(p_worst)
+
+# 6) Dinámica temporal: vol rolling, VaR/ES rolling, drawdowns -
+# Pasar a xts para rolling fácil
+# Elegimos 3 estrategias para series temporales (ajusta si quieres)
+# 6.1 Volatilidad rolling (12 meses)
+roll_sd &lt;- zoo::rollapply(R_pick, width = 12, FUN = sd, align = "right", fill = NA)
+
+roll_sd_wide &lt;- data.frame(
+  date = as.Date(index(roll_sd)),
+  coredata(roll_sd),
+  check.names = FALSE
+)
+names(roll_sd_wide) &lt;- c("date", colnames(roll_sd))
+
+roll_sd_tbl &lt;- roll_sd_wide %&gt;%
+  pivot_longer(-date, names_to = "strategy", values_to = "roll_sd") %&gt;%
+  mutate(roll_sd = as.numeric(roll_sd)) %&gt;%
+  filter(is.finite(roll_sd))
+
+p_roll_sd &lt;- ggplot(roll_sd_tbl, aes(x = date, y = roll_sd, color = strategy)) +
+  geom_line(linewidth = 0.9) +
+  theme_minimal(base_size = 12) +
+  labs(
+    title = "Volatilidad rolling (12 meses)",
+    subtitle = "EDA temporal: cambios de régimen y clustering de volatilidad",
+    x = NULL, y = "SD rolling (retorno mensual)"
+  ) +
+  scale_y_continuous(labels = percent_format(accuracy = 1))
+
+p_roll_sd
+
+
+# 6.3 Drawdowns (EDA financiero clásico)
+# PerformanceAnalytics trae chart.Drawdown y findDrawdowns
+# (en script no guardamos el gráfico ggplot, pero lo mostramos)
+par(mfrow = c(1,1))
+charts.PerformanceSummary(R_pick, main = "Performance Summary (retorno, drawdown, riesgo)")
+
+# 7) Dependencia: Pearson/Spearman + cola ---------------------
+# 7.1 Matrices de correlación (Pearson)
+cor_p &lt;- cor(R_xts, use = "pairwise.complete.obs", method = "pearson")
+
+
+# Convertir a tidy para heatmap con ggplot
+cor_to_tbl &lt;- function(M, name = "pearson"){
+  as.data.frame(M) %&gt;%
+    rownames_to_column("A") %&gt;%
+    pivot_longer(-A, names_to = "B", values_to = "rho") %&gt;%
+    mutate(type = name)
+}
+
+cor_tbl &lt;- bind_rows(
+  cor_to_tbl(cor_p, "Pearson")
+)
+
+p_cor &lt;- cor_tbl %&gt;%
+  filter(A != B) %&gt;%
+  ggplot(aes(x = A, y = B, fill = rho)) +
+  geom_tile() +
+  facet_wrap(~type, ncol = 2) +
+  theme_minimal(base_size = 11) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  labs(
+    title = "Correlación: Pearson",
+    subtitle = "Pearson captura linealidad",
+    x = NULL, y = NULL
+  )
+
+print(p_cor)
+
+
+
+# 8) Bootstrap para KPIs + incertidumbre ----------------------
+# KPI ejemplo: media (retorno) y p5 (downside) por estrategia
+boot_ci &lt;- function(x, stat = mean, B = 3000, alpha = 0.05){
+  x &lt;- x[is.finite(x)]
+  boots &lt;- replicate(B, stat(sample(x, replace = TRUE)))
+  quantile(boots, c(alpha/2, 1 - alpha/2))
+}
+
+ci_kpi &lt;- R_tbl %&gt;%
+  group_by(strategy) %&gt;%
+  summarise(
+    mean = mean(ret),
+    lo_mean = boot_ci(ret, mean)[1],
+    hi_mean = boot_ci(ret, mean)[2],
+    p05 = quantile(ret, 0.05),
+    lo_p05 = boot_ci(ret, function(z) quantile(z, 0.05))[1],
+    hi_p05 = boot_ci(ret, function(z) quantile(z, 0.05))[2],
+    .groups = "drop"
+  ) %&gt;%
+  arrange(mean)
+
+# 8.1 Error bars (retorno promedio con IC)
+p_ci_mean &lt;- ci_kpi %&gt;%
+  ggplot(aes(x = reorder(strategy, mean), y = mean)) +
+  geom_point(size = 2) +
+  geom_errorbar(aes(ymin = lo_mean, ymax = hi_mean), width = 0.2) +
+  coord_flip() +
+  theme_minimal(base_size = 12) +
+  labs(
+    title = "KPI con incertidumbre: retorno promedio (IC bootstrap 95%)",
+    subtitle = "Decisión informada: no solo el punto, sino la precisión del KPI",
+    x = NULL, y = "Retorno promedio"
+  ) +
+  scale_y_continuous(labels = percent_format(accuracy = 1))
+
+# 8.2 Error bars (p5 con IC) — cola izquierda
+p_ci_p05 &lt;- ci_kpi %&gt;%
+  ggplot(aes(x = reorder(strategy, p05), y = p05)) +
+  geom_point(size = 2) +
+  geom_errorbar(aes(ymin = lo_p05, ymax = hi_p05), width = 0.2) +
+  coord_flip() +
+  theme_minimal(base_size = 12) +
+  labs(
+    title = "Riesgo de cola con incertidumbre: percentil 5% (IC bootstrap 95%)",
+    subtitle = "Downside robusto para comparar estrategias",
+    x = NULL, y = "p5 (retorno)"
+  ) +
+  scale_y_continuous(labels = percent_format(accuracy = 1))
+
+print(p_ci_mean)
+print(p_ci_p05)
+
+# 9) Panel final (composición pro) ----------------------------
+# Un “dashboard” estático para escoger qué se vuelve slides
+
+library(cowplot)
+
+cowplot::plot_grid(
+  p_ridge + theme(legend.position="none"),
+  p_rain  + theme(legend.position="none"),
+  p_roll_sd + theme(legend.position="none"),
+  p_ci_p05  + theme(legend.position="none"),
+  ncol = 2
+)
+```
+
+
+
+
+---
+
+
+
+# Taller 2 (20%) — Dashboard EDA financiero en Flexdashboard
+
+**Objetivo:** construir un **dashboard reproducible (Flexdashboard)** que, usando el dataset final del Taller 1, entregue un diagnóstico financiero: distribución, colas, comparaciones por grupos, dependencia y KPIs con incertidumbre. 
+
+
+
+
+
+---
+
+
+class: about-me, middle, center
+
+
+# Gracias 🙌
+## ¿Preguntas?
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script src="cols_macro.js"></script>
+<script>var slideshow = remark.create({
+"ratio": "16:9",
+"highlightStyle": "github",
+"highlightLines": true,
+"highlightLanguage": ["r", "css", "yaml"],
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
