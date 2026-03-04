@@ -1,0 +1,7 @@
+\babel@toc {spanish}{}
+\beamer@sectionintoc {1}{Introducción}{3}{0}{1}
+\beamer@sectionintoc {2}{Métodos}{8}{0}{2}
+\beamer@subsectionintoc {2}{1}{Método gaussiano}{9}{0}{2}
+\beamer@subsectionintoc {2}{2}{Histórico}{12}{0}{2}
+\beamer@subsectionintoc {2}{3}{Simulación de Montecarlo}{13}{0}{2}
+\beamer@sectionintoc {3}{Expected Shortfall}{14}{0}{3}

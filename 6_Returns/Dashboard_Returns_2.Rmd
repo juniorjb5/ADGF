@@ -1,0 +1,229 @@
+---
+title: "Ejemplo 2"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: rows
+    vertical_layout: fill
+runtime: shiny
+---
+
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library(shiny)
+library(tidyverse)
+library(highcharter)
+library(plotly)
+library(timetk)
+library(tidyquant)
+library(scales)
+library(reshape2)
+library(ggplot2)
+library(plotly)
+library(quantmod)
+library(timeSeries)
+library(fPortfolio)
+library(caTools)
+
+```
+
+
+Sidebar {.sidebar}
+=====================================
+
+```{r}
+#checkboxGroupInput("checkGroup", label = h3("Checkbox group"), 
+#    choices = list("BKNG" = "BKNG", "META" = "META", "MELI" = "MELI"),
+#    selected = "BKNG")
+
+##checkboxInput("widget66", label = "INTC", value = TRUE)
+
+
+textInput("widget6", "Stock 1", "INTC")
+sliderInput("peso1", label="%", value=20, min = 0, max = 100, step = 1)
+textInput("widget6.1", "Stock 2", "BKNG")
+sliderInput("peso2", label= "% ", value=20, min = 0, max = 100, step = 1)
+textInput("widget6.2", "Stock 3", "META")
+sliderInput("peso3", label= "% ", value=20, min = 0, max = 100, step = 1)
+textInput("widget6.3", "Stock 4", "MELI")
+sliderInput("peso4", label= "% ", value=20, min = 0, max = 100, step = 1)
+textInput("widget6.4", "Stock 5", "EBAY")
+sliderInput("peso5", label= "% ", value=20, min = 0, max = 100, step = 1)
+
+dateRangeInput("dates", label = "Seleccione la fecha",
+               start="2010-01-01", end ="2022-10-31")
+
+
+####### Reactivos
+
+Stock_Ind<- reactive({
+  
+prices <- getSymbols(c(input$widget6, input$widget6.1,input$widget6.2,input$widget6.3,input$widget6.4), src = "yahoo",
+               from = input$dates[1],
+               to = input$dates[2],
+               auto.assign = TRUE,
+               warnings = FALSE) %>% 
+  map(~Ad(get(.))) %>% 
+  reduce(merge) %>%
+    `colnames<-`(c(input$widget6,input$widget6.1,input$widget6.2,input$widget6.3,input$widget6.4))
+
+})
+
+
+
+retornos <- reactive({ 
+  Return.calculate(Stock_Ind(),
+                   method = "log") %>%
+  na.omit()
+})
+
+
+pesos<- reactive({
+c(input$peso1,input$peso2,input$peso3,input$peso4,input$peso5)/100
+})
+
+
+
+asset_returns_long<- reactive({
+  retornos() %>%
+  tk_tbl(preserve_index = TRUE, # convierte de xts a formato tibble, preservando el índice y nombrándolo como "date"
+           rename_index = "date") %>%
+  gather(asset, returns, -date) %>% #aquí lo pasa a formato long, y lo agrupa por activo
+  group_by(asset)
+})
+
+
+portfolio_returns_xts <-reactive({
+  Return.portfolio(retornos(),
+                   weights = pesos()) %>%
+  `colnames<-`("returns")
+  })
+
+
+
+```
+
+
+
+
+
+Precios de acciones
+=======================================================================
+
+### Boxplot | Precios acciones
+
+```{r}
+
+
+Stock_Ind2<- reactive({
+
+DatosPre_<-as.data.frame(Stock_Ind())
+VarLong <- names(DatosPre_)
+
+Datos2<-DatosPre_ %>%  gather(VarLong, key = variable, value = index) 
+
+})
+
+
+renderPlotly({
+
+Stock_Ind2()  %>% 
+  plot_ly(y = ~index, color = ~variable, type = "box", colors = "viridis")
+})
+  
+
+
+
+```
+
+
+###  Serie | Precios acciones
+```{r}
+
+renderHighchart({
+  library(viridisLite)
+  cols <- viridis(5)
+##cols <- substr(cols, 0, 7)
+
+  highchart(type = "stock") %>%
+    hc_title(text = "") %>%
+    hc_add_series(Stock_Ind()[,1],
+                  name = input$widget6) %>%
+    hc_add_series(Stock_Ind()[,2],
+                  name = input$widget6.1) %>%
+    hc_add_series(Stock_Ind()[,3],
+                  name = input$widget6.2) %>%
+    hc_add_series(Stock_Ind()[,4],
+                  name = input$widget6.3) %>%
+    hc_add_series(Stock_Ind()[,5],
+                  name = input$widget6.4) %>%
+    hc_add_theme(hc_theme_elementary()) %>%
+    hc_navigator(enabled = FALSE) %>%
+    hc_scrollbar(enabled = FALSE) %>%
+    hc_exporting(enabled = TRUE) %>%
+    hc_legend(enabled = TRUE) %>%
+    hc_colors(cols)
+})
+  
+```
+
+
+Retornos de acciones
+=======================================================================
+
+
+
+### Densidad | Retornos acciones
+
+
+```{r}
+
+
+renderPlotly({
+  
+library(viridis)
+  
+p<-asset_returns_long() %>%
+  ggplot(aes(x = returns, colour = asset)) +
+  geom_density(alpha = 1) +
+  ggtitle("") +
+  xlab("retornos mensuales") +
+  ylab("distribución") +
+  scale_color_viridis(discrete=TRUE) +
+  theme_update(plot.title = element_text(hjust = 0.5))+ 
+  theme_light()
+
+ggplotly(p)
+})
+
+```
+
+
+Portafolio
+=====================================
+
+row
+-------------------------------------
+
+### Retornos del Portafolio
+```{r}
+
+renderHighchart(
+ highchart(type = "stock") %>%
+  hc_title(text = "") %>%
+  hc_add_series(portfolio_returns_xts()$returns,
+                name = "Portfolio returns",
+                color ="#3B528BFF")%>% ##"cornflowerblue") %>%
+  hc_add_theme(hc_theme_elementary()) %>%
+  hc_navigator(enabled = FALSE) %>%
+  hc_scrollbar(enabled = FALSE) %>%
+  hc_legend(enabled = TRUE) %>%
+  hc_exporting(enabled = TRUE)
+)
+
+
+
+```
+
+
+

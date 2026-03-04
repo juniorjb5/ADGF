@@ -1,0 +1,450 @@
+---
+title: "Analítica en la Gestión Financiera"
+subtitle: "<br/> FlexDashboard"
+author: "Orlando Joaqui-Barandica, PhD."
+institute: "Universidad del Valle"
+date: " "
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    css: 
+      - default
+      - rladies
+      - rladies-fonts
+      - fonts_mtheme.css
+      - cols.css
+    seal: false  
+    nature:
+      beforeInit: "cols_macro.js"
+      ratio: 16:9
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+
+---
+
+
+```{r setup, include = FALSE}
+library(knitr)                              # paquete que trae funciones utiles para R Markdown
+library(tidyverse)                          # paquete que trae varios paquetes comunes en el tidyverse
+library(datos)                              # paquete que viene con datos populares traducidos al español :)
+library(shiny)
+# opciones predeterminadas
+knitr::opts_chunk$set(echo = FALSE,         # FALSE: los bloques de código NO se muestran
+                      dpi = 300,            # asegura gráficos de alta resolución
+                      warning = FALSE,      # los mensajes de advertencia NO se muestran
+                      error = FALSE)        # los mensajes de error NO se muestran
+
+
+options(htmltools.dir.version = FALSE)
+
+
+xaringanExtra::use_share_again()
+xaringanExtra::use_clipboard()
+xaringanExtra::use_panelset()
+
+```
+
+
+
+
+
+class: inverse, left, bottom
+background-image: url("img/fondo.jpg")
+background-size: cover
+
+# **`r rmarkdown::metadata$title`**
+----
+
+## **`r rmarkdown::metadata$subtitle`**
+
+### `r rmarkdown::metadata$author`
+### `r rmarkdown::metadata$date`
+
+---
+
+class: center, middle
+
+```{r, echo=FALSE, fig.align="center", out.width="20%"}
+knitr::include_graphics("img/univalle.jpg")
+```
+
+---
+
+class: center, middle
+
+.center[
+
+<br>
+
+<a href="https://www.joaquibarandica.com" target="_blank">
+  <img src="img/avatar.png"
+       style="border-radius: 80%; width: 220px; max-width: 30%; height: auto;"
+       alt="Avatar"/>
+</a>
+
+## Orlando Joaqui-Barandica
+
+Doctor en Ingeniería, Enf. Ingeniería Industrial **|** Magíster en Economía Aplicada **|** Estadístico.
+
+`r anicon::faa("envelope", animate = "passing")` orlando.joaqui@correounivalle.edu.co 
+]
+
+.center[
+### [www.joaquibarandica.com](https://www.joaquibarandica.com)
+]
+
+
+---
+
+
+class: center, middle, inverse
+
+# Shiny dentro de Flexdashboard
+## Cómo pensar la estructura reactiva
+
+---
+
+## Objetivo de la sesión
+
+- Entender **cómo se “enciende” Shiny** dentro de un flexdashboard
+- Separar claramente:
+  - **Inputs** (controles)
+  - **Reactives** (datos/objetos derivados)
+  - **Outputs** (plots, tablas, KPIs)
+- Buenas prácticas mínimas para que todo sea **estable y legible**
+
+---
+
+## Arquitectura mental (muy simple)
+
+.center[
+**input** ➜ **reactive()** ➜ **render***() ➜ **UI/Output**
+]
+
+- `input$...` = valores que cambian (usuario)
+- `reactive()` = “fábrica” que recalcula solo cuando toca
+- `renderPlot()/renderDT()/renderValueBox()` = outputs que se pintan
+- `req()` = frena si falta algo (evita errores feos)
+
+---
+
+## Flexdashboard + Shiny: lo mínimo en el YAML
+
+Para que un `.Rmd` sea un dashboard **y** sea reactivo:
+
+```yaml
+---
+output:
+  flexdashboard::flex_dashboard:
+    orientation: rows
+    vertical_layout: fill
+runtime: shiny
+---
+```
+
+- `runtime: shiny` convierte el documento en una app Shiny “embebida”
+- Todo lo que hagas con `selectInput()`, `reactive()`, `renderPlot()` funciona igual que en `server.R`
+
+---
+
+## Layout de flexdashboard: cómo se organiza
+
+En flexdashboard, el “UI” es el documento:
+
+- `Sidebar {.sidebar}` = zona natural para **inputs**
+- `Row` / `Column` = contenedores de outputs (KPIs, gráficos, tablas)
+- Cada chunk con `renderPlot()` o `valueBox(renderValueBox())` es un **output**
+
+Ejemplo de estructura:
+
+```markdown
+Sidebar {.sidebar}
+Row
+### KPI
+Row
+### Plot
+### Plot
+Row
+### Tabla
+```
+
+---
+
+## 1) Inputs: dónde van y cómo se leen
+
+**Inputs** suelen ir en `Sidebar`:
+
+```r
+selectInput("activo", "Activo", choices = c("A","B","C"))
+dateRangeInput("rango", "Fechas", start = ..., end = ...)
+sliderInput("window", "Ventana", min = 10, max = 90, value = 30)
+```
+
+Y se usan así:
+
+```r
+input$activo
+input$rango
+input$window
+```
+
+**Regla:** si algo depende del usuario, sale de `input$...`.
+
+---
+
+## 2) El corazón: un reactive() “maestro” (recomendado)
+
+Casi siempre conviene tener **un** `reactive()` que filtre y prepare datos.
+
+```r
+df_filtrado <- reactive({
+  req(input$activo, input$rango)
+  df |>
+    dplyr::filter(activo == input$activo,
+                  fecha >= input$rango[1],
+                  fecha <= input$rango[2]) |>
+    dplyr::arrange(fecha)
+})
+```
+
+req() es como un “freno de seguridad” en Shiny.
+
+- Qué hace: si lo que le pasas a req(...) está vacío/NULL/NO disponible, detiene ahí mismo ese reactive (o ese output) y no sigue ejecutando el resto del código.
+
+- Para qué sirve: evita que Shiny intente correr filter(...) cuando input$activo o input$rango todavía no existen (por ejemplo, al cargar el dashboard) y te saque errores tipo “argument is of length zero” o “object not found”.
+
+- Cuándo se vuelve a ejecutar: apenas esos inputs ya tengan valor (por selección del usuario o valores por defecto), Shiny “quita el freno” y recalcula normalmente.
+
+---
+
+## `req()` y validación mínima (evita errores)
+
+- `req(condición)` detiene el output si no se cumple
+- Útil para:
+  - inputs nulos
+  - rangos sin datos
+  - ventanas rolling demasiado grandes
+
+Ejemplos:
+
+```r
+req(nrow(df_filtrado()) > 30)
+req(!all(is.na(df_filtrado()$ret_pct)))
+```
+
+- Exige que el dataset filtrado tenga más de 30 filas. Si tiene 30 o menos, Shiny no sigue (se “pausa” ese output/reactive). Esto evita errores típicos cuando vas a calcular cosas que necesitan “suficientes datos” (p. ej., una ventana rolling de 30 días, o estimaciones que con pocos puntos son inestables).
+
+
+- Exige que NO sean todos NA los retornos ret_pct.
+all(is.na(...)) sería TRUE si todo es NA; el ! lo invierte: pide que exista al menos un valor no-NA. Si todo es NA, se detiene y evitas que fallen histogramas, quantiles (VaR), medias, desviaciones, etc.
+
+
+---
+
+## 3) Reactives derivados: KPIs / features
+
+A partir del `df_filtrado()` creas objetos más específicos:
+
+```r
+kpis <- reactive({
+  d <- df_filtrado()
+  d <- d |> dplyr::filter(!is.na(ret_pct))
+  req(nrow(d) > 10)
+
+  ret_total <- (dplyr::last(d$precio) / dplyr::first(d$precio)) - 1
+  vol_anual <- stats::sd(d$ret_pct, na.rm = TRUE) * sqrt(252) / 100
+
+  list(ret_total = ret_total, vol_anual = vol_anual)
+})
+```
+
+**Idea:** reactives como “cajitas” reutilizables.
+
+---
+
+## 4) Outputs: siempre render*()
+
+Los outputs se generan con `render...()`:
+
+- `renderPlot({ ... })`
+- `renderDT({ ... })`
+- `renderPrint({ ... })`
+- `renderValueBox({ ... })` (flexdashboard)
+
+Ejemplo:
+
+```r
+renderPlot({
+  d <- df_filtrado()
+  req(nrow(d) > input$window)
+  ggplot2::ggplot(d, ggplot2::aes(fecha, precio)) +
+    ggplot2::geom_line()
+})
+```
+
+---
+
+## ValueBox: KPI bonito (flexdashboard)
+
+```r
+valueBox(
+  renderValueBox({
+    k <- kpis()
+    valueBox(
+      value   = scales::percent(k$ret_total, accuracy = 0.1),
+      caption = "Retorno total",
+      icon    = "fa-chart-line"
+    )
+  })
+)
+```
+
+- `valueBox()` es el contenedor
+- `renderValueBox()` es el motor reactivo
+- Dentro, usa `kpis()` (reactive) para obtener valores
+
+---
+
+## Render de tabla DT (patrón limpio)
+
+En flexdashboard puedes mostrar/ocultar con `renderUI()`:
+
+```r
+renderUI({
+  if (!isTRUE(input$mostrar_tabla)) return(NULL)
+  DT::DTOutput("tabla")
+})
+
+output$tabla <- DT::renderDT({
+  d <- df_filtrado()
+  DT::datatable(d, options = list(pageLength = 10))
+})
+```
+
+**Notas:**
+- `DTOutput("tabla")` define un espacio
+- `output$tabla <- renderDT()` lo llena
+
+---
+
+## Mini-módulo Shiny dentro del body (inputs + outputs)
+
+Puedes poner inputs fuera del sidebar, por ejemplo en una fila:
+
+```r
+numericInput("alpha", "Nivel VaR", value = 0.05, min = 0.001, max = 0.2)
+numericInput("monto", "Exposición", value = 100000000, min = 1000000)
+
+renderPrint({
+  d <- df_filtrado() |> dplyr::filter(!is.na(ret_pct))
+  req(nrow(d) > 50)
+  var_pct <- as.numeric(stats::quantile(d$ret_pct/100, probs = input$alpha, na.rm = TRUE))
+  var_cop <- -var_pct * input$monto
+  cat("VaR (COP):", format(round(var_cop, 0), big.mark = ","))
+})
+```
+
+---
+
+## Patrón recomendado para flujo de chunks
+
+1. **setup**: paquetes + datos
+2. **Sidebar**: inputs
+3. `df_filtrado <- reactive({ ... })`
+4. `kpis <- reactive({ ... })`
+5. Outputs:
+   - KPIs (valueBox)
+   - Gráficos (renderPlot)
+   - Tabla (renderDT)
+   - Bloque “mini Shiny” (inputs + renderPrint)
+
+
+
+---
+
+
+## Checklist de “dashboard sano”
+
+- [ ] YAML tiene `runtime: shiny`
+- [ ] Inputs en sidebar (o en secciones claras)
+- [ ] 1 `reactive()` maestro para datos
+- [ ] KPIs/features en reactives derivados
+- [ ] Outputs solo con `render*()`
+- [ ] `req()` en puntos críticos
+- [ ] Código legible (nombres claros, pocos side-effects)
+
+---
+
+
+
+
+
+
+
+class: inverse, center, middle
+background-color: #122140
+
+
+
+
+.pull-left[
+
+.center[
+<br><br>
+
+# Gracias!!!
+
+<br><br><br><br><br>
+
+
+
+### Preguntas?
+]
+
+
+]
+
+
+.pull-right[
+
+
+.center[
+
+<br><br><br>
+
+
+.center[
+<img style="border-radius: 50%;" src="img/avatar.png"
+width="100px" href="https://www.joaquibarandica.com"
+/>
+
+`r anicon::faa("envelope", animate = "passing")` orlando.joaqui@correounivalle.edu.co 
+]
+
+
+```{r qr, echo=FALSE, fig.align="center", out.width="50%"}
+knitr::include_graphics("img/qr-code.png")
+```
+
+
+.center[
+www.joaquibarandica.com
+]
+
+
+
+]
+
+
+]
+
+
+<br><br><br>
+
+----
+
+*The images used to set the presentation are from [pixabay](https://pixabay.com/).*
+
+
+

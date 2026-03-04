@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Analítica en la Gestión Financiera</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Orlando Joaqui-Barandica, PhD." />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link href="libs/remark-css/rladies.css" rel="stylesheet" />
+    <link href="libs/remark-css/rladies-fonts.css" rel="stylesheet" />
+    <script src="libs/clipboard/clipboard.min.js"></script>
+    <link href="libs/shareon/shareon.min.css" rel="stylesheet" />
+    <script src="libs/shareon/shareon.min.js"></script>
+    <link href="libs/xaringanExtra-shareagain/shareagain.css" rel="stylesheet" />
+    <script src="libs/xaringanExtra-shareagain/shareagain.js"></script>
+    <link href="libs/xaringanExtra-clipboard/xaringanExtra-clipboard.css" rel="stylesheet" />
+    <script src="libs/xaringanExtra-clipboard/xaringanExtra-clipboard.js"></script>
+    <script>window.xaringanExtraClipboard(null, {"button":"Copy Code","success":"Copied!","error":"Press Ctrl+C to Copy"})</script>
+    <link href="libs/panelset/panelset.css" rel="stylesheet" />
+    <script src="libs/panelset/panelset.js"></script>
+    <link href="libs/font-awesome-animation/font-awesome-animation-emi.css" rel="stylesheet" />
+    <script src="libs/fontawesome/js/fontawesome-all.min.js"></script>
+    <link rel="stylesheet" href="fonts_mtheme.css" type="text/css" />
+    <link rel="stylesheet" href="cols.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+
+
+
+
+
+
+
+
+
+class: inverse, left, bottom
+background-image: url("img/fondo.jpg")
+background-size: cover
+
+# **Analítica en la Gestión Financiera**
+----
+
+## **&lt;br/&gt; FlexDashboard**
+
+### Orlando Joaqui-Barandica, PhD.
+###  
+
+---
+
+class: center, middle
+
+&lt;img src="img/univalle.jpg" width="20%" style="display: block; margin: auto;" /&gt;
+
+---
+
+class: center, middle
+
+.center[
+
+&lt;br&gt;
+
+&lt;a href="https://www.joaquibarandica.com" target="_blank"&gt;
+  &lt;img src="img/avatar.png"
+       style="border-radius: 80%; width: 220px; max-width: 30%; height: auto;"
+       alt="Avatar"/&gt;
+&lt;/a&gt;
+
+## Orlando Joaqui-Barandica
+
+Doctor en Ingeniería, Enf. Ingeniería Industrial **|** Magíster en Economía Aplicada **|** Estadístico.
+
+<span>&lt;i class="fas  fa-envelope faa-passing animated "&gt;&lt;/i&gt;</span> orlando.joaqui@correounivalle.edu.co 
+]
+
+.center[
+### [www.joaquibarandica.com](https://www.joaquibarandica.com)
+]
+
+
+---
+
+
+class: center, middle, inverse
+
+# Shiny dentro de Flexdashboard
+## Cómo pensar la estructura reactiva
+
+---
+
+## Objetivo de la sesión
+
+- Entender **cómo se “enciende” Shiny** dentro de un flexdashboard
+- Separar claramente:
+  - **Inputs** (controles)
+  - **Reactives** (datos/objetos derivados)
+  - **Outputs** (plots, tablas, KPIs)
+- Buenas prácticas mínimas para que todo sea **estable y legible**
+
+---
+
+## Arquitectura mental (muy simple)
+
+.center[
+**input** ➜ **reactive()** ➜ **render***() ➜ **UI/Output**
+]
+
+- `input$...` = valores que cambian (usuario)
+- `reactive()` = “fábrica” que recalcula solo cuando toca
+- `renderPlot()/renderDT()/renderValueBox()` = outputs que se pintan
+- `req()` = frena si falta algo (evita errores feos)
+
+---
+
+## Flexdashboard + Shiny: lo mínimo en el YAML
+
+Para que un `.Rmd` sea un dashboard **y** sea reactivo:
+
+```yaml
+---
+output:
+  flexdashboard::flex_dashboard:
+    orientation: rows
+    vertical_layout: fill
+runtime: shiny
+---
+```
+
+- `runtime: shiny` convierte el documento en una app Shiny “embebida”
+- Todo lo que hagas con `selectInput()`, `reactive()`, `renderPlot()` funciona igual que en `server.R`
+
+---
+
+## Layout de flexdashboard: cómo se organiza
+
+En flexdashboard, el “UI” es el documento:
+
+- `Sidebar {.sidebar}` = zona natural para **inputs**
+- `Row` / `Column` = contenedores de outputs (KPIs, gráficos, tablas)
+- Cada chunk con `renderPlot()` o `valueBox(renderValueBox())` es un **output**
+
+Ejemplo de estructura:
+
+```markdown
+Sidebar {.sidebar}
+Row
+### KPI
+Row
+### Plot
+### Plot
+Row
+### Tabla
+```
+
+---
+
+## 1) Inputs: dónde van y cómo se leen
+
+**Inputs** suelen ir en `Sidebar`:
+
+```r
+selectInput("activo", "Activo", choices = c("A","B","C"))
+dateRangeInput("rango", "Fechas", start = ..., end = ...)
+sliderInput("window", "Ventana", min = 10, max = 90, value = 30)
+```
+
+Y se usan así:
+
+```r
+input$activo
+input$rango
+input$window
+```
+
+**Regla:** si algo depende del usuario, sale de `input$...`.
+
+---
+
+## 2) El corazón: un reactive() “maestro” (recomendado)
+
+Casi siempre conviene tener **un** `reactive()` que filtre y prepare datos.
+
+```r
+df_filtrado &lt;- reactive({
+  req(input$activo, input$rango)
+  df |&gt;
+    dplyr::filter(activo == input$activo,
+                  fecha &gt;= input$rango[1],
+                  fecha &lt;= input$rango[2]) |&gt;
+    dplyr::arrange(fecha)
+})
+```
+
+req() es como un “freno de seguridad” en Shiny.
+
+- Qué hace: si lo que le pasas a req(...) está vacío/NULL/NO disponible, detiene ahí mismo ese reactive (o ese output) y no sigue ejecutando el resto del código.
+
+- Para qué sirve: evita que Shiny intente correr filter(...) cuando input$activo o input$rango todavía no existen (por ejemplo, al cargar el dashboard) y te saque errores tipo “argument is of length zero” o “object not found”.
+
+- Cuándo se vuelve a ejecutar: apenas esos inputs ya tengan valor (por selección del usuario o valores por defecto), Shiny “quita el freno” y recalcula normalmente.
+
+---
+
+## `req()` y validación mínima (evita errores)
+
+- `req(condición)` detiene el output si no se cumple
+- Útil para:
+  - inputs nulos
+  - rangos sin datos
+  - ventanas rolling demasiado grandes
+
+Ejemplos:
+
+```r
+req(nrow(df_filtrado()) &gt; 30)
+req(!all(is.na(df_filtrado()$ret_pct)))
+```
+
+- Exige que el dataset filtrado tenga más de 30 filas. Si tiene 30 o menos, Shiny no sigue (se “pausa” ese output/reactive). Esto evita errores típicos cuando vas a calcular cosas que necesitan “suficientes datos” (p. ej., una ventana rolling de 30 días, o estimaciones que con pocos puntos son inestables).
+
+
+- Exige que NO sean todos NA los retornos ret_pct.
+all(is.na(...)) sería TRUE si todo es NA; el ! lo invierte: pide que exista al menos un valor no-NA. Si todo es NA, se detiene y evitas que fallen histogramas, quantiles (VaR), medias, desviaciones, etc.
+
+
+---
+
+## 3) Reactives derivados: KPIs / features
+
+A partir del `df_filtrado()` creas objetos más específicos:
+
+```r
+kpis &lt;- reactive({
+  d &lt;- df_filtrado()
+  d &lt;- d |&gt; dplyr::filter(!is.na(ret_pct))
+  req(nrow(d) &gt; 10)
+
+  ret_total &lt;- (dplyr::last(d$precio) / dplyr::first(d$precio)) - 1
+  vol_anual &lt;- stats::sd(d$ret_pct, na.rm = TRUE) * sqrt(252) / 100
+
+  list(ret_total = ret_total, vol_anual = vol_anual)
+})
+```
+
+**Idea:** reactives como “cajitas” reutilizables.
+
+---
+
+## 4) Outputs: siempre render*()
+
+Los outputs se generan con `render...()`:
+
+- `renderPlot({ ... })`
+- `renderDT({ ... })`
+- `renderPrint({ ... })`
+- `renderValueBox({ ... })` (flexdashboard)
+
+Ejemplo:
+
+```r
+renderPlot({
+  d &lt;- df_filtrado()
+  req(nrow(d) &gt; input$window)
+  ggplot2::ggplot(d, ggplot2::aes(fecha, precio)) +
+    ggplot2::geom_line()
+})
+```
+
+---
+
+## ValueBox: KPI bonito (flexdashboard)
+
+```r
+valueBox(
+  renderValueBox({
+    k &lt;- kpis()
+    valueBox(
+      value   = scales::percent(k$ret_total, accuracy = 0.1),
+      caption = "Retorno total",
+      icon    = "fa-chart-line"
+    )
+  })
+)
+```
+
+- `valueBox()` es el contenedor
+- `renderValueBox()` es el motor reactivo
+- Dentro, usa `kpis()` (reactive) para obtener valores
+
+---
+
+## Render de tabla DT (patrón limpio)
+
+En flexdashboard puedes mostrar/ocultar con `renderUI()`:
+
+```r
+renderUI({
+  if (!isTRUE(input$mostrar_tabla)) return(NULL)
+  DT::DTOutput("tabla")
+})
+
+output$tabla &lt;- DT::renderDT({
+  d &lt;- df_filtrado()
+  DT::datatable(d, options = list(pageLength = 10))
+})
+```
+
+**Notas:**
+- `DTOutput("tabla")` define un espacio
+- `output$tabla &lt;- renderDT()` lo llena
+
+---
+
+## Mini-módulo Shiny dentro del body (inputs + outputs)
+
+Puedes poner inputs fuera del sidebar, por ejemplo en una fila:
+
+```r
+numericInput("alpha", "Nivel VaR", value = 0.05, min = 0.001, max = 0.2)
+numericInput("monto", "Exposición", value = 100000000, min = 1000000)
+
+renderPrint({
+  d &lt;- df_filtrado() |&gt; dplyr::filter(!is.na(ret_pct))
+  req(nrow(d) &gt; 50)
+  var_pct &lt;- as.numeric(stats::quantile(d$ret_pct/100, probs = input$alpha, na.rm = TRUE))
+  var_cop &lt;- -var_pct * input$monto
+  cat("VaR (COP):", format(round(var_cop, 0), big.mark = ","))
+})
+```
+
+---
+
+## Patrón recomendado para flujo de chunks
+
+1. **setup**: paquetes + datos
+2. **Sidebar**: inputs
+3. `df_filtrado &lt;- reactive({ ... })`
+4. `kpis &lt;- reactive({ ... })`
+5. Outputs:
+   - KPIs (valueBox)
+   - Gráficos (renderPlot)
+   - Tabla (renderDT)
+   - Bloque “mini Shiny” (inputs + renderPrint)
+
+
+
+---
+
+
+## Checklist de “dashboard sano”
+
+- [ ] YAML tiene `runtime: shiny`
+- [ ] Inputs en sidebar (o en secciones claras)
+- [ ] 1 `reactive()` maestro para datos
+- [ ] KPIs/features en reactives derivados
+- [ ] Outputs solo con `render*()`
+- [ ] `req()` en puntos críticos
+- [ ] Código legible (nombres claros, pocos side-effects)
+
+---
+
+
+
+
+
+
+
+class: inverse, center, middle
+background-color: #122140
+
+
+
+
+.pull-left[
+
+.center[
+&lt;br&gt;&lt;br&gt;
+
+# Gracias!!!
+
+&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;
+
+
+
+### Preguntas?
+]
+
+
+]
+
+
+.pull-right[
+
+
+.center[
+
+&lt;br&gt;&lt;br&gt;&lt;br&gt;
+
+
+.center[
+&lt;img style="border-radius: 50%;" src="img/avatar.png"
+width="100px" href="https://www.joaquibarandica.com"
+/&gt;
+
+<span>&lt;i class="fas  fa-envelope faa-passing animated "&gt;&lt;/i&gt;</span> orlando.joaqui@correounivalle.edu.co 
+]
+
+
+&lt;img src="img/qr-code.png" width="50%" style="display: block; margin: auto;" /&gt;
+
+
+.center[
+www.joaquibarandica.com
+]
+
+
+
+]
+
+
+]
+
+
+&lt;br&gt;&lt;br&gt;&lt;br&gt;
+
+----
+
+*The images used to set the presentation are from [pixabay](https://pixabay.com/).*
+
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script src="cols_macro.js"></script>
+<script>var slideshow = remark.create({
+"ratio": "16:9",
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

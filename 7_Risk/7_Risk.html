@@ -1,0 +1,2208 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Risk</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="PhD.(C). Orlando Joaqui-Barandica" />
+    <meta name="date" content="2022-01-01" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link href="libs/remark-css/rladies.css" rel="stylesheet" />
+    <link href="libs/remark-css/rladies-fonts.css" rel="stylesheet" />
+    <script src="libs/htmlwidgets/htmlwidgets.js"></script>
+    <script src="libs/jquery/jquery.min.js"></script>
+    <script src="libs/proj4js/proj4.js"></script>
+    <link href="libs/highcharts/css/motion.css" rel="stylesheet" />
+    <script src="libs/highcharts/highcharts.js"></script>
+    <script src="libs/highcharts/highcharts-3d.js"></script>
+    <script src="libs/highcharts/highcharts-more.js"></script>
+    <script src="libs/highcharts/modules/stock.js"></script>
+    <script src="libs/highcharts/modules/map.js"></script>
+    <script src="libs/highcharts/modules/data.js"></script>
+    <script src="libs/highcharts/modules/exporting.js"></script>
+    <script src="libs/highcharts/modules/offline-exporting.js"></script>
+    <script src="libs/highcharts/modules/drilldown.js"></script>
+    <script src="libs/highcharts/modules/item-series.js"></script>
+    <script src="libs/highcharts/modules/overlapping-datalabels.js"></script>
+    <script src="libs/highcharts/modules/annotations.js"></script>
+    <script src="libs/highcharts/modules/export-data.js"></script>
+    <script src="libs/highcharts/modules/funnel.js"></script>
+    <script src="libs/highcharts/modules/heatmap.js"></script>
+    <script src="libs/highcharts/modules/treemap.js"></script>
+    <script src="libs/highcharts/modules/sankey.js"></script>
+    <script src="libs/highcharts/modules/dependency-wheel.js"></script>
+    <script src="libs/highcharts/modules/organization.js"></script>
+    <script src="libs/highcharts/modules/solid-gauge.js"></script>
+    <script src="libs/highcharts/modules/streamgraph.js"></script>
+    <script src="libs/highcharts/modules/sunburst.js"></script>
+    <script src="libs/highcharts/modules/vector.js"></script>
+    <script src="libs/highcharts/modules/wordcloud.js"></script>
+    <script src="libs/highcharts/modules/xrange.js"></script>
+    <script src="libs/highcharts/modules/tilemap.js"></script>
+    <script src="libs/highcharts/modules/venn.js"></script>
+    <script src="libs/highcharts/modules/gantt.js"></script>
+    <script src="libs/highcharts/modules/timeline.js"></script>
+    <script src="libs/highcharts/modules/parallel-coordinates.js"></script>
+    <script src="libs/highcharts/modules/bullet.js"></script>
+    <script src="libs/highcharts/modules/coloraxis.js"></script>
+    <script src="libs/highcharts/modules/dumbbell.js"></script>
+    <script src="libs/highcharts/modules/lollipop.js"></script>
+    <script src="libs/highcharts/modules/series-label.js"></script>
+    <script src="libs/highcharts/plugins/motion.js"></script>
+    <script src="libs/highcharts/custom/reset.js"></script>
+    <script src="libs/highcharts/modules/boost.js"></script>
+    <script src="libs/highchart-binding/highchart.js"></script>
+    <script src="libs/clipboard/clipboard.min.js"></script>
+    <link href="libs/shareon/shareon.min.css" rel="stylesheet" />
+    <script src="libs/shareon/shareon.min.js"></script>
+    <link href="libs/xaringanExtra-shareagain/shareagain.css" rel="stylesheet" />
+    <script src="libs/xaringanExtra-shareagain/shareagain.js"></script>
+    <link href="libs/xaringanExtra-clipboard/xaringanExtra-clipboard.css" rel="stylesheet" />
+    <script src="libs/xaringanExtra-clipboard/xaringanExtra-clipboard.js"></script>
+    <script>window.xaringanExtraClipboard(null, {"button":"Copy Code","success":"Copied!","error":"Press Ctrl+C to Copy"})</script>
+    <link href="libs/font-awesome/css/all.min.css" rel="stylesheet" />
+    <link href="libs/font-awesome/css/v4-shims.min.css" rel="stylesheet" />
+    <link href="libs/font-awesome-animation/font-awesome-animation-emi.css" rel="stylesheet" />
+    <script src="libs/fontawesome/js/fontawesome-all.min.js"></script>
+    <link rel="stylesheet" href="sydney.css" type="text/css" />
+    <link rel="stylesheet" href="fonts_mtheme.css" type="text/css" />
+    <link rel="stylesheet" href="cols.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+
+
+
+
+
+
+class: left, bottom
+background-image: url("img/back1.jpg")
+background-size: cover
+
+
+# **Risk**
+----
+
+## **Universidad del Valle - Escuela Ingeniería Industrial**
+
+### PhD.(C). Orlando Joaqui-Barandica
+### 2022
+
+
+
+
+
+---
+name: hola
+class: inverse, middle, center
+background-color: #E31D1D
+
+&lt;img style="border-radius: 50%;" src="img/uv3.jpg"
+width="150px"
+/&gt;
+
+# Universidad del Valle
+
+--
+
+## Maestría en Análitica e Inteligencia de Negocios
+---
+
+
+
+
+
+&lt;br&gt;&lt;br&gt;
+
+.center[
+&lt;img style="border-radius: 50%;" src="img/avatar.png"
+width="160px" href="https://www.joaquibarandica.com"
+/&gt;
+
+[PhD.(C) Orlando Joaqui-Barandica](https://www.joaquibarandica.com) &lt;br/&gt;
+Universidad del Valle
+]
+
+&lt;br&gt;
+
+
+
+.center[
+
+*PhD.(C) Ingeniería con enfásis en Ingeniería Industrial* 
+ 
+*MSc. Economía Aplicada*
+ 
+*Estadístico*
+
+&lt;br&gt;
+
+<i class="fas  fa-link fa-spin "></i> [www.joaquibarandica.com](https://www.joaquibarandica.com)
+
+]
+
+
+
+
+
+---
+
+class: center, middle
+
+&lt;img src="img/gifinc.jpg" width="50%"/&gt;
+
+### [https://gifinc.univalle.edu.co/](https://gifinc.univalle.edu.co/)
+
+
+
+
+---
+
+name: menu
+background-image: url("img/back2.jpg")
+background-size: cover
+class: left, middle
+
+
+# Contenido
+
+----
+
+
+.pull-left[
+### <i class="fa fa-upload" role="presentation" aria-label="upload icon"></i> [Desviación Estándar](#sd)
+* xts
+* tidyverse
+
+
+### <i class="fa fa-broom" role="presentation" aria-label="broom icon"></i> [Asimetría](#sk)
+* xts
+* tidyverse
+
+
+]
+
+
+.pull-right[
+
+### <i class="fa fa-cubes" role="presentation" aria-label="cubes icon"></i> [Curtosis](#kurto)
+* xts
+* tidyverse
+
+
+
+### <i class="fa fa-circle" role="presentation" aria-label="circle icon"></i> [VaR](#VaR)
+
+### <i class="fab fa-apple" role="presentation" aria-label="apple icon"></i> [Modelo de Markowitz](#Markowitz)
+
+]
+
+---
+
+name: sd
+class: inverse, center, middle
+background-color: #00081d
+
+# <i class="fa fa-upload" role="presentation" aria-label="upload icon"></i>
+# Standard Deviation
+----
+
+.right[
+.bottom[
+####  [<i class="fa fa-bell" role="presentation" aria-label="bell icon"></i>](#menu)
+]
+]
+
+---
+
+# <i class="fa fa-upload" role="presentation" aria-label="upload icon"></i> Packages
+
+
+Los siguientes son los paquetes que serán utilizados en los temas del curso.
+
+
+----
+
+.scroll-box-20[
+
+```r
+# Recuerde cargar las librerías
+
+library(tidyverse)
+library(lubridate)
+library(readxl)
+library(highcharter)
+library(tidyquant)
+library(timetk)
+library(tibbletime)
+library(quantmod)
+library(PerformanceAnalytics)
+library(scales)
+library(plotly)
+```
+]
+
+----
+
+
+---
+
+# <i class="fa fa-upload" role="presentation" aria-label="upload icon"></i> Standard Deviation
+
+
+
+
+.pull-left[
+
+
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+
+### `$$\sigma =  \sqrt{ \frac{\sum_{t=1}^{n} (x_i - \bar{x})^2}{n}}$$`
+
+
+
+]
+
+
+.pull-right[
+
+
+
+* `\(x_i\)` es el retorno mensual de cada portafolio.
+
+&lt;br&gt;
+
+* `\(\bar{x}\)` es el promedio mensual del retorno de los portafolios.
+
+&lt;br&gt;
+
+* `\(n\)` es el número de observaciones
+
+&lt;br&gt;
+
+&gt; La desviación estándar mide el grado en que los rendimientos de una cartera se dispersan alrededor de su media. Si los rendimientos están más dispersos, la cartera tiene una desviación estándar más alta y se considera más riesgosa o más volátil
+
+]
+
+
+---
+
+
+
+# <i class="fa fa-upload" role="presentation" aria-label="upload icon"></i> Standard Deviation `xts`
+
+
+.pull-left[
+
+En el paradigma `xts`, podemos usar la función `StdDev()` integrada de `PerformanceAnalytics` para pasar directamente de la rentabilidad de los activos a la desviación estándar de la cartera. Toma dos argumentos, un vector de retornos y pesos: `StdDev(asset_returns_xts, weights = w)`.
+
+&lt;br&gt;
+&lt;br&gt;
+
+&gt; Por favor genere los objetos necesarios para crear `asset_returns_xts`, replique los códigos de la clase anterior.
+
+
+
+]
+
+
+.pull-right[
+
+
+
+```r
+portfolio_sd_xts_builtin &lt;-
+           StdDev(asset_returns_xts, weights = w)
+           portfolio_sd_xts_builtin_percent &lt;-
+           round(portfolio_sd_xts_builtin * 100, 2)
+           portfolio_sd_xts_builtin_percent[1,1]
+```
+
+
+
+]
+
+
+---
+
+
+
+# <i class="fa fa-upload" role="presentation" aria-label="upload icon"></i> Standard Deviation `tidyverse`
+
+
+.pull-left[
+
+Para `tidyverse`, empezamos con `portfolio_returns_dplyr_byhand` y use las funciones `summarise()` y `sd()`. 
+
+También realizaremos el cálculo con nuestra propia ecuación `sqrt(sum((returns - mean(returns))ˆ2)/(nrow(.)-1)))` como un ejemplo de cómo poner una ecuación personalizada en `summarise()`
+
+&lt;br&gt;
+&lt;br&gt;
+
+&gt; Por favor genere los objetos necesarios para crear `portfolio_returns_dplyr_byhand`, replique los códigos de la clase anterior.
+
+
+
+]
+
+
+.pull-right[
+
+
+
+```r
+portfolio_sd_tidy_builtin_percent &lt;-
+            portfolio_returns_dplyr_byhand %&gt;%
+            summarise(
+            sd = sd(returns),
+            sd_byhand =
+            sqrt(sum((returns - mean(returns))^2)/(nrow(.)-1))) %&gt;%
+            mutate(dplyr = round(sd, 4) * 100,
+            dplyr_byhand = round(sd_byhand, 4) * 100)
+            portfolio_sd_tidy_builtin_percent %&gt;%
+            select(dplyr, dplyr_byhand)
+```
+
+
+
+]
+
+
+---
+
+
+
+# <i class="fa fa-upload" role="presentation" aria-label="upload icon"></i> Standard Deviation `tidyquant`
+
+
+.pull-left[
+
+En el flujo `tidyquant`, comenzamos con `portfolio_returns_tq_rebalanced_monthly` y llamamos la función `table.Stats()` de `PerformanceAnalytics` a través de `tq_performance()`. 
+
+La función `table.Stats()` devuelve una tabla de estadísticas para la cartera, pero dado que solo queremos una desviación estándar, usaremos `dplyr` para seleccionar la columna `Stdev`.
+
+&lt;br&gt;
+&lt;br&gt;
+
+&gt; Por favor genere los objetos necesarios para crear `portfolio_returns_tq_rebalanced_monthly`, replique los códigos de la clase anterior.
+
+
+
+]
+
+
+.pull-right[
+
+
+
+```r
+portfolio_sd_tidyquant_builtin_percent &lt;-
+            portfolio_returns_tq_rebalanced_monthly %&gt;%
+            tq_performance(Ra = returns,
+            Rb = NULL,
+            performance_fun = table.Stats) %&gt;%
+            select(Stdev) %&gt;%
+            mutate(tq_sd = round(Stdev, 4) * 100)
+```
+
+
+
+]
+
+
+---
+
+
+
+
+
+# <i class="fa fa-upload" role="presentation" aria-label="upload icon"></i> Standard Deviation `(Visualization)`
+
+
+
+.pull-left[
+
+
+* Primero, crearemos un indicador para el rendimiento medio con `mean()` y uno para la desviación estándar con `sd()`. Llamaremos a las variables `mean_plot` y `sd_plot` ya que planeamos usarlas en un gráfico y no para nada más.
+
+
+
+
+----
+.scroll-box-14[
+
+```r
+sd_plot &lt;- sd(portfolio_returns_tq_rebalanced_monthly$returns)
+
+mean_plot &lt;- mean(portfolio_returns_tq_rebalanced_monthly$returns)
+
+portfolio_returns_tq_rebalanced_monthly %&gt;%
+            mutate(hist_col_red =
+            if_else(returns &lt; (mean_plot - sd_plot),
+            returns, as.numeric(NA)),
+            hist_col_green =
+            if_else(returns &gt; (mean_plot + sd_plot),
+            returns, as.numeric(NA)),
+            hist_col_blue =
+            if_else(returns &gt; (mean_plot - sd_plot) &amp;
+            returns &lt; (mean_plot + sd_plot),
+            returns, as.numeric(NA))) %&gt;%
+            ggplot(aes(x = date)) +
+            geom_point(aes(y = hist_col_red),
+            color = "red") +
+            geom_point(aes(y = hist_col_green),
+            color = "green") +
+            geom_point(aes(y = hist_col_blue),
+            color = "blue") +
+            labs(title = "Colored Scatter", y = "monthly returns") +
+            scale_x_date(breaks = pretty_breaks(n = 8)) +
+            theme(plot.title = element_text(hjust = 0.5))
+```
+]
+----
+
+]
+
+.pull-right[
+
+
+![](7_Risk_files/figure-html/unnamed-chunk-6-1.png)&lt;!-- --&gt;
+
+
+]
+
+---
+
+
+
+# <i class="fa fa-upload" role="presentation" aria-label="upload icon"></i> Standard Deviation `(Visualization)`
+
+
+
+.pull-left[
+
+
+----
+.scroll-box-14[
+
+```r
+portfolio_returns_tq_rebalanced_monthly %&gt;%
+      mutate(hist_col_red =
+          if_else(returns &lt; (mean_plot - sd_plot),
+          returns, as.numeric(NA)),
+          hist_col_green =
+          if_else(returns &gt; (mean_plot + sd_plot),
+          returns, as.numeric(NA)),
+          hist_col_blue =
+          if_else(returns &gt; (mean_plot - sd_plot) &amp;
+          returns &lt; (mean_plot + sd_plot),
+          returns, as.numeric(NA))) %&gt;%
+      ggplot(aes(x = date)) +
+          geom_point(aes(y = hist_col_red),
+          color = "red") +
+          geom_point(aes(y = hist_col_green),
+          color = "green") +
+          geom_point(aes(y = hist_col_blue),
+          color = "blue") +
+          geom_hline(yintercept = (mean_plot + sd_plot),
+          color = "purple",
+          linetype = "dotted") +
+          geom_hline(yintercept = (mean_plot-sd_plot),
+          color = "purple",
+          linetype = "dotted") +
+          labs(title = "Colored Scatter with Line", y = "monthly returns") +
+          scale_x_date(breaks = pretty_breaks(n = 8)) +
+          theme(plot.title = element_text(hjust = 0.5))
+```
+]
+----
+
+]
+
+.pull-right[
+
+
+![](7_Risk_files/figure-html/unnamed-chunk-8-1.png)&lt;!-- --&gt;
+
+
+]
+
+---
+
+
+
+# <i class="fa fa-upload" role="presentation" aria-label="upload icon"></i> Standard Deviation `(Visualization)`
+
+
+.pull-left[
+
+
+Este gráfico muestra Una buena perspectiva del rendimiento de nuestra cartera frente al perfil de riesgo (y se ve bastante bien), aunque el S&amp;P500 tiene un rendimiento esperado más alto por un poco más de riesgo. EEM y EFA tienen un riesgo más alto y un rendimiento esperado más bajo (¡ningún inversor racional quiere eso!) e IJS tiene un riesgo más alto y un rendimiento esperado más alto (¡algunos inversores racionales sí quieren eso!).
+
+
+----
+.scroll-box-12[
+
+```r
+asset_returns_long %&gt;%
+   group_by(asset) %&gt;%
+   summarise(expected_return = mean(returns),
+   stand_dev = sd(returns)) %&gt;%
+   add_row(asset = "Portfolio",
+   stand_dev =
+   sd(portfolio_returns_tq_rebalanced_monthly$returns),
+   expected_return =
+   mean(portfolio_returns_tq_rebalanced_monthly$returns)) %&gt;%
+   ggplot(aes(x = stand_dev,
+   y = expected_return,
+   color = asset)) +
+   geom_point(size = 2) +
+     geom_text(
+   aes(x =
+   sd(portfolio_returns_tq_rebalanced_monthly$returns) * 1.11,
+   y =
+   mean(portfolio_returns_tq_rebalanced_monthly$returns),
+   label = "Portfolio")) +
+   ylab("expected return") +
+   xlab("standard deviation") +
+   ggtitle("Expected Monthly Returns versus Risk") +
+   scale_y_continuous(labels = function(x){ paste0(x, "%")}) +
+   theme_update(plot.title = element_text(hjust = 0.5))
+```
+]
+----
+
+]
+
+.pull-right[
+
+
+![](7_Risk_files/figure-html/unnamed-chunk-10-1.png)&lt;!-- --&gt;
+
+
+]
+
+---
+
+
+# <i class="fa fa-broom" role="presentation" aria-label="broom icon"></i> Rolling Standard Deviation
+
+
+
+.pull-left[
+
+&lt;br&gt;
+
+### Hemos calculado la volatilidad promedio para toda la vida de la cartera, pero ayudaría si pudiéramos comprender mejor cómo ha cambiado esa volatilidad con el tiempo o cómo se comportó en diferentes condiciones de mercado.
+
+
+
+
+
+]
+
+.pull-right[
+
+&lt;br&gt;
+
+.center[
+Podríamos perdernos un período de 3 o 6 meses en el que la volatilidad se disparó o se desplomó o hizo ambas cosas. Y cuanto más larga sea la vida de nuestra cartera, más probable será que nos perdamos algo importante. Si tuviéramos 10 o 20 años de datos y calculáramos la desviación estándar para toda la historia, podríamos, o seguramente no notaríamos, un período en el que la volatilidad fue muy alta y, por lo tanto, no ponderaríamos la probabilidad de que podría volver a ocurrir.
+]
+
+]
+
+---
+
+
+# <i class="fa fa-broom" role="presentation" aria-label="broom icon"></i> Rolling Standard Deviation `xts`
+
+
+
+.pull-left[
+
+El mundo `xts` está diseñado específicamente para series temporales y, como tal, calcular la desviación estándar móvil es sencillo.
+
+
+Primero, asignamos un valor de 24 a la ventana variable
+
+
+
+```r
+window &lt;- 24
+```
+
+
+Luego invocamos `rollapply()`, le pasamos nuestro objeto de retorno `xts`, la función `sd()` y una ventana móvil con `width = window`.
+
+
+
+
+]
+
+.pull-right[
+
+
+
+```r
+window &lt;- 24
+
+port_rolling_sd_xts &lt;-
+      rollapply(portfolio_returns_xts_rebalanced_monthly,
+      FUN = sd,
+      width = window) %&gt;%
+      na.omit() %&gt;%
+      `colnames&lt;-`("rolling_sd")
+
+tail(port_rolling_sd_xts, 6)
+```
+
+```
+##            rolling_sd
+## 2017-07-31 0.03066550
+## 2017-08-31 0.02684090
+## 2017-09-30 0.02560378
+## 2017-10-31 0.02337762
+## 2017-11-30 0.02326686
+## 2017-12-31 0.02169177
+```
+
+
+]
+
+---
+
+
+
+# <i class="fa fa-broom" role="presentation" aria-label="broom icon"></i> Rolling Standard Deviation `xts`
+
+
+
+.pull-left[
+
+
+
+```r
+port_rolling_sd_xts_hc &lt;-
+round(port_rolling_sd_xts, 4) * 100
+
+highchart(type = "stock") %&gt;%
+hc_title(text = "24-Month Rolling Volatility") %&gt;%
+hc_add_series(port_rolling_sd_xts_hc,
+color = "cornflowerblue") %&gt;%
+hc_add_theme(hc_theme_flat()) %&gt;%
+hc_yAxis(
+labels = list(format = "{value}%"),
+opposite = FALSE) %&gt;%
+hc_navigator(enabled = FALSE) %&gt;%
+hc_scrollbar(enabled = FALSE) %&gt;%
+hc_exporting(enabled= TRUE) %&gt;%
+hc_legend(enabled = TRUE)
+```
+
+
+
+]
+
+.pull-right[
+
+
+<div id="htmlwidget-47ae7ba43f523b8b4179" style="width:450px;height:450px;" class="highchart html-widget"></div>
+<script type="application/json" data-for="htmlwidget-47ae7ba43f523b8b4179">{"x":{"hc_opts":{"chart":{"reflow":true},"title":{"text":"24-Month Rolling Volatility"},"yAxis":{"title":{"text":null},"labels":{"format":"{value}%"},"opposite":false},"credits":{"enabled":false},"exporting":{"enabled":true},"boost":{"enabled":false},"plotOptions":{"series":{"label":{"enabled":false},"turboThreshold":0},"treemap":{"layoutAlgorithm":"squarified"}},"series":[{"data":[[1419984000000,2.62],[1422662400000,2.62],[1425081600000,2.75],[1427760000000,2.76],[1430352000000,2.76],[1433030400000,2.76],[1435622400000,2.74],[1438300800000,2.66],[1440979200000,2.95],[1443571200000,2.83],[1446249600000,3.01],[1448841600000,3],[1451520000000,3.04],[1454198400000,3.06],[1456704000000,2.92],[1459382400000,3.32],[1461974400000,3.33],[1464652800000,3.31],[1467244800000,3.28],[1469923200000,3.37],[1472601600000,3.33],[1475193600000,3.2],[1477872000000,3.21],[1480464000000,3.22],[1483142400000,3.22],[1485820800000,3.23],[1488240000000,3.11],[1490918400000,3.1],[1493510400000,3.09],[1496188800000,3.09],[1498780800000,3.05],[1501459200000,3.07],[1504137600000,2.68],[1506729600000,2.56],[1509408000000,2.34],[1512000000000,2.33],[1514678400000,2.17]],"color":"cornflowerblue"}],"navigator":{"enabled":false},"scrollbar":{"enabled":false},"legend":{"enabled":true}},"theme":{"colors":["#f1c40f","#2ecc71","#9b59b6","#e74c3c","#34495e","#3498db","#1abc9c","#f39c12","#d35400"],"chart":{"backgroundColor":"#ECF0F1"},"xAxis":{"gridLineDashStyle":"Dash","gridLineWidth":1,"gridLineColor":"#BDC3C7","lineColor":"#BDC3C7","minorGridLineColor":"#BDC3C7","tickColor":"#BDC3C7","tickWidth":1},"yAxis":{"gridLineDashStyle":"Dash","gridLineColor":"#BDC3C7","lineColor":"#BDC3C7","minorGridLineColor":"#BDC3C7","tickColor":"#BDC3C7","tickWidth":1},"legendBackgroundColor":"rgba(0, 0, 0, 0.5)","background2":"#505053","dataLabelsColor":"#B0B0B3","textColor":"#34495e","contrastTextColor":"#F0F0F3","maskColor":"rgba(255,255,255,0.3)"},"conf_opts":{"global":{"Date":null,"VMLRadialGradientURL":"http =//code.highcharts.com/list(version)/gfx/vml-radial-gradient.png","canvasToolsURL":"http =//code.highcharts.com/list(version)/modules/canvas-tools.js","getTimezoneOffset":null,"timezoneOffset":0,"useUTC":true},"lang":{"contextButtonTitle":"Chart context menu","decimalPoint":".","downloadCSV":"Download CSV","downloadJPEG":"Download JPEG image","downloadPDF":"Download PDF document","downloadPNG":"Download PNG image","downloadSVG":"Download SVG vector image","downloadXLS":"Download XLS","drillUpText":"◁ Back to {series.name}","exitFullscreen":"Exit from full screen","exportData":{"annotationHeader":"Annotations","categoryDatetimeHeader":"DateTime","categoryHeader":"Category"},"hideData":"Hide data table","invalidDate":null,"loading":"Loading...","months":["January","February","March","April","May","June","July","August","September","October","November","December"],"noData":"No data to display","numericSymbolMagnitude":1000,"numericSymbols":["k","M","G","T","P","E"],"printChart":"Print chart","resetZoom":"Reset zoom","resetZoomTitle":"Reset zoom level 1:1","shortMonths":["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],"shortWeekdays":["Sat","Sun","Mon","Tue","Wed","Thu","Fri"],"thousandsSep":" ","viewData":"View data table","viewFullscreen":"View in full screen","weekdays":["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"]}},"type":"stock","fonts":[],"debug":false},"evals":[],"jsHooks":[]}</script>
+
+
+]
+
+---
+
+
+# <i class="fa fa-broom" role="presentation" aria-label="broom icon"></i> Rolling Standard Deviation `tidyverse`
+
+
+
+.pull-left[
+
+En el tidyverse, los cálculos continuos con series de tiempo son un poco más complejos
+
+
+```r
+port_rolling_sd_tidy_does_not_work &lt;-
+    portfolio_returns_dplyr_byhand %&gt;%
+    mutate(rolling_sd = rollapply(returns,
+    FUN = sd,
+    width = window,
+    fill = NA)) %&gt;%
+    select(date, rolling_sd) %&gt;%
+    na.omit()
+
+
+tail(port_rolling_sd_tidy_does_not_work, 6)
+```
+
+
+
+]
+
+.pull-right[
+
+
+
+```r
+port_rolling_sd_tidy_does_not_work &lt;-
+    portfolio_returns_dplyr_byhand %&gt;%
+    mutate(rolling_sd = rollapply(returns,
+    FUN = sd,
+    width = window,
+    fill = NA)) %&gt;%
+    select(date, rolling_sd) %&gt;%
+    na.omit()
+
+
+tail(port_rolling_sd_tidy_does_not_work, 6)
+```
+
+```
+## # A tibble: 6 × 2
+##   date       rolling_sd
+##   &lt;date&gt;          &lt;dbl&gt;
+## 1 2016-07-31     0.0307
+## 2 2016-08-31     0.0268
+## 3 2016-09-30     0.0256
+## 4 2016-10-31     0.0234
+## 5 2016-11-30     0.0233
+## 6 2016-12-31     0.0217
+```
+
+
+]
+
+---
+
+
+
+# <i class="fa fa-broom" role="presentation" aria-label="broom icon"></i> Rolling Standard Deviation `tidyverse`
+
+
+
+.pull-left[
+
+
+
+
+```r
+port_rolling_sd_tq &lt;-
+portfolio_returns_tq_rebalanced_monthly %&gt;%
+tq_mutate(mutate_fun = rollapply,
+width = window,
+FUN = sd,
+col_rename = "rolling_sd") %&gt;%
+select(date, rolling_sd) %&gt;%
+na.omit()  
+
+port_rolling_sd_tq %&gt;%
+ggplot(aes(x = date)) +
+geom_line(aes(y = rolling_sd), color = "cornflowerblue") +
+scale_y_continuous(labels = scales::percent) +
+scale_x_date(breaks = pretty_breaks(n = 8)) +
+labs(title = "Rolling Standard Deviation", y = "") +
+theme(plot.title = element_text(hjust = 0.5))
+```
+
+
+
+]
+
+.pull-right[
+
+
+![](7_Risk_files/figure-html/unnamed-chunk-18-1.png)&lt;!-- --&gt;
+
+
+]
+
+---
+
+
+
+name: sk
+class: inverse, center, middle
+background-color: #00081d
+
+# <i class="fa fa-upload" role="presentation" aria-label="upload icon"></i>
+# Skewness
+----
+
+.right[
+.bottom[
+####  [<i class="fa fa-bell" role="presentation" aria-label="bell icon"></i>](#menu)
+]
+]
+
+---
+
+
+
+# <i class="fa fa-broom" role="presentation" aria-label="broom icon"></i> Skewness `xts`
+
+
+.pull-left[
+
+
+La asimetría es el grado en que los rendimientos son asimétricos en torno a su media.
+
+Dado que una distribución normal es simétrica alrededor de la media, la asimetría puede tomarse como una medida de cómo los rendimientos no se distribuyen normalmente. 
+
+.center[
+## ¿Por qué importa la asimetría? 
+]
+
+
+]
+
+
+.pull-right[
+
+----
+
+
+```r
+skew_xts &lt;-
+     skewness(portfolio_returns_xts_rebalanced_monthly$returns)
+
+
+skew_xts
+```
+
+```
+## [1] -0.2296716
+```
+
+----
+
+
+.center[
+Si los rendimientos de la cartera son correctos, o positivamente sesgados, implica numerosos rendimientos negativos pequeños y algunos rendimientos positivos grandes. Si los rendimientos de la cartera son sesgados a la izquierda o negativamente, implica numerosos rendimientos positivos pequeños y pocos rendimientos negativos grandes.
+]
+
+
+]
+
+---
+
+
+# <i class="fa fa-broom" role="presentation" aria-label="broom icon"></i> Skewness `tidyverse`
+
+
+
+.pull-left[
+
+
+La asimetría tiene importantes implicaciones sustantivas para el riesgo y también es un concepto que se presta a la visualización de datos. 
+
+De hecho, las visualizaciones a menudo son más esclarecedoras que los números mismos (aunque los números son lo que importa al final).
+
+]
+
+.pull-right[
+
+----
+
+
+```r
+skew_tidy &lt;-
+   portfolio_returns_tq_rebalanced_monthly %&gt;%
+   summarise(skew_builtin = skewness(returns))
+
+skew_tidy
+```
+
+```
+## # A tibble: 1 × 1
+##   skew_builtin
+##          &lt;dbl&gt;
+## 1       -0.230
+```
+
+----
+
+]
+
+
+
+---
+
+
+
+# <i class="fa fa-broom" role="presentation" aria-label="broom icon"></i> Skewness `tidyverse`
+
+
+
+.pull-left[
+
+
+----
+
+```r
+portfolio_density_plot &lt;-
+    portfolio_returns_tq_rebalanced_monthly %&gt;%
+    ggplot(aes(x = returns)) +
+    stat_density(geom = "line",
+    alpha = 1,
+    colour = "cornflowerblue")
+
+
+shaded_area_data &lt;-
+   ggplot_build(portfolio_density_plot)$data[[1]] %&gt;%
+   filter(x &lt;
+   mean(portfolio_returns_tq_rebalanced_monthly$returns))
+
+portfolio_density_plot_shaded &lt;-
+   portfolio_density_plot +
+   geom_area(data = shaded_area_data,
+   aes(x = x, y = y),
+   fill="pink",
+   alpha = 0.5)
+
+
+portfolio_density_plot_shaded
+```
+----
+
+
+
+]
+
+.pull-right[
+
+![](7_Risk_files/figure-html/unnamed-chunk-22-1.png)&lt;!-- --&gt;
+
+
+]
+
+
+
+---
+
+
+
+
+# <i class="fa fa-broom" role="presentation" aria-label="broom icon"></i> Skewness `tidyverse`
+
+
+
+.scroll-box-18[
+
+```r
+portfolio_density_plot_shaded &lt;-
+   portfolio_density_plot +
+   geom_area(data = shaded_area_data,
+   aes(x = x, y = y),
+   fill="pink",
+   alpha = 0.5)
+
+median &lt;-
+  median(portfolio_returns_tq_rebalanced_monthly$returns)
+
+mean &lt;-
+  mean(portfolio_returns_tq_rebalanced_monthly$returns)
+
+median_line_data &lt;-
+  ggplot_build(portfolio_density_plot)$data[[1]] %&gt;%
+  filter(x &lt;= median)
+
+portfolio_density_plot_shaded +
+  geom_segment(data = shaded_area_data,
+  aes(x = mean, y = 0, xend = mean, yend = density), 
+  color = "red", linetype = "dotted") +
+  annotate(geom = "text",
+  x = mean, y = 5, label = "mean",  color = "red",
+  fontface = "plain", angle = 90, alpha = .8, vjust = -1.75) +
+  geom_segment(data = median_line_data,
+  aes(x = median, y = 0, xend = median, yend = density),
+  color = "black",  linetype = "dotted") +
+  annotate(geom = "text",
+  x = median, y = 5,   label = "median",
+  fontface = "plain", angle = 90, alpha = .8,   vjust = 1.75) +
+  ggtitle("Density Plot Illustrating Skewness")
+```
+]
+
+
+---
+
+
+
+# <i class="fa fa-broom" role="presentation" aria-label="broom icon"></i> Skewness `tidyverse`
+
+
+
+
+![](7_Risk_files/figure-html/unnamed-chunk-24-1.png)&lt;!-- --&gt;
+
+
+
+
+---
+
+
+
+
+
+name: kurto
+class: inverse, center, middle
+background-color: #00081d
+
+# <i class="fa fa-upload" role="presentation" aria-label="upload icon"></i>
+# Kurtosis
+----
+
+.right[
+.bottom[
+####  [<i class="fa fa-bell" role="presentation" aria-label="bell icon"></i>](#menu)
+]
+]
+
+---
+
+
+
+# <i class="fa fa-broom" role="presentation" aria-label="broom icon"></i> Kurtosis `xts`
+
+
+.pull-left[
+
+
+La curtosis es una medida del grado en que los rendimientos de la cartera aparecen en las colas de su distribución.
+
+Una distribución con una curtosis mayor a 3 tiene más retornos en sus colas que la normal, y una con una curtosis menor a 3 tiene menos retornos en sus colas que la normal.
+
+.center[
+### Eso es importante para los inversores porque más malos rendimientos en las colas significan que nuestra cartera podría estar en riesgo de un evento a la baja raro pero enorme.
+]
+
+
+]
+
+
+.pull-right[
+
+----
+
+
+```r
+kurt_xts &lt;-
+    kurtosis(portfolio_returns_xts_rebalanced_monthly$returns)
+
+
+kurt_xts
+```
+
+```
+## [1] 0.4486006
+```
+
+----
+
+
+
+]
+
+---
+
+
+
+# <i class="fa fa-broom" role="presentation" aria-label="broom icon"></i> Kurtosis `tidyverse`
+
+
+
+.pull-left[
+
+
+.center[
+* La curtosis a menudo se describe como exceso negativo o exceso positivo, y eso es en comparación con una curtosis de 3. 
+
+* Sin embargo, recuerde que la curtosis negativa significa menos retornos en las colas y, probablemente, menos riesgo.
+]
+
+
+]
+
+.pull-right[
+
+----
+
+
+```r
+kurt_tidy &lt;-
+portfolio_returns_tq_rebalanced_monthly %&gt;%
+summarise(
+kurt_builtin = kurtosis(returns))
+```
+
+----
+
+]
+
+
+
+
+
+
+---
+
+name: VaR
+class: inverse, center, middle
+background-color: #00081d
+
+# <i class="fa fa-upload" role="presentation" aria-label="upload icon"></i>
+# VaR - Value at Risk
+
+----
+
+.right[
+.bottom[
+####  [<i class="fa fa-bell" role="presentation" aria-label="bell icon"></i>](#menu)
+]
+]
+
+---
+
+# <i class="fa fa-circle" role="presentation" aria-label="circle icon"></i> VaR
+
+
+.pull-left[
+
+&lt;br&gt;
+&lt;br&gt;
+
+El Valor en Riesgo (VaR) es una de las medidas utilizadas para evaluar el riesgo de una determinada posición o cartera de activos financieros.
+
+&lt;br&gt;
+
+La definición del VaR puede hacerse en términos de **rentabilidades** o en términos de **Pérdidas y Ganancias** (términos nominales).
+
+]
+
+
+.pull-right[
+
+![](https://media.giphy.com/media/d5FbeKADxF3CSf7y1L/giphy.gif)
+
+
+
+]
+
+
+
+---
+
+
+class: center, middle
+
+
+
+# El VaR responde entonces a la pregunta:
+
+
+
+### ¿Cuál es la caída o pérdida que se podría sufrir en condiciones normales de mercado en un intervalo de tiempo y con cierto nivel de probabilidad o de confianza?
+
+
+
+
+---
+
+
+class: center, middle
+
+## Es decir, indica la probabilidad (normalmente 1% o 5%) de sufrir una determinada pérdida durante un periodo de tiempo (normalmente 1 día, 1 semana o 1 mes).
+
+--
+
+&lt;br&gt;
+
+## Una interpretación equivalente es:
+
+--
+
+&lt;br&gt;
+
+### Con probabilidad `$$1- \alpha$$` el propietario de dicha posición experimentará una pérdida no superior al VaR.
+
+---
+
+# <i class="fa fa-circle" role="presentation" aria-label="circle icon"></i> VaR
+
+.pull-left[
+
+Ejemplo:
+
+&lt;br&gt;
+
+&gt; Una entidad financiera podría considerar que el **VaR** diario de una cartera operativa es de 50 millones de euros, con un nivel de confianza del 90%. 
+
+&lt;br&gt;
+
+----
+
+&lt;br&gt;
+
+&gt; Esto quiere decir que solamente hay 1 posibilidad en 10, en condiciones normales de mercado, de que haya una pérdida superior a los 50 millones de euros.
+
+]
+
+
+.pull-right[
+
+
+![](https://media.giphy.com/media/KDtXdzo3vBx5e1HcjU/giphy.gif)
+
+
+]
+
+
+---
+
+# <i class="fa fa-circle" role="presentation" aria-label="circle icon"></i> VaR
+
+
+&lt;img src="img/Imagen2.png" width="50%" style="display: block; margin: auto;" /&gt;
+
+.center[
+
+### Por consiguiente, el VaR no es sino un determinado percentil de la distribución de probabilidad prevista para las variaciones en el valor de mercado de la cartera en el horizonte de tiempo escogido.
+
+]
+
+---
+
+# <i class="fa fa-circle" role="presentation" aria-label="circle icon"></i> Cálculo del VaR
+
+
+## Tipos de VaR
+
+
+- **VaR Histórico, No Paramétrico:** se encuentra el `\(\alpha\)` percentil de la distribución histórica de los datos.
+
+&lt;br/&gt;
+
+- **VaR Paramétrico:** se calcula el VaR con base en un modelo que describe su función de densidad de las pérdidas. La cual debe ser estimada.
+  - VaR suponiendo que las pérdidas siguen una distribución Gaussiana no condicional.
+
+  - VaR modelando los valores futuros de la media y la varianza condicionales.
+
+  - VaR por simulación de Montecarlo (estimando la función multivariada que describe los datos, por ejemplo mediante cópulas)
+
+
+
+---
+
+
+
+
+
+
+# <i class="fa fa-circle" role="presentation" aria-label="circle icon"></i> Cálculo del VaR
+
+
+## Tipos de VaR: Método No Paramétrico - Histórico
+
+
+
+.pull-left[
+
+- No precisa hacer supuestos acerca de la forma paramétrica de la distribución de rentabilidades de los factores de riesgo o de la cartera.
+
+- No está limitado a carteras en las que los pagos tienen una estructura lineal.
+
+- El método histórico debe utilizarse solo para el cálculo del VaR a un horizonte de muy pocos días.
+
+
+]
+
+
+.pull-right[
+
+`$$VaR_{(1-\alpha)} = q_{(1-\alpha)(R)}  \nonumber$$`
+
+]
+
+
+
+---
+
+
+
+# <i class="fa fa-circle" role="presentation" aria-label="circle icon"></i> Cálculo del VaR
+
+
+## Tipos de VaR: Método Paramétrico - Distribución Gaussiana
+
+
+.pull-left[
+
+- Suponemos que la distribución de las rentabilidades de los factores sigue una distribución Normal multivariante y la cartera es función lineal de los factores.
+
+- Su ventaja es que es tratable analíticamente, pero solo se puede generalizar a una pocas formas paramétricas, como la Normal, la t-Student, o mixturas de Normales o de t-Student.
+
+
+
+
+]
+
+
+.pull-right[
+
+
+.center[
+Como `\(\alpha\)` es un valor reducido: 5%, 1% o 0.01%, entonces `\(R^*\)` será una rentabilidad negativa, y el VaR se proporciona cambiando el signo.
+]
+
+
+`$$VaR = -R^{\*} \Rightarrow \alpha = P(R&lt;R^{\*}) = \Phi\left( \frac{R^{\*}-\mu_R}{\sigma_R} \right) \nonumber$$`
+
+`$$VaR_{(1-\alpha)} = \Phi^{-1}(1-\alpha) \sigma_R - \mu_R  \nonumber$$`
+
+
+
+
+]
+
+---
+
+
+
+# <i class="fa fa-circle" role="presentation" aria-label="circle icon"></i> Cálculo del VaR
+
+
+## Tipos de VaR: Método de normalidad estático
+
+
+`$$VaR_{(1-\alpha)} = \Phi^{-1}(1-\alpha) \sigma_R - \mu_R  \nonumber$$`
+
+
+## Tipos de VaR: Método de normalidad condicional
+
+
+`$$VaR_{(1-\alpha),t+1} = \Phi^{-1}(1-\alpha) \sigma_{R,t+1} - \mu_{R,t+1}  \nonumber$$`
+
+
+
+- Estimación de `\(\mu_{t+1}\)`: Modelos ARIMA de series de tiempo
+- Estimación de `\(\sigma_{t+1}\)`: Modelos de varianza condicional:
+  - Modelos GARCH: como un ARMA sobre la varianza con algunas restricciones.
+  - Modelos de Volatilidad Estocástica: una versión más general de los GARCH.
+
+
+
+
+
+---
+
+
+# <i class="fa fa-circle" role="presentation" aria-label="circle icon"></i> Cálculo del VaR
+
+
+## Tipos de VaR: Método de simulación MonteCarlo - estático
+
+
+`$$VaR_{(1-\alpha)} = \sigma_R(-q_{(1-\alpha)}(Z))  - \mu_R, \quad \quad Z\sim N(0,1)  \nonumber$$`
+
+
+## Tipos de VaR: Método de simulación MonteCarlo - dinámico
+
+
+`$$VaR_{(1-\alpha)} = \sigma_{R,t+1}(-q_{(1-\alpha)}(Z))  - \mu_{R,t+1}, \quad \quad Z\sim N(0,1)  \nonumber$$`
+
+---
+
+# <i class="fa fa-circle" role="presentation" aria-label="circle icon"></i> Limitaciones
+
+
+.pull-left[
+
+Como se puede observar existen diversas metodologías, con diferentes niveles de precisión, para estimar el Valor en Riesgo. No obstante, todas estas metodologías presentan limitaciones generales, que caracterizan la técnica del VaR y que por ende son imposibles de evitar sin recurrir a otras herramientas.
+
+
+----
+
+&gt; - Dice muy poco sobre los casos en las colas (pérdidas extremas).
+&gt; - Puede crear estructuras perversas de incentivos (porque no se conoce la magnitud de las pérdidas que exceden las colas).
+
+----
+
+]
+
+.pull-right[
+
+![](https://media.giphy.com/media/giC1lIEz7iOIk5vp3U/giphy.gif)
+
+]
+
+
+---
+
+# <i class="fa fa-circle" role="presentation" aria-label="circle icon"></i> Expected Shortfall (CVaR)
+
+
+.pull-left[
+
+Mientras que el **VaR estima lo máximo que se puede esperar perder** si un evento de pérdidas extremas no ocurre, es decir, la peor pérdida esperada en caso de una relativa regularidad financiera, el **ES (Expected Shortfall) indica cuánto se espera perder si un evento extremo efectivamente ocurre** (más allá del nivel de confianza del VaR, en las colas de la distribución).
+
+
+----
+
+
+`$$ES = E[R / ( R &lt; VaR )] \nonumber$$`
+
+----
+
+]
+
+.pull-right[
+
+
+&lt;img src="img/Imagen3.PNG" width="75%" style="display: block; margin: auto;" /&gt;
+
+
+]
+
+
+---
+
+# <i class="fa fa-circle" role="presentation" aria-label="circle icon"></i> Código en R
+
+
+.scroll-output[
+
+
+```r
+library(quantmod)
+library(PerformanceAnalytics)
+
+
+#########Fecha inicial de descarga de datos
+maxDate = "2000-01-01"
+
+#Serie a descargar
+tick&lt;-"AMZN"
+
+#Obtener la serie de precios desde Yahoo Finance
+prices &lt;- Ad(getSymbols(tick, auto.assign = FALSE, from=maxDate))
+plot(prices)
+View(prices)
+
+
+#Calcular retornos
+rets &lt;- dailyReturn(prices)
+plot(rets)
+hist(rets)
+
+
+library(tseries)
+jarque.bera.test(rets)
+
+
+#Calcular VaR y CVaR
+VaR(rets,p=0.95,method = "historical")
+quantile(rets,0.05)
+
+VaR(rets,p=0.99,method = "gaussian")
+VaR(rets, p = 0.99, method = "historical")
+ES(rets,p=0.99,method = "gaussian")
+ES(rets, p = 0.99, method = "historical")
+
+
+
+#Series que conforman el portafolio
+tickers&lt;- c("MSFT", "AAPL", "AMZN")
+
+#Definir pesos del portafolio
+weights&lt;-c(0.5,0.1,0.4)
+
+#Obtener series de precios del portafolio
+getSymbols(tickers, from=maxDate)
+View(AAPL)
+
+#Crear el portafolio
+Port.prices &lt;- na.omit(merge(Ad(MSFT),Ad(AAPL), Ad(AMZN)))
+colnames(Port.prices)&lt;-tickers
+View(Port.prices)
+plot(Port.prices)
+
+
+#Retornos del portafolio
+Port.returns &lt;- ROC(Port.prices,type="discrete")[-1]
+colnames(Port.returns)&lt;-tickers
+View(Port.returns)
+plot(Port.returns)
+
+VaR(Port.returns,p=0.95, weights = weights, portfolio_method = "component", method = "historical")
+ES(Port.returns,p=0.95, weights = weights, portfolio_method = "component", method = "historical")
+
+
+#Calcular VaR Individual
+VaR.Hist&lt;- VaR(Port.returns,p=0.95, weights = NULL, portfolio_method = "single", method = "historical")
+VaR.Gaus&lt;- VaR(Port.returns,p=0.95, weights = NULL, portfolio_method = "single", method = "gaussian")
+VaR.Mod&lt;- VaR(Port.returns,p=0.95, weights = NULL, portfolio_method = "single", method = "modified")
+
+#Guardar datos
+All.VaR&lt;-data.frame(rbind(VaR.Hist,VaR.Gaus,VaR.Mod))
+rownames(All.VaR)&lt;-c("Hist","Gaus","Mod")
+
+All.VaR
+
+#Calcular VaR Portfolio
+Port.VaR.Hist&lt;- VaR(Port.returns,p=0.95, weights = weights, portfolio_method = "component", method = "historical")$hVaR
+Port.VaR.Gaus&lt;- VaR(Port.returns,p=0.95, weights = weights, portfolio_method = "component", method = "gaussian")$VaR
+Port.VaR.Mod&lt;- VaR(Port.returns,p=0.95, weights = weights, portfolio_method = "component", method = "modified")$MVaR
+
+
+All.VaR$Portafolio&lt;-c(Port.VaR.Hist,Port.VaR.Gaus,Port.VaR.Mod)
+All.VaR&lt;-abs(All.VaR)
+All.VaR$Type&lt;-c("Hist","Gaus","Mod")
+
+All.VaR
+
+#Base para gráfico
+library(reshape2)
+library(ggplot2)
+plotVaR&lt;-melt(All.VaR,variable.name = "Ticker", value.name = "VaR")
+
+
+g1&lt;-ggplot(plotVaR,aes(x=Type,y=VaR, fill=Ticker))+
+  geom_bar(stat="identity", position = "dodge") 
+
+g1
+
+
+
+
+
+############################################################################
+
+
+#Simulación Monte Carlo para el VaR de una acción
+
+
+
+#Instalar librerias
+
+library(quantmod)
+#library(tidyquant)
+library(xts)
+#library(rvest)
+library(tidyverse)
+#library(stringr)
+#library(forcats)
+#library(lubridate)
+#library(plotly)
+library(dplyr)
+#library(PerformanceAnalytics)
+
+
+#Simulamos un año bursatil
+
+periodos &lt;- 252
+periodos &lt;- periodos - 1
+
+#descargamos los stocks
+
+getSymbols("TSLA", from = '2015-01-01', to = "2022-01-06", warnings = FALSE, auto.assign = TRUE)
+
+TSLA_adj &lt;- TSLA$TSLA.Adjusted
+
+TSLA_log_returns &lt;- dailyReturn(Ad(TSLA), type="log")
+
+# Creamos la función
+
+gbm_sim &lt;- function(periodos, close_prices, vector_returns) {
+  # estimadores de mu y sigma
+  mu &lt;- mean(vector_returns)
+  sig &lt;- sd(vector_returns)
+  fin &lt;- length(vector_returns)
+  ini &lt;- fin - periodos
+  
+  # simulacion
+  sim_actual_values &lt;- TSLA$TSLA.Close[ini]
+  S &lt;-  vector(mode="numeric", length=periodos) # aqui vamos guardando los valores
+  S[1] &lt;- sim_actual_values
+  for (t in c(2:periodos) ) {
+    new_S &lt;- S[t-1] * exp( (mu-(0.5*sig^2)) + sig * rnorm(1)   )
+    S[t] &lt;- new_S
+  } 
+  return(S)
+}
+
+#Ahora simulamos 1000 realidades distintas
+
+# AHora podemos simular varias veces y plotear:
+n_sims = 1000
+n_periods = 252
+sims &lt;- matrix(NA, ncol=n_sims+1, nrow=n_periods)
+
+for (i in 1:n_sims) {
+  values &lt;-  gbm_sim(periodos = 252, close_prices =  TSLA$TSLA.Adjusted, vector_returns = TSLA_log_returns)
+  sims[, i] &lt;- values
+}
+sims[, n_sims+1] &lt;- 1:n_periods
+
+# Seteo del plot
+plot(sims[, n_sims+1], sims[,1], type="l",
+     xlab="tiempo", ylab="W(t)", ylim=c(0, 2000))
+colors = rainbow(n_sims)
+
+# add lines
+for ( i in 1:n_sims) {
+  lines(sims[, n_sims+1], sims[,i], type="l", col=colors[i])
+}
+
+
+# VALUE AT RISK 
+# En sims, tenemos los PRECIOS simulados. Necesitamos las rentabilidades.
+# Tenemos que convertir, cada columna de sims, en Rentabilidades.
+
+returns_gbm &lt;- apply( sims[,c(1:n_sims)], 2, Delt)
+
+
+# Histograma de todas esas rentabilidades
+hist(returns_gbm, 40)
+
+# Porcentil 5 -- VAR al  99% y 95%
+quantile(returns_gbm, c(0.05, 0.01), na.rm=TRUE) 
+
+
+
+# Histograma de todas esas rentabilidades
+hist(returns_gbm, 40)
+abline(v=quantile(returns_gbm, c(0.05), na.rm=TRUE) )
+```
+
+]
+
+---
+
+
+name: Markowitz
+class: inverse, center, middle
+background-color: #00081d
+
+# <i class="fa fa-upload" role="presentation" aria-label="upload icon"></i>
+# Modelo de Markowitz
+
+----
+
+.right[
+.bottom[
+####  [<i class="fa fa-bell" role="presentation" aria-label="bell icon"></i>](#menu)
+]
+]
+
+
+
+---
+
+# <i class="fab fa-apple" role="presentation" aria-label="apple icon"></i> Modelo de Markowitz
+
+&lt;br/&gt;
+
+.center[
+### Modelo pionero, es el primero que incorpora un trade off entre la rentabilidad y el riesgo.
+]
+
+&lt;br/&gt;
+
+.pull-left[
+
+&lt;br/&gt;
+
+**Supuestos:**
+
+
+- Rendimientos se distribuyen de manera normal.
+- Inversionistas son racionales y aversos a riesgo.
+- Información simétrica.
+- No hay costos de transacción.
+- No hay apalancamiento.
+
+]
+
+
+.pull-right[
+
+.center[
+
+## Rentabilidad vs Riesgo
+
+
+
+&lt;img src="https://media.giphy.com/media/JqKOU2VAUx9bt9K4PK/giphy.gif" width="40%" style="display: block; margin: auto;" /&gt;
+
+]
+
+]
+
+
+---
+
+# <i class="fab fa-apple" role="presentation" aria-label="apple icon"></i> Modelo de Markowitz
+
+
+
+.pull-left[
+
+## Rentabilidad
+
+`$$E(R_{(P)})$$`
+
+## Riesgo
+
+`$$\sigma^2_{R_{(P)}} = w_{R_{(A)}} \sigma^2_{R_{(A)}} + w_{R_{(B)}} \sigma^2_{R_{(B)}} + 2w_Aw_BCov_{R_{(A)}R_{(B)}}$$`
+
+`$$Cov_{R_{(A)}R_{(B)}} = \rho_{R_{(A)}R_{(B)}} \sigma_{R_{(A)}} \sigma_{R_{(B)}}$$`
+
+
+`$$w_A + w_B = 1$$`
+
+]
+
+
+
+.pull-right[
+
+&lt;br/&gt;
+&lt;br/&gt;
+&lt;br/&gt;
+
+&lt;img src="img/Imagen4.PNG" width="120%" style="display: block; margin: auto;" /&gt;
+
+
+]
+
+---
+
+# <i class="fab fa-apple" role="presentation" aria-label="apple icon"></i> Modelo de Markowitz
+
+
+- Curva XY: Frontera de varianza mínima.
+- Curva OX: Frontera eficiente.
+- Punto O: Punto de varianza mínima global
+
+
+&lt;img src="img/Imagen5.PNG" width="50%" style="display: block; margin: auto;" /&gt;
+
+
+---
+
+# <i class="fab fa-apple" role="presentation" aria-label="apple icon"></i> Modelo de Markowitz
+
+.pull-left[
+
+`$$Max (R_p) = \sum_{i=1}^n w_i R_i$$`
+
+sujeto a:
+
+- Restricción paramétrica:
+
+La suma total de los pesos de cada valor de la cartera multiplicados por la covarianza de la misma, debe ser igual a la Varianza estimada de la cartera. Para cada valor de `\(V*\)` tendremos una composición de la cartera diferente.
+
+`$$\sigma^2_p = \sum_{i=1}^n \sum_{j=1}^n w_i w_j \sigma_{i,j} = V^*$$`
+
+
+
+]
+
+
+
+.pull-right[
+
+
+- Restricción presupuestaria:
+
+La suma total de los pesos de cada valor de la cartera no puede sumar más de 1.
+
+`$$\sum_{i=1}^n w_i = 1$$`
+- No negatividad:
+
+`$$w_i \geq 0$$`
+
+]
+
+
+---
+
+# <i class="fab fa-apple" role="presentation" aria-label="apple icon"></i> Modelo de Markowitz
+
+.pull-left[
+
+`$$Min \quad \sigma^2 (R_p) = \sum_{i=1}^n \sum_{j=1}^n w_i w_j \sigma_{i,j}$$`
+
+sujeto a:
+
+- Restricción paramétrica:
+
+
+
+`$$E (R_p) = \sum_{i=1}^n w_i E(R_i)$$`
+
+
+
+]
+
+
+
+.pull-right[
+
+
+- Restricción presupuestaria:
+
+`$$\sum_{i=1}^n w_i = 1$$`
+- No negatividad:
+
+`$$w_i \geq 0$$`
+
+]
+
+
+---
+
+
+# <i class="fa fa-circle" role="presentation" aria-label="circle icon"></i> Código en R
+
+
+.scroll-output[
+
+
+```r
+#Librerías
+
+library("quantmod")
+library("timeSeries")
+library("fPortfolio")
+library("caTools")
+library("dplyr")
+library("PerformanceAnalytics")
+library("ggplot2")
+
+
+
+###########################################################
+###################### PASOS PREVIOS ######################
+###########################################################
+
+#Vector de TICKERS
+
+tickers&lt;-c("TSLA","NEM","NFLX", "BAC","AMZN","JNJ")
+
+#Extrayendo la data
+
+PrecPort&lt;- NULL
+for (Ticker in tickers)
+PrecPort&lt;-cbind(PrecPort, getSymbols(Ticker, from= '2019-01-01', auto.assign=FALSE)[,4])
+PrecPort 
+
+#Renombrando los encabezados de las columnas
+
+colnames(PrecPort)&lt;-tickers
+
+#Calculando los retornos
+
+RetPort &lt;- na.omit(ROC(PrecPort, type="discrete"))
+RetPort
+
+#Convirtiendo los retornos en series de tiempo
+RetPort &lt;- as.timeSeries(RetPort)
+
+RetPort
+
+###############################################################################
+###################### FRONTERA Y PORTAFOLIOS EFICIENTES ######################
+###############################################################################
+
+#Calculando la frontera eficiente
+
+fronteraEff &lt;- portfolioFrontier(RetPort, constraints= "LongOnly",)
+
+#Graficando la frontera
+#En el gráfico, se pueden incorporar los siguientes elementos:
+# 1: Frontera Eficiente
+# 2: El portafolio con la mínima varianza global
+# 3: Línea tangente al portafolio
+# 4: Riesgo y retorno de cada activo
+# 5: Portafolio con activos del mismo peso
+# 6: Fronteras de dos activos
+# 7: Portafolios de Monte Carlo
+# 8: Ratio de Sharpe
+
+plot(fronteraEff,c(1,2,3))
+
+plot(fronteraEff)
+
+
+#Riesgos y Retornos de la frontera
+
+Riesgo_Retorno &lt;- frontierPoints(fronteraEff)
+
+#Matrices de correlación y covarianza
+
+MatrizCorr&lt;-cor(RetPort)
+MatrizCov&lt;-cov(RetPort)
+
+MatrizCov
+MatrizCorr
+
+#Pesos en las fronteras eficientes
+fronteraPesos&lt;-getWeights(fronteraEff)
+colnames(fronteraPesos)&lt;-tickers
+
+barplot(t(fronteraPesos), main="Pesos de los activos en la Frontera Eficiente",col=cm.colors(ncol(fronteraPesos)+2), legend=colnames(fronteraPesos))
+
+
+#Puntos interesantes:
+
+  #Varianza mínima global
+  VMG&lt;-minvariancePortfolio(RetPort, spec=portfolioSpec(), constraints="LongOnly")
+  VMG
+  
+    #Reporte de los pesos asignados:
+    VMG_Pesos&lt;-getWeights(VMG)
+    DF_VMG_Pesos&lt;-data.frame(VMG_Pesos)
+    acciones&lt;-colnames(fronteraPesos)
+    
+    ggplot(data=DF_VMG_Pesos,aes(x=acciones,y=VMG_Pesos,fill=acciones))+
+      geom_bar(stat="identity",position=position_dodge(),colour="black")+
+      geom_text(aes(label=sprintf("%.02f %%",VMG_Pesos*100)),
+                position=position_dodge(width=0.9),vjust=-0.25,check_overlap=TRUE)+
+      ggtitle("Pesos de las acciones del portafolio de varianza minima global")+
+      theme(plot.title = element_text(hjust=0.5))+
+      labs(x="Acciones",y="Pesos (%)")
+      
+  #Punto de la Línea de Mercado de Capitales tangente a la Frontera Eficiente  
+  LMC&lt;-tangencyPortfolio(RetPort, spec=portfolioSpec(), constraints="LongOnly")
+  LMC
+  
+    #Reporte de los pesos asignados:
+    LMC_Pesos&lt;-getWeights(LMC)
+    DF_LMC_Pesos&lt;-data.frame(LMC_Pesos)
+    acciones&lt;-colnames(fronteraPesos)
+    ggplot(data=DF_LMC_Pesos,aes(x=acciones,y=LMC_Pesos,fill=acciones))+
+      geom_bar(stat="identity",position=position_dodge(),colour="black")+
+      geom_text(aes(label=sprintf("%.02f %%",LMC_Pesos*100)),
+                position=position_dodge(width=0.9),vjust=-0.25,check_overlap=TRUE)+
+      ggtitle("Pesos de las acciones del portafolio de mercado")+
+      theme(plot.title = element_text(hjust=0.5))+
+      labs(x="Acciones",y="Pesos (%)")
+```
+
+]
+
+
+---
+
+
+
+
+class: inverse, center, middle
+background-color: #00081d
+
+
+
+
+.pull-left[
+
+.center[
+&lt;br&gt;&lt;br&gt;
+
+# Gracias!!!
+
+&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;
+
+
+
+### Preguntas?
+]
+
+
+]
+
+
+.pull-right[
+
+
+.center[
+
+&lt;br&gt;&lt;br&gt;&lt;br&gt;
+
+
+.center[
+&lt;img style="border-radius: 50%;" src="img/avatar.png"
+width="100px" href="https://www.joaquibarandica.com"
+/&gt;
+
+<span>&lt;i class="fas  fa-envelope faa-passing animated "&gt;&lt;/i&gt;</span> orlando.joaqui@correounivalle.edu.co 
+]
+
+
+&lt;img src="img/qr-code.png" width="50%" style="display: block; margin: auto;" /&gt;
+
+
+.center[
+www.joaquibarandica.com
+]
+
+
+
+]
+
+
+]
+
+
+&lt;br&gt;&lt;br&gt;&lt;br&gt;
+----
+
+
+
+
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script src="cols_macro.js"></script>
+<script>var slideshow = remark.create({
+"ratio": "16:9",
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

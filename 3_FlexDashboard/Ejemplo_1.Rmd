@@ -1,0 +1,239 @@
+---
+title: "Flexdashboard + Shiny (Demo para clase)"
+output:
+  flexdashboard::flex_dashboard:
+    orientation: rows
+    vertical_layout: fill
+runtime: shiny
+---
+
+```{r setup, include=FALSE}
+# Paquetes
+library(flexdashboard)
+library(shiny)
+library(dplyr)
+library(ggplot2)
+library(DT)
+library(scales)
+library(zoo)
+
+set.seed(123)
+
+# Datos simulados tipo "mercado"
+n <- 1200
+df <- tibble(
+  fecha  = seq.Date(Sys.Date() - n + 1, Sys.Date(), by = "day"),
+  activo = sample(c("ACCION_A", "ACCION_B", "ACCION_C"), n, replace = TRUE, prob = c(0.4, 0.35, 0.25)),
+  precio = round(exp(cumsum(rnorm(n, 0.0002, 0.02))) * 100, 2),
+  volumen = round(runif(n, 1e5, 5e5))
+) |>
+  arrange(activo, fecha) |>
+  group_by(activo) |>
+  mutate(
+    ret_log = c(NA, diff(log(precio))),
+    ret_pct = 100 * (exp(ret_log) - 1),
+    ret_roll_30 = zoo::rollapply(ret_pct, 30, mean, fill = NA, align = "right"),
+    vol_roll_30 = zoo::rollapply(ret_pct, 30, sd,   fill = NA, align = "right")
+  ) |>
+  ungroup()
+```
+
+Sidebar {.sidebar}
+-------------------------------------
+
+### Filtros
+
+```{r}
+selectInput(
+  inputId = "activo",
+  label   = "Activo",
+  choices = sort(unique(df$activo)),
+  selected = "ACCION_A"
+)
+
+dateRangeInput(
+  inputId = "rango_fechas",
+  label   = "Rango de fechas",
+  start   = min(df$fecha),
+  end     = max(df$fecha),
+  min     = min(df$fecha),
+  max     = max(df$fecha)
+)
+
+sliderInput(
+  inputId = "window",
+  label   = "Ventana rolling (días)",
+  min = 10, max = 90, value = 30, step = 5
+)
+
+hr()
+
+checkboxInput("mostrar_tabla", "Mostrar tabla (DT)", TRUE)
+
+helpText("Tip clase: muéstrales cómo todo se vuelve reactivo con un solo 'reactive()'.")
+```
+
+Row
+-------------------------------------
+
+### KPIs (reactivos) {data-height=140}
+
+```{r}
+df_filtrado <- reactive({
+  req(input$activo, input$rango_fechas)
+  df |>
+    filter(
+      activo == input$activo,
+      fecha >= input$rango_fechas[1],
+      fecha <= input$rango_fechas[2]
+    ) |>
+    arrange(fecha) |>
+    mutate(
+      ret_roll = zoo::rollapply(ret_pct, input$window, mean, fill = NA, align = "right"),
+      vol_roll = zoo::rollapply(ret_pct, input$window, sd,   fill = NA, align = "right")
+    )
+})
+
+kpis <- reactive({
+  d <- df_filtrado()
+  d <- d |> filter(!is.na(ret_pct))
+  req(nrow(d) > 10)
+
+  ret_total <- (last(d$precio) / first(d$precio)) - 1
+  vol_anual <- sd(d$ret_pct, na.rm = TRUE) * sqrt(252) / 100
+  sharpe_aprox <- (mean(d$ret_pct, na.rm = TRUE) * 252 / 100) / vol_anual
+
+  list(
+    ret_total = ret_total,
+    vol_anual = vol_anual,
+    sharpe = sharpe_aprox
+  )
+})
+
+valueBox(
+  renderValueBox({
+    k <- kpis()
+    valueBox(
+      value = percent(k$ret_total, accuracy = 0.1),
+      caption = "Retorno total (rango)",
+      icon = "fa-chart-line"
+    )
+  })
+)
+
+valueBox(
+  renderValueBox({
+    k <- kpis()
+    valueBox(
+      value = percent(k$vol_anual, accuracy = 0.1),
+      caption = "Volatilidad anual aprox.",
+      icon = "fa-wave-square"
+    )
+  })
+)
+
+valueBox(
+  renderValueBox({
+    k <- kpis()
+    valueBox(
+      value = round(k$sharpe, 2),
+      caption = "Sharpe aprox.",
+      icon = "fa-balance-scale"
+    )
+  })
+)
+```
+
+Row
+-------------------------------------
+
+### Precio + media móvil (Shiny output) {data-height=350}
+
+```{r}
+renderPlot({
+  d <- df_filtrado()
+  req(nrow(d) > input$window)
+
+  d <- d |>
+    mutate(ma = zoo::rollapply(precio, input$window, mean, fill = NA, align = "right"))
+
+  ggplot(d, aes(fecha, precio)) +
+    geom_line() +
+    geom_line(aes(y = ma), linewidth = 0.8) +
+    labs(
+      title = paste0("Precio: ", input$activo),
+      subtitle = paste0("Media móvil ", input$window, " días"),
+      x = NULL, y = "Precio"
+    ) +
+    theme_minimal()
+})
+```
+
+### Retornos diarios (hist + densidad) {data-height=350}
+
+```{r}
+renderPlot({
+  d <- df_filtrado() |> filter(!is.na(ret_pct))
+  req(nrow(d) > 50)
+
+  ggplot(d, aes(ret_pct)) +
+    geom_histogram(bins = 40) +
+    geom_density(linewidth = 0.9) +
+    labs(
+      title = "Distribución de retornos (%)",
+      x = "Retorno diario (%)", y = "Frecuencia / Densidad"
+    ) +
+    theme_minimal()
+})
+```
+
+Row
+-------------------------------------
+
+### “Mini Shiny” para stress-test de VaR histórico {data-height=360}
+
+```{r}
+# Inputs tipo Shiny dentro del body del flexdashboard
+numericInput("alpha", "Nivel VaR (alpha)", value = 0.05, min = 0.001, max = 0.2, step = 0.005)
+numericInput("monto", "Exposición (COP)", value = 100000000, min = 1000000, step = 1000000)
+
+renderPrint({
+  d <- df_filtrado() |> filter(!is.na(ret_pct))
+  req(nrow(d) > 50)
+
+  alpha <- input$alpha
+  monto <- input$monto
+
+  var_pct <- as.numeric(quantile(d$ret_pct/100, probs = alpha, na.rm = TRUE))
+  # VaR positivo como pérdida esperada en cola: -quantil
+  var_cop <- -var_pct * monto
+
+  cat("VaR histórico (1 día)\n")
+  cat("Activo:", input$activo, "\n")
+  cat("alpha:", alpha, "\n\n")
+  cat("VaR (%):", round(-var_pct*100, 3), "%\n")
+  cat("VaR (COP):", format(round(var_cop, 0), big.mark = ",", scientific = FALSE), "\n")
+})
+```
+
+### Tabla (reactiva) {data-height=360}
+
+```{r}
+renderUI({
+  if (!isTRUE(input$mostrar_tabla)) return(NULL)
+  DTOutput("tabla")
+})
+
+output$tabla <- renderDT({
+  d <- df_filtrado() |>
+    select(fecha, activo, precio, volumen, ret_pct) |>
+    mutate(ret_pct = round(ret_pct, 4))
+
+  datatable(
+    d,
+    options = list(pageLength = 10, scrollX = TRUE),
+    rownames = FALSE
+  )
+})
+```
+

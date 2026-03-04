@@ -1,0 +1,1789 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Portfolio Theory</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="PhD. Diego F. Manotas-Duque   PhD. St. Orlando Joaqui-Barandica" />
+    <meta name="date" content="2021-01-01" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link href="libs/remark-css/rladies.css" rel="stylesheet" />
+    <link href="libs/remark-css/rladies-fonts.css" rel="stylesheet" />
+    <script src="libs/htmlwidgets/htmlwidgets.js"></script>
+    <script src="libs/jquery/jquery.min.js"></script>
+    <script src="libs/proj4js/proj4.js"></script>
+    <link href="libs/highcharts/css/motion.css" rel="stylesheet" />
+    <script src="libs/highcharts/highcharts.js"></script>
+    <script src="libs/highcharts/highcharts-3d.js"></script>
+    <script src="libs/highcharts/highcharts-more.js"></script>
+    <script src="libs/highcharts/modules/stock.js"></script>
+    <script src="libs/highcharts/modules/map.js"></script>
+    <script src="libs/highcharts/modules/annotations.js"></script>
+    <script src="libs/highcharts/modules/data.js"></script>
+    <script src="libs/highcharts/modules/drilldown.js"></script>
+    <script src="libs/highcharts/modules/item-series.js"></script>
+    <script src="libs/highcharts/modules/offline-exporting.js"></script>
+    <script src="libs/highcharts/modules/overlapping-datalabels.js"></script>
+    <script src="libs/highcharts/modules/exporting.js"></script>
+    <script src="libs/highcharts/modules/export-data.js"></script>
+    <script src="libs/highcharts/modules/funnel.js"></script>
+    <script src="libs/highcharts/modules/heatmap.js"></script>
+    <script src="libs/highcharts/modules/treemap.js"></script>
+    <script src="libs/highcharts/modules/sankey.js"></script>
+    <script src="libs/highcharts/modules/dependency-wheel.js"></script>
+    <script src="libs/highcharts/modules/organization.js"></script>
+    <script src="libs/highcharts/modules/solid-gauge.js"></script>
+    <script src="libs/highcharts/modules/streamgraph.js"></script>
+    <script src="libs/highcharts/modules/sunburst.js"></script>
+    <script src="libs/highcharts/modules/vector.js"></script>
+    <script src="libs/highcharts/modules/wordcloud.js"></script>
+    <script src="libs/highcharts/modules/xrange.js"></script>
+    <script src="libs/highcharts/modules/tilemap.js"></script>
+    <script src="libs/highcharts/modules/venn.js"></script>
+    <script src="libs/highcharts/modules/gantt.js"></script>
+    <script src="libs/highcharts/modules/timeline.js"></script>
+    <script src="libs/highcharts/modules/parallel-coordinates.js"></script>
+    <script src="libs/highcharts/modules/bullet.js"></script>
+    <script src="libs/highcharts/modules/coloraxis.js"></script>
+    <script src="libs/highcharts/modules/dumbbell.js"></script>
+    <script src="libs/highcharts/modules/lollipop.js"></script>
+    <script src="libs/highcharts/modules/series-label.js"></script>
+    <script src="libs/highcharts/plugins/motion.js"></script>
+    <script src="libs/highcharts/custom/reset.js"></script>
+    <script src="libs/highcharts/modules/boost.js"></script>
+    <script src="libs/highchart-binding/highchart.js"></script>
+    <script src="libs/clipboard/clipboard.min.js"></script>
+    <link href="libs/shareon/shareon.min.css" rel="stylesheet" />
+    <script src="libs/shareon/shareon.min.js"></script>
+    <link href="libs/xaringanExtra-shareagain/shareagain.css" rel="stylesheet" />
+    <script src="libs/xaringanExtra-shareagain/shareagain.js"></script>
+    <link href="libs/xaringanExtra-clipboard/xaringanExtra-clipboard.css" rel="stylesheet" />
+    <script src="libs/xaringanExtra-clipboard/xaringanExtra-clipboard.js"></script>
+    <script>window.xaringanExtraClipboard(null, {"button":"Copy Code","success":"Copied!","error":"Press Ctrl+C to Copy"})</script>
+    <link href="libs/font-awesome/css/all.min.css" rel="stylesheet" />
+    <link href="libs/font-awesome/css/v4-shims.min.css" rel="stylesheet" />
+    <link href="libs/font-awesome-animation/font-awesome-animation-emi.css" rel="stylesheet" />
+    <script src="libs/fontawesome/js/fontawesome-all.min.js"></script>
+    <link rel="stylesheet" href="sydney.css" type="text/css" />
+    <link rel="stylesheet" href="fonts_mtheme.css" type="text/css" />
+    <link rel="stylesheet" href="cols.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+
+
+
+
+
+
+class: left, bottom
+background-image: url("img/back1.jpg")
+background-size: cover
+
+
+# **Portfolio Theory**
+----
+
+## **Universidad del Valle - Escuela Ingeniería Industrial**
+
+### PhD. Diego F. Manotas-Duque &lt;br/&gt; PhD. St. Orlando Joaqui-Barandica
+### 2021
+
+
+
+
+
+---
+name: hola
+class: inverse, middle, center
+background-color: #E31D1D
+
+&lt;img style="border-radius: 50%;" src="img/uv3.jpg"
+width="150px"
+/&gt;
+
+# Universidad del Valle
+
+--
+
+## Maestría en Análitica e Inteligencia de Negocios
+---
+
+
+
+
+.pull-left[
+
+&lt;br&gt;&lt;br&gt;
+
+.center[
+&lt;img style="border-radius: 50%;" src="img/avatar2.PNG"
+width="160px"
+/&gt;
+
+[PhD. Diego F. Manotas-Duque](http://industrial.univalle.edu.co/profesores/diego-fernando-manotas-duque) &lt;br&gt;
+Universidad del Valle
+]
+
+&lt;br&gt;
+
+.center[
+
+*PhD. in Engineering with emphasis in Electrical Engineering*
+
+*MSc. in Management - Finance Emphasis*
+
+*Finance Specialist*
+
+*Industrial Engineer*
+
+<i class="fas  fa-link fa-spin "></i> [Personal Webpage](http://industrial.univalle.edu.co/profesores/diego-fernando-manotas-duque)
+
+]
+
+]
+
+
+
+.pull-right[
+
+
+&lt;br&gt;&lt;br&gt;
+
+.center[
+&lt;img style="border-radius: 50%;" src="img/avatar.png"
+width="160px" href="https://www.joaquibarandica.com"
+/&gt;
+
+[PhD. Student. Orlando Joaqui-Barandica](https://www.joaquibarandica.com) &lt;br/&gt;
+Universidad del Valle
+]
+
+&lt;br&gt;
+
+
+.center[
+
+*PhD. Student in Engineering with emphasis in Engineering Industrial* 
+ 
+*MSc. Applied Economics*
+ 
+*BSc. Statistic*
+
+&lt;br&gt;
+
+<i class="fas  fa-link fa-spin "></i> [www.joaquibarandica.com](https://www.joaquibarandica.com)
+
+]
+
+
+]
+
+
+---
+
+class: center, middle
+
+&lt;img src="img/gifinc.jpg" width="50%"/&gt;
+
+### [https://gifinc.univalle.edu.co/](https://gifinc.univalle.edu.co/)
+
+
+---
+
+name: menu
+background-image: url("img/back2.jpg")
+background-size: cover
+class: left, middle
+
+
+# Contenido
+
+----
+
+
+.pull-left[
+### <i class="fa fa-upload" role="presentation" aria-label="upload icon"></i> [Sharpe Ratio](#sr)
+* xts
+* tidyverse
+
+
+### <i class="fa fa-broom" role="presentation" aria-label="broom icon"></i> [CAPM](#capm)
+
+
+
+]
+
+
+.pull-right[
+
+### <i class="fa fa-cubes" role="presentation" aria-label="cubes icon"></i> [App Shiny](#shiny)
+
+
+
+
+]
+
+---
+
+name: sr
+class: inverse, center, middle
+background-color: #00081d
+
+# <i class="fa fa-upload" role="presentation" aria-label="upload icon"></i>
+# Sharpe Ratio
+----
+
+.right[
+.bottom[
+####  [<i class="fa fa-bell" role="presentation" aria-label="bell icon"></i>](#menu)
+]
+]
+
+---
+
+# <i class="fa fa-upload" role="presentation" aria-label="upload icon"></i> Packages
+
+
+Los siguientes son los paquetes que serán utilizados en los temas del curso.
+
+
+----
+
+.scroll-box-20[
+
+```r
+# Recuerde cargar las librerías
+
+library(tidyverse)
+library(lubridate)
+library(readxl)
+library(highcharter)
+library(tidyquant)
+library(timetk)
+library(tibbletime)
+library(quantmod)
+library(PerformanceAnalytics)
+library(scales)
+library(plotly)
+```
+]
+
+----
+
+
+---
+
+# <i class="fa fa-upload" role="presentation" aria-label="upload icon"></i> Sharpe Ratio
+
+
+
+
+.pull-left[
+
+
+El ratio de Sharpe es una medida para analizar el rendimiento de una inversión, teniendo en cuenta el riesgo que suponga esa inversión.
+
+&lt;br&gt;
+
+`En finanzas, cuanto más arriesgada sea una inversión, la rentabilidad que se espera de ella es mayor, dado que esperamos que se pague más por arriesgar más. Con el ratio de Sharpe podemos comparar carteras con riesgos diferentes y saber cuál ha tenido más éxito, ya que estamos ajustando el riesgo. Este ratio financiero nos dice lo buena que es una inversión. Gracias al ajuste por riesgo podemos ver qué inversión ha obtenido más rentabilidad de su riesgo, o dicho de otra manera, cuanta rentabilidad adicional ha conseguido por invertir en activos financieros más arriesgados.`
+
+
+
+]
+
+
+.pull-right[
+
+
+
+### Definición:
+
+.center[El Ratio de Sharpe se define como la media de los rendimientos mensuales en exceso de la cartera por encima de la **tasa libre de riesgo**, dividido por la desviación estándar de los rendimientos mensuales en exceso de la cartera por encima de la tasa libre de riesgo. Esta es la formulación de la Razón de Sharpe a partir de 1994; si quisiéramos usar la formulación original de 1966, el denominador sería la desviación estándar de todos los rendimientos mensuales de la cartera.]
+
+
+`$$Sharpe Ratio = \frac{R_p - R_f}{\sigma_{exceso}}$$`
+**Cuanto mayor sea el ratio sharpe de una inversión, mejor será el rendimiento ajustado al riesgo de la inversión**
+
+]
+
+
+---
+
+
+
+# <i class="fa fa-upload" role="presentation" aria-label="upload icon"></i> Sharpe Ratio
+
+
+.pull-left[
+
+
+* Si una inversión presenta más riesgo que otra, como es lógico, los inversores también exigirán una mayor rentabilidad en compensación.
+
+
+![](https://media.giphy.com/media/l2JeierkQlHpJsGWY/giphy.gif)
+
+
+
+
+]
+
+
+.pull-right[
+
+
+
+### Ahora bien, ¿cómo calculamos que la rentabilidad obtenida se ajusta bien al riesgo asumido? Para ello se parte del concepto de “prima de riesgo”.
+
+
+La prima de riesgo es la rentabilidad extra que obtenemos para compensar el riesgo asumido. Pero para ello, debemos tomar como referencia un activo que se encuentre, o que sea considerado por la comunidad financiera, como “libre de riesgo”.
+
+
+* La rentabilidad que nos ofrece este activo considerado como “libre de riesgo” es la denominada “tasa libre de riesgo”. Sobre esta tasa se calcula la “prima de riesgo”.
+
+
+]
+
+
+---
+
+
+
+# <i class="fa fa-upload" role="presentation" aria-label="upload icon"></i> Sharpe Ratio
+
+.pull-left[
+
+### Qué es la tasa libre de riesgo?
+
+
+Una tasa libre de riesgo es aquella rentabilidad obtenida por invertir en un activo que está considerado como libre de riesgo.
+
+* En principio es una `valoración teórica`. Se supone que todas las inversiones tienen un componente de riesgo.
+
+
+
+*Sin embargo, si invertimos en un activo que no cambie su rentabilidad durante toda su vida o duración (activo de renta fija) que tenga una mínima fluctuación de mercado, y por último, que sea de un emisor de reconocida solvencia (para que sea remota la probabilidad de que incumpla su promesa de pago), tenemos un activo que podríamos considerar como “libre de riesgo”.*
+
+
+
+]
+
+
+.pull-right[
+
+
+**¿Dónde encontramos estos activos?**
+
+
+Como norma general se utiliza el interés que pagan por los Bonos del Estado, puesto que estos activos cumplen perfectamente las condiciones anteriormente descritas.
+
+.center[
+### **En Colombia,** se pueden usar las tasas de los bonos de tesoro o incluso de los TES. En refinitiv pueden encontrarlos como: GOVERNMENT BOND PRICES, aparece para varios plazos.
+]
+
+
+
+
+]
+
+
+---
+
+
+# <i class="fa fa-upload" role="presentation" aria-label="upload icon"></i> Sharpe Ratio
+
+.center[
+&lt;img src="img/Tasas.JPG" width="80%" /&gt;
+]
+
+
+---
+
+
+
+
+# <i class="fa fa-upload" role="presentation" aria-label="upload icon"></i> Sharpe Ratio `xts`
+
+
+.pull-left[
+
+
+* Para cualquier trabajo con el Ratio de Sharpe, primero debemos elegir una tasa libre de riesgo (en adelante RFR) y usaremos .3%.
+
+
+```
+
+rfr &lt;- .0003
+
+
+```
+
+Calcular la razón de Sharpe en el mundo `xts` es muy sencillo a partir de la función `SharpeRatio()` de la librería `PerfomanceAnalytics`
+
+
+]
+
+
+.pull-right[
+
+
+
+```r
+rfr &lt;- .0003
+
+sharpe_xts &lt;-
+SharpeRatio(portfolio_returns_xts_rebalanced_monthly,
+            Rf = rfr,
+            FUN = "StdDev") %&gt;%
+`colnames&lt;-`("sharpe_xts")
+
+
+sharpe_xts
+```
+
+```
+##                               sharpe_xts
+## StdDev Sharpe (Rf=0%, p=95%):  0.2753917
+```
+
+
+
+]
+
+
+---
+
+
+# <i class="fa fa-upload" role="presentation" aria-label="upload icon"></i> Sharpe Ratio `tidyverse`
+
+
+.pull-left[
+
+
+* Para nuestro ejemplo de tidyverse, implementaremos la ecuación de la relación de Sharpe a través de pipes y dplyr.
+
+Empezamos con nuestro objeto `portfolio_returns_dplyr_byhand` y luego ejecutamos:
+
+
+```
+
+summarise(ratio = mean(returns - rfr)/sd(returns - rfr))
+
+
+```
+
+que se asigna a la ecuación de la relación de Sharpe.
+
+
+]
+
+
+.pull-right[
+
+
+
+```r
+rfr &lt;- .0003
+
+sharpe_tidyverse_byhand &lt;-
+           portfolio_returns_dplyr_byhand %&gt;%
+           summarise(sharpe_dplyr = mean(returns - rfr)/
+           sd(returns - rfr))
+
+
+sharpe_tidyverse_byhand
+```
+
+```
+## # A tibble: 1 x 1
+##   sharpe_dplyr
+##          &lt;dbl&gt;
+## 1        0.275
+```
+
+
+
+]
+
+
+---
+
+
+
+# <i class="fa fa-upload" role="presentation" aria-label="upload icon"></i> Sharpe Ratio
+
+### Sharpe Ratio vs S&amp;P500
+
+.pull-left[
+
+
+* A continuación, comparamos con el Sharpe Ratio del S&amp;P500 en el mismo período de tiempo.
+
+
+
+
+----
+.scroll-box-14[
+
+```r
+market_returns_xts &lt;-
+          getSymbols("SPY",
+          src = 'yahoo',
+          from = "2012-12-31",
+          to = "2017-12-31",
+          auto.assign = TRUE,
+          warnings = FALSE) %&gt;%
+          map(~Ad(get(.))) %&gt;%
+          reduce(merge) %&gt;%
+          `colnames&lt;-`("SPY") %&gt;%
+          to.monthly(indexAt = "lastof",
+          OHLC = FALSE)
+
+
+market_sharpe &lt;-
+          market_returns_xts %&gt;%
+          tk_tbl(preserve_index = TRUE,
+          rename_index = "date") %&gt;%
+          mutate(returns =
+          (log(SPY) - log(lag(SPY)))) %&gt;%
+          na.omit() %&gt;%
+          summarise(ratio =
+          mean(returns - rfr)/sd(returns - rfr))
+
+
+market_sharpe$ratio
+```
+]
+----
+
+]
+
+.pull-right[
+
+
+```
+[1] 0.4348  
+
+```
+
+.center[
+### Nuestra cartera ha tenido un rendimiento inferior al del mercado durante el período de tiempo elegido.
+]
+
+
+----
+
+]
+
+---
+
+# <i class="fa fa-upload" role="presentation" aria-label="upload icon"></i> Sharpe Ratio
+
+### Recuerde: 
+
+.right[En definitiva, es una herramienta para calcular mejor la relación rentabilidad/riesgo. Esto significa que no sirve solo con que un activo sea muy rentable, como pueden serlo las criptomonedas, sino en función de cuánto lo es con respecto al riesgo asumido.
+
+
+&lt;br&gt;
+&lt;br&gt;
+
+Así, se pueden dar paradojas como que una acción tradicional que lleve cotizando más de 30 años en el mercado tiene mejor calificación en el ratio de Sharpe que una compañía growth que lleve creciendo a dos dígitos durante los últimos años.
+
+]
+
+
+
+---
+
+
+
+# <i class="fa fa-upload" role="presentation" aria-label="upload icon"></i> Sharpe Ratio
+
+
+.pull-left[
+
+
+* Antes de visualizar el Sharpe real, tendremos una idea de qué proporción de los rendimientos de nuestra cartera excedieron el RFR.
+
+* Ahora, haremos dos adiciones para ayudar en nuestra visualización de datos.
+
+
+
+* Agregaremos una columna para rendimientos que estén por debajo de la tasa libre de riesgo y agregaremos una columna para rendimientos por encima de la tasa libre de riesgo.
+
+* Esto no es necesario para calcular la razón de Sharpe, pero veremos cómo ilustra el beneficio de hacer las cosas a mano con dplyr: si queremos extraer o crear ciertas transformaciones de datos, podemos agregarlo al flujo de código canalizado.
+
+
+
+]
+
+
+.pull-right[
+
+
+
+```r
+sharpe_byhand_with_return_columns &lt;-
+          portfolio_returns_tq_rebalanced_monthly %&gt;%
+          mutate(ratio =
+          mean(returns - rfr)/sd(returns - rfr)) %&gt;%
+          mutate(returns_below_rfr =
+          if_else(returns &lt; rfr, returns, as.numeric(NA))) %&gt;%
+          mutate(returns_above_rfr =
+          if_else(returns &gt; rfr, returns, as.numeric(NA))) %&gt;%
+          mutate_if(is.numeric, funs(round(.,4)))
+          sharpe_byhand_with_return_columns %&gt;%
+
+            
+head(6)
+```
+
+```
+## # A tibble: 6 x 5
+##   date       returns ratio returns_below_rfr returns_above_rfr
+##   &lt;date&gt;       &lt;dbl&gt; &lt;dbl&gt;             &lt;dbl&gt;             &lt;dbl&gt;
+## 1 2013-01-31  0.0308 0.275           NA                 0.0308
+## 2 2013-02-28 -0.0009 0.275           -0.0009           NA     
+## 3 2013-03-31  0.0187 0.275           NA                 0.0187
+## 4 2013-04-30  0.0206 0.275           NA                 0.0206
+## 5 2013-05-31 -0.0054 0.275           -0.0054           NA     
+## 6 2013-06-30 -0.0229 0.275           -0.0229           NA
+```
+
+
+
+]
+
+
+---
+
+
+
+# <i class="fa fa-upload" role="presentation" aria-label="upload icon"></i> Sharpe Ratio `(Visualization)`
+
+
+.pull-left[
+
+
+----
+.scroll-box-12[
+
+```r
+sharpe_byhand_with_return_columns %&gt;%
+ggplot(aes(x = date)) +
+geom_point(aes(y = returns_below_rfr),
+colour = "red") +
+geom_point(aes(y = returns_above_rfr),
+colour = "green") +
+geom_vline(xintercept =
+as.numeric(as.Date("2016-11-30")),
+color = "blue") +
+geom_hline(yintercept = rfr,
+color = "purple",
+linetype = "dotted") +
+annotate(geom = "text",
+x = as.Date("2016-11-30"),
+y = -.04,
+label = "Election",
+fontface = "plain",
+angle = 90,
+alpha = .5,
+vjust = 1.5) +
+  ylab("percent monthly returns") +
+scale_y_continuous(breaks = pretty_breaks(n = 10)) +
+scale_x_date(breaks = pretty_breaks( n = 8))
+```
+]
+----
+
+&gt; Note que después de las elecciones presidenciales de Noviembre en Estados Unidos hay cero rendimientos por debajo de la RFR (Rate free risk)
+
+
+]
+
+.pull-right[
+
+
+![](8_Portafolio_files/figure-html/unnamed-chunk-8-1.png)&lt;!-- --&gt;
+
+
+]
+
+---
+
+
+
+
+# <i class="fa fa-upload" role="presentation" aria-label="upload icon"></i> Sharpe Ratio `(Visualization)`
+
+
+.pull-left[
+
+
+----
+.scroll-box-12[
+
+```r
+sharpe_byhand_with_return_columns %&gt;%
+ggplot(aes(x = returns)) +
+geom_histogram(alpha = 0.45,
+binwidth = .01,
+fill = "cornflowerblue") +
+geom_vline(xintercept = rfr,
+color = "green") +
+annotate(geom = "text",
+x = rfr,
+y = 13,
+label = "rfr",
+fontface = "plain",
+angle = 90,
+alpha = .5,
+vjust = 1)
+```
+]
+----
+
+
+
+]
+
+.pull-right[
+
+
+![](8_Portafolio_files/figure-html/unnamed-chunk-10-1.png)&lt;!-- --&gt;
+
+
+]
+
+---
+
+
+
+
+# <i class="fa fa-upload" role="presentation" aria-label="upload icon"></i> Sharpe Ratio `(Visualization)`
+
+
+.pull-left[
+
+
+----
+.scroll-box-12[
+
+```r
+portfolio_sd_xts_builtin &lt;-
+           StdDev(asset_returns_xts, weights = w)
+
+portfolio_sd_xts_builtin_percent &lt;-
+           round(portfolio_sd_xts_builtin * 100, 2)
+
+sharpe_tq &lt;-
+portfolio_returns_tq_rebalanced_monthly %&gt;%
+tq_performance(Ra = returns,
+performance_fun = SharpeRatio,
+Rf = rfr,
+FUN = "StdDev") %&gt;%
+`colnames&lt;-`("sharpe_tq")
+
+
+asset_returns_long %&gt;%
+summarise(stand_dev = sd(returns),
+sharpe = mean(returns - rfr)/
+sd(returns - rfr))%&gt;%
+add_row(asset = "Portfolio",
+stand_dev =
+portfolio_sd_xts_builtin[1],
+sharpe =
+sharpe_tq$sharpe_tq) %&gt;%
+ggplot(aes(x = stand_dev,
+y = sharpe,
+color = asset)) +
+geom_point(size = 2) +
+geom_text(
+aes(x =
+sd(portfolio_returns_tq_rebalanced_monthly$returns),
+y =
+sharpe_tq$sharpe_tq + .02,
+label = "Portfolio")) +
+ylab("Sharpe Ratio") +
+xlab("standard deviation") +
+ggtitle("Sharpe Ratio versus Standard Deviation") +
+# The next line centers the title
+theme_update(plot.title = element_text(hjust = 0.5))
+```
+]
+----
+
+&gt; Indica que el S&amp;P500 nuevamente parece dominar nuestra cartera, aunque tiene un poco más de riesgo.
+
+Eso es interesante de observar pero, al igual que con la desviación estándar, la asimetría y la curtosis, estos números generales pueden ocultar importantes períodos de fluctuación en nuestros datos. Podemos resolver eso trabajando con la relación de Sharpe móvil.
+
+
+]
+
+.pull-right[
+
+
+![](8_Portafolio_files/figure-html/unnamed-chunk-12-1.png)&lt;!-- --&gt;
+
+
+]
+
+---
+
+
+
+# <i class="fa fa-upload" role="presentation" aria-label="upload icon"></i> Sharpe Ratio `(Visualization)`
+
+
+.pull-left[
+
+
+----
+.scroll-box-12[
+
+```r
+portfolio_sd_xts_builtin &lt;-
+           StdDev(asset_returns_xts, weights = w)
+
+portfolio_sd_xts_builtin_percent &lt;-
+           round(portfolio_sd_xts_builtin * 100, 2)
+
+sharpe_tq &lt;-
+   portfolio_returns_tq_rebalanced_monthly %&gt;%
+   tq_performance(Ra = returns,
+   performance_fun = SharpeRatio,
+   Rf = rfr,
+   FUN = "StdDev") %&gt;%
+   `colnames&lt;-`("sharpe_tq")
+
+asset_returns_long %&gt;%
+   summarise(stand_dev = sd(returns),
+   sharpe = mean(returns - rfr)/
+   sd(returns - rfr))%&gt;%
+   add_row(asset = "Portfolio",
+   stand_dev =
+   portfolio_sd_xts_builtin[1],
+   sharpe =
+   sharpe_tq$sharpe_tq) %&gt;%
+   ggplot(aes(x = stand_dev,
+   y = sharpe,
+   color = asset)) +
+   geom_point(size = 2) +
+   geom_text(
+   aes(x =
+   sd(portfolio_returns_tq_rebalanced_monthly$returns),
+   y =
+   sharpe_tq$sharpe_tq + .02,
+   label = "Portfolio")) +
+   ylab("Sharpe Ratio") +
+   xlab("standard deviation") +
+   ggtitle("Sharpe Ratio versus Standard Deviation") +
+   theme_update(plot.title = element_text(hjust = 0.5))
+```
+]
+----
+
+&gt; Indica que el S&amp;P500 nuevamente parece dominar nuestra cartera, aunque tiene un poco más de riesgo.
+
+Eso es interesante de observar pero, al igual que con la desviación estándar, la asimetría y la curtosis, estos números generales pueden ocultar importantes períodos de fluctuación en nuestros datos. Podemos resolver eso trabajando con la relación de Sharpe móvil.
+
+
+]
+
+.pull-right[
+
+
+![](8_Portafolio_files/figure-html/unnamed-chunk-14-1.png)&lt;!-- --&gt;
+
+
+]
+
+---
+
+
+
+
+# <i class="fa fa-upload" role="presentation" aria-label="upload icon"></i> Rolling Sharpe Ratio `(xts)`
+
+
+.pull-left[
+
+
+----
+.scroll-box-16[
+
+```r
+window &lt;- 24
+
+rolling_sharpe_xts &lt;-
+      rollapply(portfolio_returns_xts_rebalanced_monthly,
+      window,
+      function(x)
+      SharpeRatio(x,
+      Rf = rfr,
+      FUN = "StdDev")) %&gt;%
+      na.omit() %&gt;%
+      `colnames &lt;-` ("xts")
+
+highchart(type = "stock") %&gt;%
+       hc_title(text = "Rolling 24-Month Sharpe") %&gt;%
+       hc_add_series(rolling_sharpe_xts,
+       name = "sharpe",
+       color = "blue") %&gt;%
+       hc_navigator(enabled = FALSE) %&gt;%
+       hc_scrollbar(enabled = FALSE) %&gt;%
+       hc_add_theme(hc_theme_flat()) %&gt;%
+       hc_exporting(enabled = TRUE)
+```
+]
+----
+
+
+
+]
+
+.pull-right[
+
+
+<div id="htmlwidget-ac9bb4da4a14a6a66c45" style="width:100%;height:500px;" class="highchart html-widget"></div>
+<script type="application/json" data-for="htmlwidget-ac9bb4da4a14a6a66c45">{"x":{"hc_opts":{"chart":{"reflow":true},"title":{"text":"Rolling 24-Month Sharpe"},"yAxis":{"title":{"text":null}},"credits":{"enabled":false},"exporting":{"enabled":true},"boost":{"enabled":false},"plotOptions":{"series":{"label":{"enabled":false},"turboThreshold":0},"treemap":{"layoutAlgorithm":"squarified"}},"series":[{"data":[[1419984000000,0.312389325026696],[1422662400000,0.237335863693724],[1425081600000,0.300614876444049],[1427760000000,0.258836656692975],[1430352000000,0.258869779563449],[1433030400000,0.261767862948608],[1435622400000,0.269001790940729],[1438300800000,0.201626171690196],[1440979200000,0.128384765658611],[1443571200000,0.00794877999030142],[1446249600000,0.0439397084886483],[1448841600000,0.0193922510979245],[1451520000000,-0.0379234388157468],[1454198400000,-0.040609940767418],[1456704000000,-0.110240607101412],[1459382400000,-0.0160586942804956],[1461974400000,-0.00580874093867079],[1464652800000,-0.0317424004506252],[1467244800000,-0.0477022480385404],[1469923200000,0.024680280848924],[1472601600000,-0.000275206847712188],[1475193600000,0.0679804870428836],[1477872000000,0.0121992214784735],[1480464000000,0.0283325565284087],[1483142400000,0.0689593690221201],[1485820800000,0.119893664711648],[1488240000000,0.0859023812399037],[1490918400000,0.115880765470752],[1493510400000,0.107075093493052],[1496188800000,0.130631245546915],[1498780800000,0.172200205598367],[1501459200000,0.214764519595668],[1504137600000,0.344704117028662],[1506729600000,0.455152976286791],[1509408000000,0.420356863461451],[1512000000000,0.453330273708351],[1514678400000,0.567204324314946]],"name":"sharpe","color":"blue"}],"navigator":{"enabled":false},"scrollbar":{"enabled":false}},"theme":{"colors":["#f1c40f","#2ecc71","#9b59b6","#e74c3c","#34495e","#3498db","#1abc9c","#f39c12","#d35400"],"chart":{"backgroundColor":"#ECF0F1"},"xAxis":{"gridLineDashStyle":"Dash","gridLineWidth":1,"gridLineColor":"#BDC3C7","lineColor":"#BDC3C7","minorGridLineColor":"#BDC3C7","tickColor":"#BDC3C7","tickWidth":1},"yAxis":{"gridLineDashStyle":"Dash","gridLineColor":"#BDC3C7","lineColor":"#BDC3C7","minorGridLineColor":"#BDC3C7","tickColor":"#BDC3C7","tickWidth":1},"legendBackgroundColor":"rgba(0, 0, 0, 0.5)","background2":"#505053","dataLabelsColor":"#B0B0B3","textColor":"#34495e","contrastTextColor":"#F0F0F3","maskColor":"rgba(255,255,255,0.3)"},"conf_opts":{"global":{"Date":null,"VMLRadialGradientURL":"http =//code.highcharts.com/list(version)/gfx/vml-radial-gradient.png","canvasToolsURL":"http =//code.highcharts.com/list(version)/modules/canvas-tools.js","getTimezoneOffset":null,"timezoneOffset":0,"useUTC":true},"lang":{"contextButtonTitle":"Chart context menu","decimalPoint":".","downloadJPEG":"Download JPEG image","downloadPDF":"Download PDF document","downloadPNG":"Download PNG image","downloadSVG":"Download SVG vector image","drillUpText":"Back to {series.name}","invalidDate":null,"loading":"Loading...","months":["January","February","March","April","May","June","July","August","September","October","November","December"],"noData":"No data to display","numericSymbols":["k","M","G","T","P","E"],"printChart":"Print chart","resetZoom":"Reset zoom","resetZoomTitle":"Reset zoom level 1:1","shortMonths":["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],"thousandsSep":" ","weekdays":["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"]}},"type":"stock","fonts":[],"debug":false},"evals":[],"jsHooks":[]}</script>
+
+
+]
+
+---
+
+
+
+# <i class="fa fa-upload" role="presentation" aria-label="upload icon"></i> Rolling Sharpe Ratio `(tidyverse)`
+
+
+.pull-left[
+
+
+----
+
+.scroll-box-16[
+
+```r
+rolling_sharpe_xts %&gt;%
+tk_tbl(preserve_index = TRUE,
+rename_index = "date") %&gt;%
+rename(rolling_sharpe = xts) %&gt;%
+ggplot(aes(x = date,
+y = rolling_sharpe)) +
+geom_line(color = "cornflowerblue") +
+ggtitle("Rolling 24-Month Sharpe Ratio") +
+labs(y = "rolling sharpe ratio") +
+  scale_x_date(breaks = pretty_breaks(n = 8)) +
+theme(plot.title = element_text(hjust = 0.5))
+```
+]
+
+----
+
+
+
+]
+
+.pull-right[
+
+
+![](8_Portafolio_files/figure-html/unnamed-chunk-18-1.png)&lt;!-- --&gt;
+
+
+]
+
+---
+
+
+
+
+name: capm
+class: inverse, center, middle
+background-color: #00081d
+
+# <i class="fa fa-upload" role="presentation" aria-label="upload icon"></i>
+# CAPM Beta
+----
+
+.right[
+.bottom[
+####  [<i class="fa fa-bell" role="presentation" aria-label="bell icon"></i>](#menu)
+]
+]
+
+---
+
+
+
+
+
+# <i class="fa fa-upload" role="presentation" aria-label="upload icon"></i> CAPM Beta
+
+
+.pull-left[
+
+
+A modo de antecedentes extraordinariamente breves, el Modelo de fijación de precios de activos de capital (CAPM - Capital Asset Pricing Model) es un modelo, creado por William Sharpe, que estima el rendimiento de un activo en función del rendimiento del mercado y la relación lineal del activo con el rendimiento del mercado. Esa relación lineal es el coeficiente beta de la acción.
+
+
+&gt; `\(\beta\)` se puede considerar como la sensibilidad de la acción al mercado, o su riesgo con respecto al mercado.
+
+
+`$$ER_i = R_f + \beta_i (ER_m - R_f)$$`
+dónde
+
+* `\(ER_i\)` Retorno esperado de la inversión
+* `\(R_f\)` Risk free rate
+* `\(\beta_i\)` Beta de la inversión
+* `\((ER_m - R_f)\)` Prima de riesgo de mercado
+
+]
+
+.pull-right[
+
+Nos centraremos en un aspecto particular de CAPM: `\(\beta\)`. 
+
+&lt;br&gt;
+
+&gt; `\(\beta\)`, como señalamos anteriormente, es el coeficiente de un activo que resulta de la regresión de los rendimientos de ese activo sobre los rendimientos del mercado. Captura la relación lineal entre el activo y el mercado. Para nuestros propósitos, es un buen vehículo para explorar un flujo reproducible para modelar o hacer una regresión de los rendimientos de nuestra cartera sobre los rendimientos del mercado. Incluso si su equipo prefiere modelos con más matices, este flujo de trabajo puede servir como una buena base.
+
+
+
+]
+
+---
+
+
+
+
+
+
+# <i class="fa fa-upload" role="presentation" aria-label="upload icon"></i> CAPM Beta
+
+
+.pull-left[
+
+
+El indicador Beta relaciona la volatilidad de un activo, del mercado, y la correlación de activo y mercado. Es decir, en términos estadísticos relaciona la covarianza del activo con el mercado, con la varianza del mercado.
+
+
+$$\beta_{Portafolio} = \frac{cov(R_p, R_m)}{\sigma_m} $$
+
+
+La interpretación es sencilla. 
+
+&lt;br&gt;
+
+* Si `\(\beta\)` de un activo es **mayor que 1**, éste tiene mayor riesgo sistémico que el mercado, y amplifica los movimientos de éste. El activo sería más volátil. Por ejemplo, en un periodo de pérdidas o depreciación, el activo tendría más pérdidas que el conjunto del mercado. Al revés cuando sea un periodo alcista.
+
+]
+
+.pull-right[
+
+* Si sucede lo contrario, y `\(\beta\)` es **menor que 1**, quiere decir que el activo tiene menor riesgo sistémico que el mercado, es menos volátil que la tendencia general.
+
+&lt;br&gt;
+
+* Por último, si el valor **es negativo**, quiere decir que la relación es inversa. Es decir, que la rentabilidad del activo aumentará cuando caiga la del mercado y viceversa.
+
+]
+
+---
+
+
+
+
+# <i class="fa fa-upload" role="presentation" aria-label="upload icon"></i> CAPM Beta `xts`
+
+
+
+.pull-left[
+
+
+Nuestro primer paso es elegir qué activo usar como indicador del **rendimiento del mercado**, por ahora trabajaremos con el SPY ETF, tratando efectivamente al S&amp;P500 como el mercado.
+
+Eso hace que nuestros cálculos sean sustancialmente poco interesantes porque 
+
+* (1) SPY es el 25 % de nuestra cartera
+* (2) hemos elegido activos y un período de tiempo (2013 - 2017) en los que las correlaciones con SPY han sido altas.
+
+
+&gt; Con esas advertencias en mente, siéntase libre de elegir un activo diferente para el rendimiento del mercado e intente reproducir este trabajo, o construya una cartera diferente que no incluya SPY.
+
+
+
+
+]
+
+
+.pull-right[
+
+.scroll-box-16[
+
+```r
+market_returns_xts &lt;-
+      getSymbols("SPY",
+      src = 'yahoo',
+      from = "2012-12-31",
+      to = "2017-12-31",
+      auto.assign = TRUE,
+      warnings = FALSE) %&gt;%
+      map(~Ad(get(.))) %&gt;%
+      reduce(merge) %&gt;%
+      `colnames&lt;-`("SPY") %&gt;%
+      to.monthly(indexAt = "lastof",
+      OHLC = FALSE) %&gt;%
+      Return.calculate(.,
+      method = "log") %&gt;%
+      na.omit()
+
+
+
+
+head(market_returns_xts,5)
+```
+
+```
+##                   SPY
+## 2013-01-31 0.04992305
+## 2013-02-28 0.01267826
+## 2013-03-31 0.03726787
+## 2013-04-30 0.01902992
+## 2013-05-31 0.02333547
+```
+]
+
+&gt; Es importante destacar que si tu portafolio por ejemplo presenta inversiones en el mercado de activos tecnológicos, puedes buscar un activo enfocado en el rendimineto del mercado tecnológico para hacer la comparación.
+
+
+]
+
+---
+
+
+
+
+
+# <i class="fa fa-upload" role="presentation" aria-label="upload icon"></i> CAPM Beta `tidyverse`
+
+
+
+.pull-left[
+
+
+Nuestro primer paso es elegir qué activo usar como indicador del **rendimiento del mercado**, por ahora trabajaremos con el SPY ETF, tratando efectivamente al S&amp;P500 como el mercado.
+
+Eso hace que nuestros cálculos sean sustancialmente poco interesantes porque 
+
+* (1) SPY es el 25 % de nuestra cartera
+* (2) hemos elegido activos y un período de tiempo (2013 - 2017) en los que las correlaciones con SPY han sido altas.
+
+
+&gt; Con esas advertencias en mente, siéntase libre de elegir un activo diferente para el rendimiento del mercado e intente reproducir este trabajo, o construya una cartera diferente que no incluya SPY.
+
+
+
+
+]
+
+
+.pull-right[
+
+.scroll-box-16[
+
+```r
+market_returns_tidy &lt;-
+        market_returns_xts %&gt;%
+        tk_tbl(preserve_index = TRUE,
+        rename_index = "date") %&gt;%
+        na.omit() %&gt;%
+        select(date, returns = SPY)
+
+
+head(market_returns_tidy, 5)
+```
+
+```
+## # A tibble: 5 x 2
+##   date       returns
+##   &lt;date&gt;       &lt;dbl&gt;
+## 1 2013-01-31  0.0499
+## 2 2013-02-28  0.0127
+## 3 2013-03-31  0.0373
+## 4 2013-04-30  0.0190
+## 5 2013-05-31  0.0233
+```
+]
+
+&gt; Es importante destacar que si tu portafolio por ejemplo presenta inversiones en el mercado de activos tecnológicos, puedes buscar un activo enfocado en el rendimineto del mercado tecnológico para hacer la comparación.
+
+
+]
+
+
+
+---
+
+
+# <i class="fa fa-upload" role="presentation" aria-label="upload icon"></i> CAPM Beta
+
+
+
+```r
+portfolio_returns_tq_rebalanced_monthly %&gt;%
+         mutate(market_returns = market_returns_tidy$returns) %&gt;%
+         head(20)
+```
+
+```
+## # A tibble: 20 x 3
+##    date         returns market_returns
+##    &lt;date&gt;         &lt;dbl&gt;          &lt;dbl&gt;
+##  1 2013-01-31  0.0308          0.0499 
+##  2 2013-02-28 -0.000870        0.0127 
+##  3 2013-03-31  0.0187          0.0373 
+##  4 2013-04-30  0.0206          0.0190 
+##  5 2013-05-31 -0.00535         0.0233 
+##  6 2013-06-30 -0.0229         -0.0134 
+##  7 2013-07-31  0.0412          0.0504 
+##  8 2013-08-31 -0.0255         -0.0305 
+##  9 2013-09-30  0.0544          0.0312 
+## 10 2013-10-31  0.0352          0.0453 
+## 11 2013-11-30  0.0162          0.0292 
+## 12 2013-12-31  0.0130          0.0256 
+## 13 2014-01-31 -0.0460         -0.0359 
+## 14 2014-02-28  0.0421          0.0445 
+## 15 2014-03-31  0.0110          0.00826
+## 16 2014-04-30  0.00360         0.00693
+## 17 2014-05-31  0.0179          0.0229 
+## 18 2014-06-30  0.0196          0.0204 
+## 19 2014-07-31 -0.0179         -0.0135 
+## 20 2014-08-31  0.0256          0.0387
+```
+
+
+
+
+
+---
+
+
+
+
+# <i class="fa fa-upload" role="presentation" aria-label="upload icon"></i> CAPM Beta `xts`
+
+
+
+.pull-left[
+
+
+* La covarianza de los rendimientos de la cartera y los rendimientos del mercado dividida por la varianza de los rendimientos del mercado es igual a la estimación beta ponderada de cada activo.
+
+
+`$$\beta_{Portfolio} = \sum_{i=1}^n W_i \beta_i$$`
+* `\(\beta\)` está cerca de 1 y no es una sorpresa ya que SPY es una gran parte de esta cartera.
+
+* Además, al ser menor que 1 esta cartera tiene menor riesgo sistémico que el mercado. Esto es natural, ya que nuestra cartera está más diversificada respecto al mercado.
+
+]
+
+
+.pull-right[
+
+
+
+```r
+beta_builtin_xts &lt;-
+    CAPM.beta(portfolio_returns_xts_rebalanced_monthly,
+    market_returns_xts)
+    beta_builtin_xts
+```
+
+```
+## [1] 0.8914377
+```
+
+
+
+]
+
+---
+
+
+
+name: shiny
+class: inverse, center, middle
+background-color: #00081d
+
+# <i class="fa fa-broom" role="presentation" aria-label="broom icon"></i>
+# Shiny App
+----
+
+.right[
+.bottom[
+####  [<i class="fa fa-bell" role="presentation" aria-label="bell icon"></i>](#menu)
+]
+]
+
+
+
+
+---
+
+# <i class="fa fa-broom" role="presentation" aria-label="broom icon"></i> Shiny App
+
+.center[
+&lt;img src="img/Dashboard.JPG" width="100%" /&gt;
+]
+
+
+---
+
+
+
+# <i class="fa fa-broom" role="presentation" aria-label="broom icon"></i> Shiny App
+
+
+.scroll-box-18[
+````
+---
+title: "Sharpe Ratio"
+runtime: shiny
+output:
+  flexdashboard::flex_dashboard:
+    orientation: rows
+    source_code: embed
+---
+
+```{r setup, message = FALSE}
+library(flexdashboard)
+library(highcharter)
+library(tidyquant)
+library(timetk)
+library(shiny)
+library(scales)
+library(purrr)
+```
+
+Sidebar {.sidebar}
+=====================================
+  
+```{r}
+
+fluidRow(
+  column(5,
+  textInput("stock1", "Stock 1", "SPY")),
+  column(5,
+  numericInput("w1", "Portf. %", 25, min = 1, max = 100))
+)  
+
+fluidRow(
+  column(5,
+  textInput("stock2", "Stock 2", "EFA")),
+  column(5,
+  numericInput("w2", "Portf. %", 25, min = 1, max = 100))
+)
+
+fluidRow(
+  column(5,
+  textInput("stock3", "Stock 3", "IJS")),
+  column(5,
+  numericInput("w3", "Portf. %", 20, min = 1, max = 100))
+)
+
+fluidRow(
+  column(5,
+  textInput("stock4", "Stock 4", "EEM")),
+  column(5,
+  numericInput("w4", "Portf. %", 20, min = 1, max = 100))
+)
+
+fluidRow(
+  column(5,
+  textInput("stock5", "Stock 5", "AGG")),
+  column(5,
+  numericInput("w5", "Portf. %", 10, min = 1, max = 100))
+)
+
+
+fluidRow(
+  column(7,
+  dateInput("date", "Starting Date", "2013-01-01", format = "yyyy-mm-dd")))
+
+fluidRow(
+  column(5,
+  numericInput("rfr", "RFR%", .03, min = 0, max = 1, step = .0002)),
+  column(5,
+  numericInput("window", "Window", 6, min = 3, max = 24, step = 2))
+)
+
+actionButton("go", "Submit")
+```
+
+```{r}
+# market calculations
+
+rfr &lt;- eventReactive(input$go, {input$rfr/100})
+
+window &lt;- eventReactive(input$go, {input$window}) 
+
+
+market_returns &lt;- eventReactive(input$go, {
+  
+    getSymbols("SPY", src = 'yahoo', 
+            from = input$date, 
+             auto.assign = TRUE, 
+             warnings = FALSE) %&gt;% 
+    map(~Ad(get(.))) %&gt;% 
+    reduce(merge) %&gt;%
+    `colnames&lt;-`("SPY") %&gt;% 
+    to.monthly(indexAt = "lastof", 
+               OHLC = FALSE) %&gt;% 
+    Return.calculate(method = "log") %&gt;% 
+    na.omit()  
+})
+
+market_sharpe &lt;- eventReactive(input$go, {
+  
+  SharpeRatio(market_returns(),
+              Rf = rfr(), 
+              FUN = "StdDev")
+})
+
+market_rolling_sharpe &lt;- eventReactive(input$go, {
+  
+  rollapply(market_returns(), 
+            window(), 
+            function(x) 
+            SharpeRatio(x, 
+                        Rf = rfr(), 
+                        FUN = "StdDev")) %&gt;% 
+  na.omit()
+})
+```
+
+```{r}
+# Portfolio calculations
+
+portfolio_returns &lt;- eventReactive(input$go, {
+  
+  symbols &lt;- c(input$stock1, input$stock2, input$stock3, input$stock4, input$stock5)
+  
+  validate(need(input$w1 + input$w2 + input$w3 + input$w4 + input$w5 == 100, 
+                "The portfolio weights must sum to 100%!"))
+  
+  w &lt;- c(input$w1/100, input$w2/100, input$w3/100, input$w4/100, input$w5/100)
+  
+  getSymbols(symbols, src = 'yahoo', from = input$date, 
+             auto.assign = TRUE, warnings = FALSE) %&gt;% 
+  map(~Ad(get(.))) %&gt;% 
+  reduce(merge) %&gt;%
+  `colnames&lt;-`(symbols) %&gt;% 
+  to.monthly(indexAt = "lastof", 
+             OHLC = FALSE) %&gt;% 
+  Return.calculate(method = "log") %&gt;% 
+  na.omit() %&gt;% 
+  Return.portfolio(weights = w)
+  
+})
+
+
+portfolio_rolling_sharpe &lt;- eventReactive(input$go, {
+
+  rollapply(portfolio_returns(),
+            window(),
+            function(x) SharpeRatio(x, 
+                                    Rf = rfr(), 
+                                    FUN = "StdDev")) %&gt;% 
+  na.omit()
+})
+
+portfolio_sharpe &lt;- eventReactive(input$go, {
+  
+  validate(need(input$w1 + input$w2 + input$w3 + input$w4 + input$w5 == 100, "------"))
+  
+  SharpeRatio(portfolio_returns(),
+              Rf = rfr(), 
+              FUN = "StdDev")
+  
+})
+
+
+
+beta_builtin_xts &lt;- eventReactive(input$go, {
+    CAPM.beta(portfolio_returns(), market_returns())
+
+
+})
+
+```
+
+Sharpe Ratio
+=====================================  
+
+Row {data-height=800}
+-----------------------------------------------------------------------
+
+### Rolling Sharpe
+
+```{r}
+renderHighchart({
+  
+  validate(need(input$go, "Please choose your portfolio assets, weights, rfr, rolling window and start date and click submit."))
+  
+  
+  highchart(type = "stock") %&gt;%
+  hc_title(text = "Rolling Sharpe") %&gt;%
+  hc_add_series(portfolio_rolling_sharpe(), name = "Portfolio", color = "cornflowerblue") %&gt;%
+  hc_add_series(market_rolling_sharpe(), name = "Market", color = "green") %&gt;%
+  hc_navigator(enabled = FALSE) %&gt;% 
+  hc_scrollbar(enabled = FALSE) %&gt;% 
+  hc_exporting(enabled = TRUE) %&gt;% 
+  hc_legend(enabled = TRUE, align = "right", verticalAlign = "middle",
+            layout = "vertical")
+
+  
+})
+```
+
+
+Row {data-height=200}
+-----------------------------------------------------------------------
+
+### The Sharpe Ratio of Your Portfolio
+
+```{r}
+renderValueBox({
+  
+  
+  valueBox(value = tags$p(round(portfolio_sharpe(), 4), 
+                          style = "font-size: 70%;"), 
+           color = "primary")
+})
+
+```
+
+### Sharpe Ratio of S&amp;P500 in same time period
+
+```{r}
+renderValueBox({
+  
+  valueBox(value = tags$p(round(market_sharpe(), 4), 
+                          style = "font-size: 70%;"), 
+           color = "primary")
+})
+
+```
+
+
+
+### CAPM Beta
+
+```{r}
+renderValueBox({
+  
+  valueBox(value = tags$p(round(beta_builtin_xts(), 4), 
+                          style = "font-size: 70%;"), 
+           color = "red")
+})
+
+```
+````
+]
+
+
+
+
+---
+
+
+class: inverse, center, middle
+background-color: #00081d
+
+
+
+
+.pull-left[
+
+.center[
+&lt;br&gt;&lt;br&gt;
+
+# Thanks!!!
+
+&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;
+
+
+
+### Questions?
+]
+
+
+]
+
+
+.pull-right[
+
+
+.center[
+&lt;img style="border-radius: 50%;" src="img/avatar2.PNG"
+width="100px"
+/&gt;
+
+<span>&lt;i class="fas  fa-envelope faa-passing animated "&gt;&lt;/i&gt;</span> diego.manotas@correounivalle.edu.co
+
+
+&lt;br&gt;&lt;br&gt;&lt;br&gt;
+
+
+.center[
+&lt;img style="border-radius: 50%;" src="img/avatar3.png"
+width="100px" href="https://www.joaquibarandica.com"
+/&gt;
+
+<span>&lt;i class="fas  fa-envelope faa-passing animated "&gt;&lt;/i&gt;</span> orlando.joaqui@correounivalle.edu.co 
+]
+
+
+
+]
+
+
+]
+
+
+&lt;br&gt;&lt;br&gt;&lt;br&gt;
+
+----
+
+*The images used to set the presentation are from [pixabay](https://pixabay.com/).*
+
+
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script src="cols_macro.js"></script>
+<script>var slideshow = remark.create({
+"ratio": "16:9",
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
