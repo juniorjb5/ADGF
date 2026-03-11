@@ -1,0 +1,3301 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Analítica en la Gestión Financiera</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Orlando Joaqui-Barandica, PhD." />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link href="libs/remark-css/rladies.css" rel="stylesheet" />
+    <link href="libs/remark-css/rladies-fonts.css" rel="stylesheet" />
+    <link href="libs/font-awesome-animation/font-awesome-animation-emi.css" rel="stylesheet" />
+    <script src="libs/fontawesome/js/fontawesome-all.min.js"></script>
+    <link href="libs/font-awesome/css/all.min.css" rel="stylesheet" />
+    <link href="libs/font-awesome/css/v4-shims.min.css" rel="stylesheet" />
+    <script src="libs/htmlwidgets/htmlwidgets.js"></script>
+    <script src="libs/jquery/jquery.min.js"></script>
+    <script src="libs/proj4js/proj4.js"></script>
+    <link href="libs/highcharts/css/motion.css" rel="stylesheet" />
+    <script src="libs/highcharts/highcharts.js"></script>
+    <script src="libs/highcharts/highcharts-3d.js"></script>
+    <script src="libs/highcharts/highcharts-more.js"></script>
+    <script src="libs/highcharts/modules/stock.js"></script>
+    <script src="libs/highcharts/modules/map.js"></script>
+    <script src="libs/highcharts/modules/data.js"></script>
+    <script src="libs/highcharts/modules/exporting.js"></script>
+    <script src="libs/highcharts/modules/offline-exporting.js"></script>
+    <script src="libs/highcharts/modules/drilldown.js"></script>
+    <script src="libs/highcharts/modules/item-series.js"></script>
+    <script src="libs/highcharts/modules/overlapping-datalabels.js"></script>
+    <script src="libs/highcharts/modules/annotations.js"></script>
+    <script src="libs/highcharts/modules/export-data.js"></script>
+    <script src="libs/highcharts/modules/funnel.js"></script>
+    <script src="libs/highcharts/modules/heatmap.js"></script>
+    <script src="libs/highcharts/modules/treemap.js"></script>
+    <script src="libs/highcharts/modules/sankey.js"></script>
+    <script src="libs/highcharts/modules/dependency-wheel.js"></script>
+    <script src="libs/highcharts/modules/organization.js"></script>
+    <script src="libs/highcharts/modules/solid-gauge.js"></script>
+    <script src="libs/highcharts/modules/streamgraph.js"></script>
+    <script src="libs/highcharts/modules/sunburst.js"></script>
+    <script src="libs/highcharts/modules/vector.js"></script>
+    <script src="libs/highcharts/modules/wordcloud.js"></script>
+    <script src="libs/highcharts/modules/xrange.js"></script>
+    <script src="libs/highcharts/modules/tilemap.js"></script>
+    <script src="libs/highcharts/modules/venn.js"></script>
+    <script src="libs/highcharts/modules/gantt.js"></script>
+    <script src="libs/highcharts/modules/timeline.js"></script>
+    <script src="libs/highcharts/modules/parallel-coordinates.js"></script>
+    <script src="libs/highcharts/modules/bullet.js"></script>
+    <script src="libs/highcharts/modules/coloraxis.js"></script>
+    <script src="libs/highcharts/modules/dumbbell.js"></script>
+    <script src="libs/highcharts/modules/lollipop.js"></script>
+    <script src="libs/highcharts/modules/series-label.js"></script>
+    <script src="libs/highcharts/plugins/motion.js"></script>
+    <script src="libs/highcharts/custom/reset.js"></script>
+    <script src="libs/highcharts/modules/boost.js"></script>
+    <script src="libs/highchart-binding/highchart.js"></script>
+    <script src="libs/plotly-binding/plotly.js"></script>
+    <script src="libs/typedarray/typedarray.min.js"></script>
+    <link href="libs/crosstalk/css/crosstalk.min.css" rel="stylesheet" />
+    <script src="libs/crosstalk/js/crosstalk.min.js"></script>
+    <link href="libs/plotly-htmlwidgets-css/plotly-htmlwidgets.css" rel="stylesheet" />
+    <script src="libs/plotly-main/plotly-latest.min.js"></script>
+    <link rel="stylesheet" href="sydney.css" type="text/css" />
+    <link rel="stylesheet" href="fonts_mtheme.css" type="text/css" />
+    <link rel="stylesheet" href="cols.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+
+
+
+
+
+
+
+
+class: inverse, left, bottom
+background-image: url("img/fondo.jpg")
+background-size: cover
+
+
+# **Analítica en la Gestión Financiera**
+----
+
+## **&lt;br/&gt; Del dato al modelo**
+
+### Orlando Joaqui-Barandica, PhD.
+###  
+
+
+---
+
+
+
+class: center, middle
+
+
+
+
+
+&lt;img src="img/univalle.jpg" width="20%" style="display: block; margin: auto;" /&gt;
+
+
+
+---
+
+
+
+
+
+
+class: center, middle
+
+
+.center[
+
+&lt;br&gt;
+
+
+
+&lt;a href="https://www.joaquibarandica.com" target="_blank"&gt;
+  &lt;img src="img/avatar.png"
+       style="border-radius: 80%; width: 220px; max-width: 30%; height: auto;"
+       alt="Avatar"/&gt;
+&lt;/a&gt;
+
+
+## Orlando Joaqui-Barandica
+
+
+Doctor en Ingeniería, Enf. Ingeniería Industrial **|** Magíster en Economía Aplicada **|** Estadístico.
+
+
+
+<span>&lt;i class="fas  fa-envelope faa-passing animated "&gt;&lt;/i&gt;</span> orlando.joaqui@correounivalle.edu.co 
+]
+
+
+
+.center[
+### [www.joaquibarandica.com](https://www.joaquibarandica.com)
+]
+
+
+
+
+---
+
+
+name: menu
+background-image: url("img/back2.jpg")
+background-size: cover
+class: left, middle
+
+
+# Contenido
+
+----
+
+
+.pull-left[
+### <i class="fas fa-upload" role="presentation" aria-label="upload icon"></i> [Cálculo de retornos](#retornos)
+* xts
+* tidyverse
+* tidyquant
+
+
+### <i class="fas fa-broom" role="presentation" aria-label="broom icon"></i> [Visualización](#Vis)
+* xts
+* tidyverse
+
+
+]
+
+
+.pull-right[
+
+### <i class="fas fa-cubes" role="presentation" aria-label="cubes icon"></i> [Construcción de portafolio](#portafolio)
+* xts
+* tidyverse
+* tidyquant
+
+
+###  <i class="fas fa-cubes" role="presentation" aria-label="cubes icon"></i> [Shiny App](#shiny)
+
+]
+
+---
+
+name: retornos
+class: inverse, center, middle
+background-color: #00081d
+
+# <i class="fas fa-upload" role="presentation" aria-label="upload icon"></i>
+# Cálculo de retornos
+----
+
+.right[
+.bottom[
+####  [<i class="far fa-bell" role="presentation" aria-label="bell icon"></i>](#menu)
+]
+]
+
+---
+
+
+
+
+## Qué es una cartera de inversión?
+
+
+Una cartera de inversión es el conjunto de activos financieros que pertenecen a una persona o por una institución, ya sea una sociedad o un fondo.
+
+
+
+.pull-left[
+
+&lt;img src="img/img1.png" width="300px" style="display: block; margin: auto;" /&gt;
+
+
+
+ ]
+
+.pull-right[
+
+&gt; Qué puede contener una cartera?
+
+- Acciones
+- Obligaciones
+- Materias primas
+- Fondos
+- Pólizas
+- Etc.
+
+]
+
+---
+
+
+
+
+## Asignación de activos y riesgo
+
+
+#### La cartera refleja la propensión al riesgo del inversor, así como el horizonte temporal y los objetivos de su inversión.
+
+
+.center[
+
+## Rentabilidad vs Riesgo
+
+
+
+
+&lt;img src="https://media.giphy.com/media/xT8qBit7YomT80d0M8/giphy.gif" width="20%"/&gt;
+
+]
+
+
+.center[
+`Diversificar correctamente la inversión permitirá que la cartera esté expuesta a menos riesgos que si se invierte en una única clase de activos o en un único título.`
+]
+
+
+---
+
+
+background-image: url("https://media.giphy.com/media/m65GQLUX8faUw/giphy.gif")
+background-size: cover
+class: inverse, center, middle
+
+# Rentabilidad vs Riesgo
+
+---
+
+
+
+## ¿Por qué crear una cartera de inversión?
+
+
+.pull-left[
+
+.center[
+
+## La creación de una cartera de inversión obedece a la necesidad del inversor de diversificar sus inversiones
+
+## con el fin de..
+
+## reducir sus riesgos de pérdida.
+
+]
+
+]
+
+
+
+.pull-right[
+
+&lt;br&gt;
+&lt;br&gt;
+
+.center[
+&lt;img src="https://media.giphy.com/media/MRxJqmk3MNta8/giphy.gif" width="90%"/&gt;
+]
+]
+
+
+---
+
+
+## ¿Quién gestiona la cartera de inversión?
+
+
+
+.center[
+&lt;img src="https://media.giphy.com/media/3o6wroTygkjop77QiY/giphy.gif" width="40%"/&gt;
+]
+
+
+.center[
+### La cartera pertenece al inversor  pero puede ser gestionada por un profesional financiero, por un banco, por un fondo o por otras instituciones financieras.
+]
+
+---
+
+## Diversificar y cubrir riesgos
+
+
+.pull-left[
+
+&lt;br&gt;
+
+La principal premisa de cualquier portafolio de inversión, especialmente a largo plazo, es alcanzar el equilibrio.
+
+----
+&gt;Independientemente del **perfil inversor de cada persona**, una buena cartera debe de ser capaz de cubrir los riesgos de los activos `más agresivos` con otros más `conservadores.`
+
+----
+
+&lt;br&gt;
+
+.center[
+### Diversificar la inversión es la mejor fórmula para lograrlo.
+]
+
+]
+
+
+.pull-right[
+
+
+
+.center[
+
+&lt;img src="img/img2.png" width="600px" style="display: block; margin: auto;" /&gt;
+
+
+&lt;br&gt;
+
+
+Del mismo modo que en bolsa no es recomendable tener acciones sólo de una empresa o de un sector en concreto, tampoco hay que fiar todo el patrimonio a un tipo de inversión o familia de productos
+]
+
+
+
+
+]
+
+
+---
+
+background-image: url("https://media.giphy.com/media/5UEO7c7Ubk5pKQYwje/giphy.gif")
+background-size: cover
+class: inverse, center, middle
+
+# ¿Cuánto invertir en cada activo?
+
+
+---
+
+class: left, bottom
+background-image: url("img/back1.png")
+background-size: cover
+
+
+---
+
+class: left, bottom
+background-image: url("img/back2.png")
+background-size: cover
+
+
+---
+
+class: left, bottom
+background-image: url("img/back3.png")
+background-size: cover
+
+
+---
+
+class: left, bottom
+background-image: url("img/back4.png")
+background-size: cover
+
+
+---
+
+class: left, bottom
+background-image: url("img/back5.png")
+background-size: cover
+
+
+---
+
+class: left, bottom
+background-image: url("img/back6.png")
+background-size: cover
+
+
+---
+
+class: left, bottom
+background-image: url("img/back7.png")
+background-size: cover
+
+
+---
+
+class: left, bottom
+background-image: url("img/back8.png")
+background-size: cover
+
+
+---
+
+class: left, bottom
+background-image: url("img/back9.png")
+background-size: cover
+
+
+---
+
+class: left, bottom
+background-image: url("img/back10.png")
+background-size: cover
+
+
+---
+
+class: left, bottom
+background-image: url("img/back11.png")
+background-size: cover
+
+
+---
+
+
+background-image: url("https://media.giphy.com/media/3o7abIileRivlGr8Nq/giphy.gif")
+background-size: cover
+class: inverse, center, middle
+
+# Hoy ganamos!!... mañana?
+
+
+
+---
+
+
+
+# <i class="fas fa-upload" role="presentation" aria-label="upload icon"></i> Packages
+
+
+Los siguientes son los paquetes que serán utilizados en los temas del curso.
+
+
+----
+
+.scroll-box-20[
+
+```r
+# tidyverse contains the packages tidyr, ggplot2, dplyr,
+# readr, purrr and tibble
+install.packages("tidyverse")
+install.packages("lubridate")
+install.packages("readxl")
+install.packages("highcharter")
+install.packages("tidyquant")
+install.packages("timetk")
+install.packages("tibbletime")
+install.packages("quantmod")
+install.packages("PerformanceAnalytics")
+install.packages("scales")
+
+
+library(tidyverse)
+library(lubridate)
+library(readxl)
+library(highcharter)
+library(tidyquant)
+library(timetk)
+library(tibbletime)
+library(quantmod)
+library(PerformanceAnalytics)
+library(scales)
+```
+]
+
+----
+
+
+---
+
+# <i class="fas fa-upload" role="presentation" aria-label="upload icon"></i> Asset Prices to Returns
+
+
+En nuestro tema de rendimientos de activos `(asset returns)` tomaremos datos de precios sin procesar para 5 activos individuales y los transformaremos en rendimientos mensuales para una sola cartera `(portfolio)`. 
+
+
+
+.pull-left[
+
+Nuestro portafolio consiste en los siguientes ETFs (Exchange Traded Funds)
+
+- SPY (S&amp;P500 ETF) `weighted 25%`
+- EFA (a non-US equities ETF) `weighted 25%`
+- IJS (a small-cap value ETF) `weighted 20%`
+- EEM (an emerging-markets ETF) `weighted 20%`
+- AGG (a bond ETF) `weighted 10%`
+
+
+### Enfoques
+
+Trabajaremos tres enfoques de codificación:
+
+* xts
+* tidyverse
+* tidyquant
+
+
+]
+
+
+.pull-right[
+
+&lt;br&gt;
+
+![](https://media.giphy.com/media/l0HlDDyxBfSaPpU88/giphy.gif)
+
+
+]
+
+
+---
+
+
+
+# <i class="fas fa-upload" role="presentation" aria-label="upload icon"></i> Asset Prices to Returns
+
+
+### Cargar los precios diarios
+
+.pull-left[
+
+Lo hacemos con los `symbols &lt;- c("SPY", "EFA", "IJS", "EEM", "AGG")`. Esos son los tickers de los 5 activos de nuestra cartera. Si desea cambiar a diferentes activos para realizar pruebas, cambie esos tickers. Tenga en cuenta que si desea elegir diferentes tickers de acciones o crear una cartera diferente, cambie los tickers en el vector de símbolos.
+
+----
+
+
+```r
+symbols &lt;- c("SPY","EFA", "IJS", "EEM","AGG")
+```
+
+----
+
+Importaremos los 5 ETFs en un objeto `xts` llamado precios.
+
+
+]
+
+
+.pull-right[
+
+La función `getSymbols()` del paquete `quantmod` nos permite realizar lectura de los datos diarios desde [Yahoo! Finance](https://finance.yahoo.com/).
+
+
+
+&lt;br&gt;
+
+Esto devolverá un objeto con el precio de apertura, precio de cierre, precio ajustado, máximo diario, mínimo diario y volumen diario para cada ticker.
+
+
+]
+
+
+---
+
+
+
+# <i class="fas fa-upload" role="presentation" aria-label="upload icon"></i> Asset Prices to Returns
+
+
+### Cargar los precios diarios
+
+.pull-left[
+
+
+&lt;br&gt;
+
+----
+
+
+```r
+prices &lt;-
+getSymbols(symbols,
+           src = 'yahoo',
+           from = "2012-12-31",
+           to = "2017-12-31",
+           auto.assign = TRUE,
+           warnings = FALSE) %&gt;%
+map(~Ad(get(.)))
+```
+
+----
+
+Note que la fuente se especifica desde Yahoo! Finance con `src = 'yahoo'`.
+
+]
+
+
+.pull-right[
+
+
+* Estamos imponiendo una fecha de inicio de "2012-12-31" y una fecha de finalización de "2017-12-31". Eso significa que trabajaremos con 5 años de datos (cuando convertimos a rendimientos mensuales, perderemos diciembre de 2012)
+
+
+&lt;br&gt;
+
+
+* Para aislar el precio ajustado, usamos la función `map()` del paquete `purrr` y aplicamos `Ad(get(.))` a los precios. Esto obtendrá el precio ajustado de cada una de nuestras series individuales. Si quisieramos el precio de cierre sería: `Cl(get(.))`.
+Aquí, el `.` hace referencia a nuestro objeto inicial.
+
+]
+
+
+---
+
+
+
+
+
+# <i class="fas fa-upload" role="presentation" aria-label="upload icon"></i> Asset Prices to Returns
+
+
+### Cargar los precios diarios
+
+.pull-left[
+
+
+&lt;br&gt;
+
+----
+
+
+```r
+prices &lt;-
+getSymbols(symbols,
+           src = 'yahoo',
+           from = "2012-12-31",
+           to = "2017-12-31",
+           auto.assign = TRUE,
+           warnings = FALSE) %&gt;%
+map(~Ad(get(.))) %&gt;%
+reduce(merge) %&gt;%
+`colnames&lt;-`(symbols)
+```
+
+----
+
+]
+
+
+.pull-right[
+
+&lt;br&gt;
+
+* `map()` devuelve una lista de 5 objetos `xts`.
+
+
+* `reduce(merge)` fusionará las 5 listas en un solo objeto `xts`.
+
+* `merge()` busca el índice de fecha compartido por nuestros objetos y usa ese índice para alinear los datos.
+
+* `colnames &lt;-` renombra las columnas de acuerdo  al objeto `symbols`
+
+]
+
+
+---
+
+
+
+
+# <i class="fas fa-upload" role="presentation" aria-label="upload icon"></i> Asset Prices to Returns
+
+
+### Cargar los precios diarios desde un external file
+
+.pull-left[
+
+
+
+----
+
+
+```r
+# Desde .csv
+prices &lt;-
+      read_csv("path to your data.csv",
+          col_types =
+          cols(date =
+          col_date(format = "%Y-%m-%d"))) %&gt;%
+tk_xts(date_var = date)
+
+
+# Desde .xlsx
+prices &lt;-
+       read_excel("path to your excel spreadsheet",
+                 col_types = c("text", "numeric",
+                 "numeric", "numeric",
+                 "numeric", "numeric")) %&gt;%
+mutate(date = ymd(date)) %&gt;%
+tk_xts(date_var = date)
+```
+
+----
+
+]
+
+
+.pull-right[
+
+
+
+* Para cargar el archivo usamos la función `read_csv()`  del paquete `readr`. Si la extensión es *.csv*, si hay otras extensiones como *.xlsx* se puede utilizar la función `read_xlsx()` o `read_excel` del paquete `readxl`.
+
+
+* `tk_xts(date_var = date)` convierte el data frame en `xts`.
+
+* `ymd()` del paquete `lubridate` convierte a formato fecha el vector.
+
+* `mutate()` crea una variable.
+
+]
+
+
+---
+
+
+
+
+
+# <i class="fas fa-upload" role="presentation" aria-label="upload icon"></i> Asset Prices to Returns
+
+
+### Al final tenemos...
+
+.pull-left[
+
+
+
+----
+
+
+```r
+symbols &lt;- c("SPY","EFA", "IJS", "EEM","AGG")
+
+
+prices &lt;-
+getSymbols(symbols,
+           src = 'yahoo',
+           from = "2012-12-31",
+           to = "2017-12-31",
+           auto.assign = TRUE,
+           warnings = FALSE) %&gt;%
+map(~Ad(get(.))) %&gt;%
+reduce(merge) %&gt;%
+`colnames&lt;-`(symbols)
+
+head(prices,10)
+```
+
+----
+
+]
+
+
+.pull-right[
+
+
+
+
+
+```
+##                 SPY      EFA      IJS      EEM      AGG
+## 2012-12-31 113.6953 38.59528 33.11091 33.22223 78.42946
+## 2013-01-02 116.6093 39.19260 34.01941 33.87394 78.33769
+## 2013-01-03 116.3458 38.81248 33.97439 33.63423 78.13999
+## 2013-01-04 116.8568 39.00933 34.24039 33.70164 78.22470
+## 2013-01-07 116.5374 38.83963 34.03987 33.44696 78.18232
+## 2013-01-08 116.2021 38.62243 33.90892 33.14732 78.25294
+## 2013-01-09 116.4975 38.81927 34.00715 33.28965 78.19643
+## 2013-01-10 117.4236 39.31478 34.04805 33.58180 78.18943
+## 2013-01-11 117.4157 39.39623 34.02350 33.31213 78.26704
+## 2013-01-14 117.3358 39.44375 34.01532 33.45445 78.33769
+```
+
+
+]
+
+
+---
+
+
+
+
+# <i class="fas fa-upload" role="presentation" aria-label="upload icon"></i> `xts`
+
+
+.pull-left[
+
+La primera observación en nuestro objeto de precios es el 31 de diciembre de 2012 (último día de negociación de ese año) y tenemos precios diarios. Queremos convertir esos precios diarios en retornos de registros mensuales basados en la última lectura de cada mes.
+
+&lt;br&gt;
+
+----
+
+* Usaremos `to.monthly(prices, indexAt = "lastog", OHLC = FALSE)` del paquete `quantmod`.
+
+&lt;br&gt;
+
+* El argumento `indexAt = "lastof"` le dice a la función si queremos indexar al primer día del mes o al último día. Si quisieramos usar el primer día, lo cambiariamos a `indexAt = "firstof"`.
+
+----
+
+
+]
+
+
+.pull-right[
+
+
+&lt;br&gt;&lt;br&gt;
+
+----
+
+
+
+```r
+prices_monthly &lt;- to.monthly(prices,
+                  indexAt = "lastof",
+                  OHLC = FALSE)
+
+head(prices_monthly, 7)
+```
+
+```
+##                 SPY      EFA      IJS      EEM      AGG
+## 2012-12-31 113.6953 38.59528 33.11091 33.22223 78.42946
+## 2013-01-31 119.5153 40.03428 34.88288 33.12486 77.94228
+## 2013-02-28 121.0402 39.51841 35.45173 32.36826 78.40281
+## 2013-03-31 125.6363 40.03428 36.90806 32.03867 78.48002
+## 2013-04-30 128.0500 42.04347 36.95320 32.42818 79.24020
+## 2013-05-31 131.0733 40.77415 38.53737 30.86259 77.65455
+## 2013-06-30 129.3242 39.68224 38.48336 29.21892 76.43890
+```
+
+
+----
+
+
+* Hemos convertido un objeto `xts` diario a un objeto `xts` mensual
+
+]
+
+
+---
+
+
+
+
+
+
+
+# <i class="fas fa-upload" role="presentation" aria-label="upload icon"></i> `xts`
+
+
+
+.pull-left[
+
+
+* Usaremos `Return.calculate(prices_monthly, method = "log")` para convertir a retornos y guardar un objeto llamado `asset_returns_xts`
+
+
+* Note que estos están dados en logaritmo por `method = "log"`.
+
+`$$r_t = ln \left( \frac{P_t}{P_{t-1}} \right)$$`
+
+* Podríamos usar `method = "discrete"` para obtener los retornos simples.
+
+`$$r_t = \frac{P_t - P_{t-1}}{P_{t-1}}$$`
+
+* Podríamos usar `method = "difference"`. Obtenemos diferencias absolutas en precios, no retornos.
+
+
+`$$r_t = P_t - P_{t-1}$$`
+
+]
+
+
+.pull-right[
+
+
+&lt;br&gt;&lt;br&gt;
+
+----
+
+
+
+```r
+asset_returns_xts &lt;-
+                     Return.calculate(prices_monthly,
+                     method = "log") %&gt;%
+na.omit()
+
+head(round(asset_returns_xts,3), 7)
+```
+
+```
+##               SPY    EFA    IJS    EEM    AGG
+## 2013-01-31  0.050  0.037  0.052 -0.003 -0.006
+## 2013-02-28  0.013 -0.013  0.016 -0.023  0.006
+## 2013-03-31  0.037  0.013  0.040 -0.010  0.001
+## 2013-04-30  0.019  0.049  0.001  0.012  0.010
+## 2013-05-31  0.023 -0.031  0.042 -0.049 -0.020
+## 2013-06-30 -0.013 -0.027 -0.001 -0.055 -0.016
+## 2013-07-31  0.050  0.052  0.064  0.013  0.003
+```
+
+
+----
+
+
+
+
+]
+
+
+---
+
+
+
+
+# ¿Qué diferencia hay entre el retorno simple y el logarítmico?
+
+
+.pull-left[
+
+Suponga que un activo pasa de `\((P_{t-1})\)` a `\((P_t)\)`.
+
+
+### Idea clave
+
+- El **retorno simple** mide el cambio porcentual directo.
+- El **retorno logarítmico** mide el cambio en escala logarítmica.
+- Cuando las variaciones son pequeñas, ambos valores suelen ser muy parecidos.
+
+### Ejemplo
+
+Si el precio pasa de 100 a 110:
+
+- Retorno simple: `\((\frac{110-100}{100} = 0.10 = 10\%)\)`
+- Retorno logarítmico: `\((\ln(110/100) \approx 0.0953)\)`
+
+
+]
+
+
+
+.pull-right[
+
+### ¿Por qué usar retorno logarítmico?
+
+- Es muy útil en modelación estadística y series de tiempo.
+- Tiene una ventaja importante: **se puede sumar en el tiempo**.
+
+$$
+\ln\left(\frac{P_2}{P_0}\right)
+=
+\ln\left(\frac{P_1}{P_0}\right)
++
+\ln\left(\frac{P_2}{P_1}\right)
+$$
+
+]
+
+---
+
+# ¿Cuántos tipos de retornos hay? ¿Y por qué la diferencia no es un retorno?
+
+
+.pull-left[
+
+### Tipos de retornos más comunes en finanzas
+
+**1. Retorno simple o discreto**
+
+
+**2. Retorno logarítmico**
+
+**3. Retorno total**
+Incluye precio más dividendos o cupones:
+
+----
+
+
+&gt; ¿Por qué `\((P_t - P_{t-1})\)` no se considera un retorno?
+
+Porque eso representa una **diferencia absoluta en precios**, no una variación relativa.
+
+
+]
+
+Ejemplo:
+
+
+.pull-right[
+
+- Activo A: pasa de 10 a 12  
+  $$ P_t - P_{t-1} = 2   ;  r_t = 20\% $$
+
+- Activo B: pasa de 100 a 102  
+  $$ P_t - P_{t-1} = 2  ;   r_t = 2\% $$
+
+
+
+
+----
+
+- La **diferencia** solo indica cuántas unidades subió o bajó el precio.
+- Un **retorno financiero** expresa el cambio **en relación con el precio inicial**.
+- Por eso, en finanzas, los retornos se trabajan como medidas **relativas**, no solo como restas.
+
+
+]
+
+
+
+---
+
+class: inverse, center, middle
+background-color: #00081d
+
+
+# xts
+
+
+
+.pull-left[
+
+En términos más generales, este es un buen momento para notar cómo nuestras decisiones en la transformación de datos pueden afectar los datos que finalmente sobreviven a nuestra etapa analítica. 
+
+Acabamos de perder el primer mes de precios diarios. 
+
+Quizás eso no nos importe, o quizás queremos cambiar la fecha de inicio original para asegurarnos de capturar diciembre de 2012. Depende de la tarea y los datos, y si subcontratamos la preparación de los datos, estas decisiones se tomarán antes.
+
+]
+
+
+.pull-right[
+
+
+&lt;br&gt;&lt;br&gt;
+
+----
+
+**Desde una perspectiva sustantiva, ahora hemos importado precios diarios, recortados a precios ajustados, movidos a precios mensuales y transformados a retornos de registros mensuales, todo en el mundo xts.**
+
+----
+
+]
+
+
+---
+
+
+
+
+
+
+
+# <i class="fas fa-upload" role="presentation" aria-label="upload icon"></i> `tidyverse`
+
+
+.pull-left[
+
+Hay varias diferencias entre un objeto `xts` y un `tibble`, pero uno muy importante es la fecha, un componente esencial de la mayoría de los análisis financieros. Los objetos `xts` tienen un índice de fecha. Por el contrario, los `dataframe` tienen una columna de fecha y esa columna no es necesaria para la existencia del marco de datos.
+
+
+----
+
+
+
+```r
+asset_returns_dplyr_byhand &lt;- prices %&gt;%
+    to.monthly(indexAt = "lastof", OHLC = FALSE) %&gt;%
+    # convert the index to a date
+    data.frame(date = index(.)) %&gt;%
+    # now remove the index because it got converted to row names
+    remove_rownames() %&gt;%
+    gather(asset, prices, -date) %&gt;%
+    group_by(asset) %&gt;%
+    mutate(returns = (log(prices) - log(lag(prices)))) %&gt;%
+    select(-prices) %&gt;%
+    spread(asset, returns) %&gt;%
+    select(date, symbols)
+```
+
+----
+
+
+]
+
+
+.pull-right[
+
+
+----
+
+
+Nuestra conversión de xts a tibble comienza con `data.frame(date = index (.))`
+
+* Convierte nuestro objeto en un data.frame 
+
+* Agrega una columna de fecha basada en el índice con `date = index (.)`. 
+
+&lt;br&gt;
+
+* El índice de fecha del objeto `xts` se conserva como nombres de fila y debe eliminarse explícitamente con `remove_rownames()`.
+
+&lt;br&gt;
+
+* gather() convierte de formato wide a formato long
+
+----
+
+
+
+]
+
+
+---
+
+
+# <i class="fas fa-upload" role="presentation" aria-label="upload icon"></i> `tidyverse`
+
+
+.pull-left[
+
+
+----
+
+
+
+```r
+asset_returns_dplyr_byhand &lt;- prices %&gt;%
+    to.monthly(indexAt = "lastof", OHLC = FALSE) %&gt;%
+    # convert the index to a date
+    data.frame(date = index(.)) %&gt;%
+    # now remove the index because it got converted to row names
+    remove_rownames() %&gt;%
+    gather(asset, prices, -date) %&gt;%
+    group_by(asset) %&gt;%
+    mutate(returns = (log(prices) - log(lag(prices)))) %&gt;%
+    select(-prices) %&gt;%
+    spread(asset, returns) %&gt;%
+    select(date, symbols)
+```
+
+----
+
+
+]
+
+
+.pull-right[
+
+
+----
+
+
+* `mutate()` nos permite crear nuestro propio cálculo de retornos: `mutate(returns = (log(prices) - log(lag(prices))))`
+
+&lt;br&gt;
+
+* Removemos la serie de precios ya que no la necesitamos `select(-prices)`
+
+&lt;br&gt;
+
+* `spread()` convierte de formato long a formato wide
+
+&lt;br&gt;
+
+* reordenamos las columnas según las importamos usando el objeto `symbols`, es decir,
+`select(date, symbols)`
+
+
+----
+
+
+
+]
+
+
+---
+
+
+
+
+# <i class="fas fa-upload" role="presentation" aria-label="upload icon"></i> `tidyverse`
+
+
+.pull-left[
+
+
+----
+
+
+
+```r
+asset_returns_dplyr_byhand &lt;- prices %&gt;%
+    to.monthly(indexAt = "lastof", OHLC = FALSE) %&gt;%
+    # convert the index to a date
+    data.frame(date = index(.)) %&gt;%
+    # now remove the index because it got converted to row names
+    remove_rownames() %&gt;%
+    gather(asset, prices, -date) %&gt;%
+    group_by(asset) %&gt;%
+    mutate(returns = (log(prices) - log(lag(prices)))) %&gt;%
+    select(-prices) %&gt;%
+    spread(asset, returns) %&gt;%
+    select(date, symbols)
+
+
+
+head(asset_returns_dplyr_byhand, 10)
+
+
+asset_returns_dplyr_byhand &lt;-
+asset_returns_dplyr_byhand %&gt;%
+na.omit()
+```
+
+----
+
+
+]
+
+
+.pull-right[
+
+
+
+```
+## # A tibble: 10 × 6
+##    date           SPY     EFA      IJS      EEM       AGG
+##    &lt;date&gt;       &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;
+##  1 2012-12-31 NA      NA      NA       NA       NA       
+##  2 2013-01-31  0.0499  0.0366  0.0521  -0.00294 -0.00623 
+##  3 2013-02-28  0.0127 -0.0130  0.0162  -0.0231   0.00589 
+##  4 2013-03-31  0.0373  0.0130  0.0403  -0.0102   0.000984
+##  5 2013-04-30  0.0190  0.0490  0.00122  0.0121   0.00964 
+##  6 2013-05-31  0.0233 -0.0307  0.0420  -0.0495  -0.0202  
+##  7 2013-06-30 -0.0134 -0.0271 -0.00140 -0.0547  -0.0158  
+##  8 2013-07-31  0.0504  0.0519  0.0635   0.0132   0.00269 
+##  9 2013-08-31 -0.0305 -0.0197 -0.0347  -0.0257  -0.00830 
+## 10 2013-09-30  0.0312  0.0753  0.0639   0.0696   0.0111
+```
+
+
+]
+
+
+---
+
+
+# <i class="fas fa-upload" role="presentation" aria-label="upload icon"></i> `tidyquant`
+
+
+.pull-left[
+
+
+Exploremos el paradigma tidyquant para convertir a retornos logarítmicos.
+
+----
+
+.scroll-box-14[
+
+```r
+asset_returns_tq_1 &lt;-
+  prices %&gt;%
+  tk_tbl(preserve_index = TRUE,
+         rename_index = "date") %&gt;%
+  gather(asset, prices, -date) %&gt;%
+  filter(asset == "SPY") %&gt;% 
+  tq_transmute(select = prices, mutate_fun = periodReturn,
+               period = "monthly",
+               type = "log",
+               col_rename = "SPY")
+
+asset_returns_tq_2 &lt;-
+  prices %&gt;%
+  tk_tbl(preserve_index = TRUE,
+         rename_index = "date") %&gt;%
+  gather(asset, prices, -date) %&gt;%
+  filter(asset == "EFA") %&gt;% 
+  tq_transmute(select = prices, mutate_fun = periodReturn,
+               period = "monthly",
+               type = "log",
+               col_rename = "EFA")  
+
+asset_returns_tq_3 &lt;-
+  prices %&gt;%
+  tk_tbl(preserve_index = TRUE,
+         rename_index = "date") %&gt;%
+  gather(asset, prices, -date) %&gt;%
+  filter(asset == "IJS") %&gt;% 
+  tq_transmute(select = prices, mutate_fun = periodReturn,
+               period = "monthly",
+               type = "log",
+               col_rename = "IJS")  
+
+
+asset_returns_tq_4 &lt;-
+  prices %&gt;%
+  tk_tbl(preserve_index = TRUE,
+         rename_index = "date") %&gt;%
+  gather(asset, prices, -date) %&gt;%
+  filter(asset == "EEM") %&gt;% 
+  tq_transmute(select = prices, mutate_fun = periodReturn,
+               period = "monthly",
+               type = "log",
+               col_rename = "EEM")  
+
+
+asset_returns_tq_5 &lt;-
+  prices %&gt;%
+  tk_tbl(preserve_index = TRUE,
+         rename_index = "date") %&gt;%
+  gather(asset, prices, -date) %&gt;%
+  filter(asset == "AGG") %&gt;% 
+  tq_transmute(select = prices, mutate_fun = periodReturn,
+               period = "monthly",
+               type = "log",
+               col_rename = "AGG")  
+
+asset_returns_tq_builtin &lt;-
+  left_join(asset_returns_tq_1,asset_returns_tq_2, by = "date") %&gt;% 
+   left_join(. , asset_returns_tq_3, by = "date") %&gt;% 
+   left_join(. , asset_returns_tq_4, by = "date") %&gt;%   
+   left_join(. , asset_returns_tq_5, by = "date") %&gt;% 
+   slice(-1)
+
+head(asset_returns_tq_builtin, 10)
+```
+]
+
+----
+
+
+]
+
+
+.pull-right[
+
+
+----
+
+
+`tk_tbl(preserve_index = TRUE, rename_index = "date")` convierte los precios de `xts` a `tibble`
+
+* Convierte el índice de fecha en una columna de fecha y lo renombra como "date".
+
+* Dado que el índice se está convirtiendo, no es necesario eliminarlo como hicimos anteriormente.
+
+
+
+&lt;br&gt;
+
+* `tq_transmute(mutate_fun = periodReturn, period ="monthly", type = "log")` nos permite pasar de precios diarios a los retornos logarítmicos mensuales.
+
+
+
+
+----
+
+
+
+]
+
+
+---
+
+
+
+# <i class="fas fa-upload" role="presentation" aria-label="upload icon"></i> `tidyquant`
+
+
+.pull-left[
+
+
+Exploremos el paradigma tidyquant para convertir a retornos logarítmicos.
+
+----
+
+.scroll-box-14[
+
+```r
+asset_returns_tq_1 &lt;-
+  prices %&gt;%
+  tk_tbl(preserve_index = TRUE,
+         rename_index = "date") %&gt;%
+  gather(asset, prices, -date) %&gt;%
+  filter(asset == "SPY") %&gt;% 
+  tq_transmute(select = prices, mutate_fun = periodReturn,
+               period = "monthly",
+               type = "log",
+               col_rename = "SPY")
+
+asset_returns_tq_2 &lt;-
+  prices %&gt;%
+  tk_tbl(preserve_index = TRUE,
+         rename_index = "date") %&gt;%
+  gather(asset, prices, -date) %&gt;%
+  filter(asset == "EFA") %&gt;% 
+  tq_transmute(select = prices, mutate_fun = periodReturn,
+               period = "monthly",
+               type = "log",
+               col_rename = "EFA")  
+
+asset_returns_tq_3 &lt;-
+  prices %&gt;%
+  tk_tbl(preserve_index = TRUE,
+         rename_index = "date") %&gt;%
+  gather(asset, prices, -date) %&gt;%
+  filter(asset == "IJS") %&gt;% 
+  tq_transmute(select = prices, mutate_fun = periodReturn,
+               period = "monthly",
+               type = "log",
+               col_rename = "IJS")  
+
+
+asset_returns_tq_4 &lt;-
+  prices %&gt;%
+  tk_tbl(preserve_index = TRUE,
+         rename_index = "date") %&gt;%
+  gather(asset, prices, -date) %&gt;%
+  filter(asset == "EEM") %&gt;% 
+  tq_transmute(select = prices, mutate_fun = periodReturn,
+               period = "monthly",
+               type = "log",
+               col_rename = "EEM")  
+
+
+asset_returns_tq_5 &lt;-
+  prices %&gt;%
+  tk_tbl(preserve_index = TRUE,
+         rename_index = "date") %&gt;%
+  gather(asset, prices, -date) %&gt;%
+  filter(asset == "AGG") %&gt;% 
+  tq_transmute(select = prices, mutate_fun = periodReturn,
+               period = "monthly",
+               type = "log",
+               col_rename = "AGG")  
+
+asset_returns_tq_builtin &lt;-
+  left_join(asset_returns_tq_1,asset_returns_tq_2, by = "date") %&gt;% 
+   left_join(. , asset_returns_tq_3, by = "date") %&gt;% 
+   left_join(. , asset_returns_tq_4, by = "date") %&gt;%   
+   left_join(. , asset_returns_tq_5, by = "date") %&gt;% 
+   slice(-1)
+
+head(asset_returns_tq_builtin, 10)
+```
+]
+
+----
+
+
+]
+
+
+.pull-right[
+
+
+----
+
+
+
+```
+## # A tibble: 10 × 6
+##    date           SPY     EFA      IJS      EEM       AGG
+##    &lt;date&gt;       &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;
+##  1 2013-01-31  0.0499  0.0366  0.0521  -0.00294 -0.00623 
+##  2 2013-02-28  0.0127 -0.0130  0.0162  -0.0231   0.00589 
+##  3 2013-03-28  0.0373  0.0130  0.0403  -0.0102   0.000984
+##  4 2013-04-30  0.0190  0.0490  0.00122  0.0121   0.00964 
+##  5 2013-05-31  0.0233 -0.0307  0.0420  -0.0495  -0.0202  
+##  6 2013-06-28 -0.0134 -0.0271 -0.00140 -0.0547  -0.0158  
+##  7 2013-07-31  0.0504  0.0519  0.0635   0.0132   0.00269 
+##  8 2013-08-30 -0.0305 -0.0197 -0.0347  -0.0257  -0.00830 
+##  9 2013-09-30  0.0312  0.0753  0.0639   0.0696   0.0111  
+## 10 2013-10-31  0.0453  0.0321  0.0342   0.0409   0.00829
+```
+
+
+
+----
+
+
+
+]
+
+
+---
+
+
+
+# <i class="fas fa-upload" role="presentation" aria-label="upload icon"></i> En resumen...
+
+
+
+
+
+```r
+head(asset_returns_xts, 3)
+```
+
+```
+##                   SPY         EFA        IJS          EEM           AGG
+## 2013-01-31 0.04992273  0.03660607 0.05213329 -0.002935062 -0.0062310051
+## 2013-02-28 0.01267853 -0.01296943 0.01617593 -0.023105728  0.0058911583
+## 2013-03-31 0.03726800  0.01296943 0.04025778 -0.010234817  0.0009842948
+```
+
+```r
+head(asset_returns_dplyr_byhand, 3)
+```
+
+```
+## # A tibble: 3 × 6
+##   date           SPY     EFA     IJS      EEM      AGG
+##   &lt;date&gt;       &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;
+## 1 2012-12-31 NA      NA      NA      NA       NA      
+## 2 2013-01-31  0.0499  0.0366  0.0521 -0.00294 -0.00623
+## 3 2013-02-28  0.0127 -0.0130  0.0162 -0.0231   0.00589
+```
+
+```r
+head(asset_returns_tq_builtin, 3)
+```
+
+```
+## # A tibble: 3 × 6
+##   date          SPY     EFA    IJS      EEM       AGG
+##   &lt;date&gt;      &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;
+## 1 2013-01-31 0.0499  0.0366 0.0521 -0.00294 -0.00623 
+## 2 2013-02-28 0.0127 -0.0130 0.0162 -0.0231   0.00589 
+## 3 2013-03-28 0.0373  0.0130 0.0403 -0.0102   0.000984
+```
+
+
+
+
+---
+
+
+
+name: Vis
+class: inverse, center, middle
+background-color: #00081d
+
+# <i class="fas fa-broom" role="presentation" aria-label="broom icon"></i>
+# Visualización
+----
+
+.right[
+.bottom[
+####  [<i class="far fa-bell" role="presentation" aria-label="bell icon"></i>](#menu)
+]
+]
+
+---
+
+# <i class="fas fa-broom" role="presentation" aria-label="broom icon"></i> Visualizing Asset Returns `xts`
+
+
+
+.pull-left[
+
+&lt;br&gt;
+
+.center[
+![](https://media.giphy.com/media/rM0wxzvwsv5g4/giphy.gif)
+
+
+]
+]
+
+.pull-right[
+
+
+&gt; Es una buena práctica graficar los rendimientos individuales porque una vez que se construye una cartera, es poco probable que retrocedamos para visualizar de forma individual. 
+
+&gt; Sin embargo, esos rendimientos individuales son los componentes básicos y la materia prima de nuestra cartera y visualizarlos es una excelente manera de comprenderlos en profundidad.
+
+
+&lt;br&gt;
+
+.center[
+### También presenta una oportunidad para buscar valores atípicos, errores o cualquier cosa inusual para corregir antes de avanzar demasiado en nuestro análisis.
+]
+
+]
+
+---
+
+
+
+
+
+# <i class="fas fa-broom" role="presentation" aria-label="broom icon"></i> Visualizing Asset Returns `xts`
+
+
+
+.pull-left[
+
+.center[
+`Highcharter` es un paquete de R, pero Highcharts es una biblioteca de JavaScript. El paquete R es un enlace a la biblioteca de JavaScript. 
+
+
+Highcharts es fantástico para visualizar series de tiempo y viene con excelentes widgets incorporados para ver diferentes marcos de tiempo, además de que podemos usar el poder de JavaScript sin salir del mundo del código R.
+
+]
+
+.center[
+### Las visualizaciones no solo son agradables, sino que highcharter “simplemente funciona” con objetos xts en el sentido de que lee el índice como fechas sin necesidad de que se le indique.
+]
+
+
+]
+
+.pull-right[
+
+
+<div id="htmlwidget-3092566fc20f391000fe" style="width:450px;height:450px;" class="highchart html-widget"></div>
+<script type="application/json" data-for="htmlwidget-3092566fc20f391000fe">{"x":{"hc_opts":{"chart":{"reflow":true},"title":{"text":"Monthly Log Returns"},"yAxis":{"title":{"text":null}},"credits":{"enabled":false},"exporting":{"enabled":true},"boost":{"enabled":false},"plotOptions":{"series":{"label":{"enabled":false},"turboThreshold":0},"treemap":{"layoutAlgorithm":"squarified"}},"series":[{"data":[[1359590400000,0.04992272831399447],[1362009600000,0.01267853234988614],[1364688000000,0.03726800490587223],[1367280000000,0.01903015802602415],[1369958400000,0.02333565573523355],[1372550400000,-0.01343462877814972],[1375228800000,0.05038584476641628],[1377907200000,-0.03045098403300717],[1380499200000,0.031155631838371],[1383177600000,0.04526688897128306],[1385769600000,0.02920661354993648],[1388448000000,0.02559627828009869],[1391126400000,-0.03588463600636072],[1393545600000,0.04451067243030238],[1396224000000,0.008261172582407994],[1398816000000,0.006927252481845336],[1401494400000,0.02294148959480857],[1404086400000,0.02043436751209704],[1406764800000,-0.01352846984500911],[1409443200000,0.03870485713254812],[1412035200000,-0.01389253157676329],[1414713600000,0.02327789566740712],[1417305600000,0.02710149126380657],[1419984000000,-0.002540186741385675],[1422662400000,-0.03007685810339744],[1425081600000,0.05468193166987323],[1427760000000,-0.01583050154815258],[1430352000000,0.009786305637819126],[1433030400000,0.01277397739290898],[1435622400000,-0.02052130214373182],[1438300800000,0.02233765255364872],[1440979200000,-0.0628863226312717],[1443571200000,-0.02584731640259541],[1446249600000,0.08163520629690435],[1448841600000,0.003648420632112348],[1451520000000,-0.01743398117470374],[1454198400000,-0.05106832564047092],[1456704000000,-0.0008261747030671174],[1459382400000,0.06509997772577414],[1461974400000,0.003933483936377158],[1464652800000,0.01686842665438881],[1467244800000,0.003469873883206631],[1469923200000,0.03582208013952037],[1472601600000,0.001196656264020213],[1475193600000,5.795102631633853e-05],[1477872000000,-0.01748898109177066],[1480464000000,0.0361764056514593],[1483142400000,0.02006902176251657],[1485820800000,0.01773598402833532],[1488240000000,0.03853955091310279],[1490918400000,0.001249088383496577],[1493510400000,0.009877451496609346],[1496188800000,0.01401425539111667],[1498780800000,0.006354733245737876],[1501459200000,0.02034557843838947],[1504137600000,0.00291383894261088],[1506729600000,0.0199486987955293],[1509408000000,0.02329085952962462],[1512000000000,0.03010778733164621],[1514678400000,0.01205498136329641]],"name":"SPY"},{"data":[[1359590400000,0.03660607404881056],[1362009600000,-0.01296942520085853],[1364688000000,0.01296942520085853],[1367280000000,0.0489679833587191],[1369958400000,-0.0306559080751434],[1372550400000,-0.02714441264786505],[1375228800000,0.05186044153762781],[1377907200000,-0.01974640668511451],[1380499200000,0.07533862188159413],[1383177600000,0.03208152933640207],[1385769600000,0.005449872868954486],[1388448000000,0.02152792131085279],[1391126400000,-0.05341338714116395],[1393545600000,0.05950499713288959],[1396224000000,-0.004602382702733721],[1398816000000,0.016529211361064],[1401494400000,0.01582850980281147],[1404086400000,0.00916530931238535],[1406764800000,-0.02637968923913192],[1409443200000,0.001800473900371191],[1412035200000,-0.03959846553547353],[1414713600000,-0.002655014481136142],[1417305600000,0.0006253290628119856],[1419984000000,-0.04074656624498685],[1422662400000,0.006226580350824129],[1425081600000,0.06145039128375807],[1427760000000,-0.01438892781941004],[1430352000000,0.03581690792543935],[1433030400000,0.001952654550501975],[1435622400000,-0.0316788030019195],[1438300800000,0.02011435081418345],[1440979200000,-0.07715242892842156],[1443571200000,-0.04519492091323407],[1446249600000,0.06402603217180936],[1448841600000,-0.007555878782972592],[1451520000000,-0.0235951478059877],[1454198400000,-0.05675768038058182],[1456704000000,-0.03391409823469305],[1459382400000,0.06374585474636607],[1461974400000,0.02197513364020587],[1464652800000,-0.0008560916080040393],[1467244800000,-0.02449134270339837],[1469923200000,0.03899992977163835],[1472601600000,0.005327112988552596],[1475193600000,0.01327892913665618],[1477872000000,-0.02240367000011867],[1480464000000,-0.01797428756729147],[1483142400000,0.02670285071082779],[1485820800000,0.03238174658958215],[1488240000000,0.01183643762777198],[1490918400000,0.03180556102958754],[1493510400000,0.02395248490562762],[1496188800000,0.03481000736377871],[1498780800000,0.002955932673181838],[1501459200000,0.02618799199802258],[1504137600000,-0.0004483374143973151],[1506729600000,0.02334259767037272],[1509408000000,0.01665395983685825],[1512000000000,0.006869971691838561],[1514678400000,0.01339837252557086]],"name":"EFA"},{"data":[[1359590400000,0.05213329234077646],[1362009600000,0.01617592943211577],[1364688000000,0.04025777844519851],[1367280000000,0.001222376476985421],[1369958400000,0.04197620487495612],[1372550400000,-0.001402638556994962],[1375228800000,0.06354121396257417],[1377907200000,-0.03474350987226638],[1380499200000,0.06387377144358553],[1383177600000,0.03423419853321974],[1385769600000,0.04166099477553109],[1388448000000,0.01289202135117762],[1391126400000,-0.03577539239543226],[1393545600000,0.04525748941116081],[1396224000000,0.01331528199987497],[1398816000000,-0.02318413048795254],[1401494400000,0.006205079922875001],[1404086400000,0.03771876789140238],[1406764800000,-0.05200924832648779],[1409443200000,0.04365784367634484],[1412035200000,-0.06126047281670477],[1414713600000,0.06887484076274131],[1417305600000,0.004773331183676177],[1419984000000,0.02529622860662695],[1422662400000,-0.05462815805656884],[1425081600000,0.05691468551840773],[1427760000000,0.01015634850927194],[1430352000000,-0.01841756608917589],[1433030400000,0.007509983555286759],[1435622400000,0.004171366756548167],[1438300800000,-0.02737564890409772],[1440979200000,-0.04726818948789546],[1443571200000,-0.03846476620279082],[1446249600000,0.06358938304625683],[1448841600000,0.02441563148422921],[1451520000000,-0.05215726696352752],[1454198400000,-0.06030663769591937],[1456704000000,0.02060546091482607],[1459382400000,0.089910192845013],[1461974400000,0.02104412856890114],[1464652800000,0.004397060898037264],[1467244800000,0.008292358532056454],[1469923200000,0.04934827006464948],[1472601600000,0.0112610605468646],[1475193600000,0.008614815653423591],[1477872000000,-0.0381350194850345],[1480464000000,0.1252462548819486],[1483142400000,0.03149192267829548],[1485820800000,-0.01214392949317933],[1488240000000,0.01342891439460647],[1490918400000,-0.006532955579050537],[1493510400000,0.005107651663688095],[1496188800000,-0.0228626361464368],[1498780800000,0.02915188950125724],[1501459200000,0.007481618838941273],[1504137600000,-0.02756507094485272],[1506729600000,0.08232193027742252],[1509408000000,0.005915921749819475],[1512000000000,0.03691344248852513],[1514678400000,-0.003731294999433032]],"name":"IJS"},{"data":[[1359590400000,-0.002935062009318923],[1362009600000,-0.02310572794645083],[1364688000000,-0.01023481666078352],[1367280000000,0.0120844581777293],[1369958400000,-0.04948307870349922],[1372550400000,-0.05472855253954778],[1375228800000,0.01315999512671517],[1377907200000,-0.0257057200091495],[1380499200000,0.06958865187324026],[1383177600000,0.04086148720643257],[1385769600000,-0.002593860528811831],[1388448000000,-0.004074505960597996],[1391126400000,-0.09032270529024133],[1393545600000,0.03322041267563103],[1396224000000,0.03802157129703776],[1398816000000,0.007773133461180581],[1401494400000,0.02909087634490026],[1404086400000,0.02373404962073211],[1406764800000,0.01355550530003136],[1409443200000,0.02790477334463448],[1412035200000,-0.08085694459177528],[1414713600000,0.01409650199418255],[1417305600000,-0.01554110407397946],[1419984000000,-0.04044246141107299],[1422662400000,-0.006895579072786706],[1425081600000,0.0431364477747489],[1427760000000,-0.01508650556396862],[1430352000000,0.06628144825959748],[1433030400000,-0.04191121438187073],[1435622400000,-0.02974632305865921],[1438300800000,-0.06517854502535858],[1440979200000,-0.09251202744512321],[1443571200000,-0.03182497118827277],[1446249600000,0.06180840419009037],[1448841600000,-0.02556075035152494],[1451520000000,-0.03894698614065506],[1454198400000,-0.05163652547024267],[1456704000000,-0.008211660362224649],[1459382400000,0.1218790680871114],[1461974400000,0.004079132969755594],[1464652800000,-0.03762861516900706],[1467244800000,0.04458246274436251],[1469923200000,0.05244232845603092],[1472601600000,0.008798366844660066],[1475193600000,0.02487279073900428],[1477872000000,-0.008312066514736927],[1480464000000,-0.04516178099808155],[1483142400000,-0.00253000777882928],[1485820800000,0.06443157365365648],[1488240000000,0.0172576760705514],[1490918400000,0.03618912613075231],[1493510400000,0.01686599708457059],[1496188800000,0.02806028087761936],[1498780800000,0.009223494589371217],[1501459200000,0.05659486240172784],[1504137600000,0.02324349658517155],[1506729600000,-0.000446006112977404],[1509408000000,0.03227840242413471],[1512000000000,-0.00389711722161179],[1514678400000,0.03692579556081244]],"name":"EEM"},{"data":[[1359590400000,-0.006231005129417433],[1362009600000,0.005891158288782172],[1364688000000,0.0009842948395677453],[1367280000000,0.009639742024587505],[1369958400000,-0.02021366779059264],[1372550400000,-0.01577834797214273],[1375228800000,0.002687173816039667],[1377907200000,-0.008297452355519042],[1380499200000,0.01114359899718842],[1383177600000,0.008291721724408063],[1385769600000,-0.00250952636962154],[1388448000000,-0.005583398131913775],[1391126400000,0.01529136459641034],[1393545600000,0.003757446410282306],[1396224000000,-0.00148166522750337],[1398816000000,0.008183445420474555],[1401494400000,0.01172122747908144],[1404086400000,-0.0005759999241323754],[1406764800000,-0.002511922171255954],[1409443200000,0.01143138497567442],[1412035200000,-0.006168099667333671],[1414713600000,0.01058491356527913],[1417305600000,0.006549196413653036],[1419984000000,0.001474443477888165],[1422662400000,0.02031568233724279],[1425081600000,-0.008988593662998312],[1427760000000,0.003740476761274536],[1430352000000,-0.003233325876814241],[1433030400000,-0.004383400639489388],[1435622400000,-0.01082529592482562],[1438300800000,0.008584318573238825],[1440979200000,-0.003363714708896737],[1443571200000,0.008081148577714359],[1446249600000,0.0006859221199695398],[1448841600000,-0.003898459487237993],[1451520000000,-0.001918790971635609],[1454198400000,0.01232993921632985],[1456704000000,0.008831767411352054],[1459382400000,0.008708329473716248],[1461974400000,0.002546265307824314],[1464652800000,0.0001356573557051988],[1467244800000,0.01916682561382999],[1469923200000,0.005429721717349345],[1472601600000,-0.002156217100476532],[1475193600000,0.0005159559397114322],[1477872000000,-0.008205202652466603],[1480464000000,-0.0259898227907458],[1483142400000,0.002537731861294468],[1485820800000,0.002126482183515854],[1488240000000,0.006437875629680789],[1490918400000,-0.000552832187198149],[1493510400000,0.009029348510762425],[1496188800000,0.006847211401510123],[1498780800000,-0.0001825668234074485],[1501459200000,0.003334158525955644],[1504137600000,0.009369560068119398],[1506729600000,-0.005732152453695072],[1509408000000,0.0009775643818041857],[1512000000000,-0.001483962947528283],[1514678400000,0.004740370657067672]],"name":"AGG"}],"navigator":{"enabled":false},"scrollbar":{"enabled":false},"legend":{"enabled":true}},"theme":{"colors":["#f1c40f","#2ecc71","#9b59b6","#e74c3c","#34495e","#3498db","#1abc9c","#f39c12","#d35400"],"chart":{"backgroundColor":"#ECF0F1"},"xAxis":{"gridLineDashStyle":"Dash","gridLineWidth":1,"gridLineColor":"#BDC3C7","lineColor":"#BDC3C7","minorGridLineColor":"#BDC3C7","tickColor":"#BDC3C7","tickWidth":1},"yAxis":{"gridLineDashStyle":"Dash","gridLineColor":"#BDC3C7","lineColor":"#BDC3C7","minorGridLineColor":"#BDC3C7","tickColor":"#BDC3C7","tickWidth":1},"legendBackgroundColor":"rgba(0, 0, 0, 0.5)","background2":"#505053","dataLabelsColor":"#B0B0B3","textColor":"#34495e","contrastTextColor":"#F0F0F3","maskColor":"rgba(255,255,255,0.3)"},"conf_opts":{"global":{"Date":null,"VMLRadialGradientURL":"http =//code.highcharts.com/list(version)/gfx/vml-radial-gradient.png","canvasToolsURL":"http =//code.highcharts.com/list(version)/modules/canvas-tools.js","getTimezoneOffset":null,"timezoneOffset":0,"useUTC":true},"lang":{"contextButtonTitle":"Chart context menu","decimalPoint":".","downloadCSV":"Download CSV","downloadJPEG":"Download JPEG image","downloadPDF":"Download PDF document","downloadPNG":"Download PNG image","downloadSVG":"Download SVG vector image","downloadXLS":"Download XLS","drillUpText":"◁ Back to {series.name}","exitFullscreen":"Exit from full screen","exportData":{"annotationHeader":"Annotations","categoryDatetimeHeader":"DateTime","categoryHeader":"Category"},"hideData":"Hide data table","invalidDate":null,"loading":"Loading...","months":["January","February","March","April","May","June","July","August","September","October","November","December"],"noData":"No data to display","numericSymbolMagnitude":1000,"numericSymbols":["k","M","G","T","P","E"],"printChart":"Print chart","resetZoom":"Reset zoom","resetZoomTitle":"Reset zoom level 1:1","shortMonths":["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],"shortWeekdays":["Sat","Sun","Mon","Tue","Wed","Thu","Fri"],"thousandsSep":" ","viewData":"View data table","viewFullscreen":"View in full screen","weekdays":["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"]}},"type":"stock","fonts":[],"debug":false},"evals":[],"jsHooks":[]}</script>
+
+
+]
+
+---
+
+
+
+# <i class="fas fa-broom" role="presentation" aria-label="broom icon"></i> Visualizing Asset Returns `xts`
+
+
+
+.pull-left[
+
+
+* Configuramos `highchart(type = "stock")` para obtener un formato de línea agradable que fue creado específicamente para acciones.
+
+* Luego agregamos cada una de nuestras series al flujo de código.
+
+
+----
+.scroll-box-14[
+
+```r
+highchart(type = "stock") %&gt;%
+hc_title(text = "Monthly Log Returns") %&gt;%
+hc_add_series(asset_returns_xts[, symbols[1]],
+name = symbols[1]) %&gt;%
+hc_add_series(asset_returns_xts[, symbols[2]],
+name = symbols[2]) %&gt;%
+hc_add_series(asset_returns_xts[, symbols[3]],
+name = symbols[3]) %&gt;%
+hc_add_series(asset_returns_xts[, symbols[4]],
+name = symbols[4]) %&gt;%
+hc_add_series(asset_returns_xts[, symbols[5]],
+name = symbols[5]) %&gt;%
+hc_add_theme(hc_theme_flat()) %&gt;%
+hc_navigator(enabled = FALSE) %&gt;%
+hc_scrollbar(enabled = FALSE) %&gt;%
+hc_exporting(enabled = TRUE) %&gt;%
+hc_legend(enabled = TRUE)
+```
+]
+----
+
+]
+
+.pull-right[
+
+
+<div id="htmlwidget-564f6ced2bcdf4cc05f8" style="width:450px;height:450px;" class="highchart html-widget"></div>
+<script type="application/json" data-for="htmlwidget-564f6ced2bcdf4cc05f8">{"x":{"hc_opts":{"chart":{"reflow":true},"title":{"text":"Monthly Log Returns"},"yAxis":{"title":{"text":null}},"credits":{"enabled":false},"exporting":{"enabled":true},"boost":{"enabled":false},"plotOptions":{"series":{"label":{"enabled":false},"turboThreshold":0},"treemap":{"layoutAlgorithm":"squarified"}},"series":[{"data":[[1359590400000,0.04992272831399447],[1362009600000,0.01267853234988614],[1364688000000,0.03726800490587223],[1367280000000,0.01903015802602415],[1369958400000,0.02333565573523355],[1372550400000,-0.01343462877814972],[1375228800000,0.05038584476641628],[1377907200000,-0.03045098403300717],[1380499200000,0.031155631838371],[1383177600000,0.04526688897128306],[1385769600000,0.02920661354993648],[1388448000000,0.02559627828009869],[1391126400000,-0.03588463600636072],[1393545600000,0.04451067243030238],[1396224000000,0.008261172582407994],[1398816000000,0.006927252481845336],[1401494400000,0.02294148959480857],[1404086400000,0.02043436751209704],[1406764800000,-0.01352846984500911],[1409443200000,0.03870485713254812],[1412035200000,-0.01389253157676329],[1414713600000,0.02327789566740712],[1417305600000,0.02710149126380657],[1419984000000,-0.002540186741385675],[1422662400000,-0.03007685810339744],[1425081600000,0.05468193166987323],[1427760000000,-0.01583050154815258],[1430352000000,0.009786305637819126],[1433030400000,0.01277397739290898],[1435622400000,-0.02052130214373182],[1438300800000,0.02233765255364872],[1440979200000,-0.0628863226312717],[1443571200000,-0.02584731640259541],[1446249600000,0.08163520629690435],[1448841600000,0.003648420632112348],[1451520000000,-0.01743398117470374],[1454198400000,-0.05106832564047092],[1456704000000,-0.0008261747030671174],[1459382400000,0.06509997772577414],[1461974400000,0.003933483936377158],[1464652800000,0.01686842665438881],[1467244800000,0.003469873883206631],[1469923200000,0.03582208013952037],[1472601600000,0.001196656264020213],[1475193600000,5.795102631633853e-05],[1477872000000,-0.01748898109177066],[1480464000000,0.0361764056514593],[1483142400000,0.02006902176251657],[1485820800000,0.01773598402833532],[1488240000000,0.03853955091310279],[1490918400000,0.001249088383496577],[1493510400000,0.009877451496609346],[1496188800000,0.01401425539111667],[1498780800000,0.006354733245737876],[1501459200000,0.02034557843838947],[1504137600000,0.00291383894261088],[1506729600000,0.0199486987955293],[1509408000000,0.02329085952962462],[1512000000000,0.03010778733164621],[1514678400000,0.01205498136329641]],"name":"SPY"},{"data":[[1359590400000,0.03660607404881056],[1362009600000,-0.01296942520085853],[1364688000000,0.01296942520085853],[1367280000000,0.0489679833587191],[1369958400000,-0.0306559080751434],[1372550400000,-0.02714441264786505],[1375228800000,0.05186044153762781],[1377907200000,-0.01974640668511451],[1380499200000,0.07533862188159413],[1383177600000,0.03208152933640207],[1385769600000,0.005449872868954486],[1388448000000,0.02152792131085279],[1391126400000,-0.05341338714116395],[1393545600000,0.05950499713288959],[1396224000000,-0.004602382702733721],[1398816000000,0.016529211361064],[1401494400000,0.01582850980281147],[1404086400000,0.00916530931238535],[1406764800000,-0.02637968923913192],[1409443200000,0.001800473900371191],[1412035200000,-0.03959846553547353],[1414713600000,-0.002655014481136142],[1417305600000,0.0006253290628119856],[1419984000000,-0.04074656624498685],[1422662400000,0.006226580350824129],[1425081600000,0.06145039128375807],[1427760000000,-0.01438892781941004],[1430352000000,0.03581690792543935],[1433030400000,0.001952654550501975],[1435622400000,-0.0316788030019195],[1438300800000,0.02011435081418345],[1440979200000,-0.07715242892842156],[1443571200000,-0.04519492091323407],[1446249600000,0.06402603217180936],[1448841600000,-0.007555878782972592],[1451520000000,-0.0235951478059877],[1454198400000,-0.05675768038058182],[1456704000000,-0.03391409823469305],[1459382400000,0.06374585474636607],[1461974400000,0.02197513364020587],[1464652800000,-0.0008560916080040393],[1467244800000,-0.02449134270339837],[1469923200000,0.03899992977163835],[1472601600000,0.005327112988552596],[1475193600000,0.01327892913665618],[1477872000000,-0.02240367000011867],[1480464000000,-0.01797428756729147],[1483142400000,0.02670285071082779],[1485820800000,0.03238174658958215],[1488240000000,0.01183643762777198],[1490918400000,0.03180556102958754],[1493510400000,0.02395248490562762],[1496188800000,0.03481000736377871],[1498780800000,0.002955932673181838],[1501459200000,0.02618799199802258],[1504137600000,-0.0004483374143973151],[1506729600000,0.02334259767037272],[1509408000000,0.01665395983685825],[1512000000000,0.006869971691838561],[1514678400000,0.01339837252557086]],"name":"EFA"},{"data":[[1359590400000,0.05213329234077646],[1362009600000,0.01617592943211577],[1364688000000,0.04025777844519851],[1367280000000,0.001222376476985421],[1369958400000,0.04197620487495612],[1372550400000,-0.001402638556994962],[1375228800000,0.06354121396257417],[1377907200000,-0.03474350987226638],[1380499200000,0.06387377144358553],[1383177600000,0.03423419853321974],[1385769600000,0.04166099477553109],[1388448000000,0.01289202135117762],[1391126400000,-0.03577539239543226],[1393545600000,0.04525748941116081],[1396224000000,0.01331528199987497],[1398816000000,-0.02318413048795254],[1401494400000,0.006205079922875001],[1404086400000,0.03771876789140238],[1406764800000,-0.05200924832648779],[1409443200000,0.04365784367634484],[1412035200000,-0.06126047281670477],[1414713600000,0.06887484076274131],[1417305600000,0.004773331183676177],[1419984000000,0.02529622860662695],[1422662400000,-0.05462815805656884],[1425081600000,0.05691468551840773],[1427760000000,0.01015634850927194],[1430352000000,-0.01841756608917589],[1433030400000,0.007509983555286759],[1435622400000,0.004171366756548167],[1438300800000,-0.02737564890409772],[1440979200000,-0.04726818948789546],[1443571200000,-0.03846476620279082],[1446249600000,0.06358938304625683],[1448841600000,0.02441563148422921],[1451520000000,-0.05215726696352752],[1454198400000,-0.06030663769591937],[1456704000000,0.02060546091482607],[1459382400000,0.089910192845013],[1461974400000,0.02104412856890114],[1464652800000,0.004397060898037264],[1467244800000,0.008292358532056454],[1469923200000,0.04934827006464948],[1472601600000,0.0112610605468646],[1475193600000,0.008614815653423591],[1477872000000,-0.0381350194850345],[1480464000000,0.1252462548819486],[1483142400000,0.03149192267829548],[1485820800000,-0.01214392949317933],[1488240000000,0.01342891439460647],[1490918400000,-0.006532955579050537],[1493510400000,0.005107651663688095],[1496188800000,-0.0228626361464368],[1498780800000,0.02915188950125724],[1501459200000,0.007481618838941273],[1504137600000,-0.02756507094485272],[1506729600000,0.08232193027742252],[1509408000000,0.005915921749819475],[1512000000000,0.03691344248852513],[1514678400000,-0.003731294999433032]],"name":"IJS"},{"data":[[1359590400000,-0.002935062009318923],[1362009600000,-0.02310572794645083],[1364688000000,-0.01023481666078352],[1367280000000,0.0120844581777293],[1369958400000,-0.04948307870349922],[1372550400000,-0.05472855253954778],[1375228800000,0.01315999512671517],[1377907200000,-0.0257057200091495],[1380499200000,0.06958865187324026],[1383177600000,0.04086148720643257],[1385769600000,-0.002593860528811831],[1388448000000,-0.004074505960597996],[1391126400000,-0.09032270529024133],[1393545600000,0.03322041267563103],[1396224000000,0.03802157129703776],[1398816000000,0.007773133461180581],[1401494400000,0.02909087634490026],[1404086400000,0.02373404962073211],[1406764800000,0.01355550530003136],[1409443200000,0.02790477334463448],[1412035200000,-0.08085694459177528],[1414713600000,0.01409650199418255],[1417305600000,-0.01554110407397946],[1419984000000,-0.04044246141107299],[1422662400000,-0.006895579072786706],[1425081600000,0.0431364477747489],[1427760000000,-0.01508650556396862],[1430352000000,0.06628144825959748],[1433030400000,-0.04191121438187073],[1435622400000,-0.02974632305865921],[1438300800000,-0.06517854502535858],[1440979200000,-0.09251202744512321],[1443571200000,-0.03182497118827277],[1446249600000,0.06180840419009037],[1448841600000,-0.02556075035152494],[1451520000000,-0.03894698614065506],[1454198400000,-0.05163652547024267],[1456704000000,-0.008211660362224649],[1459382400000,0.1218790680871114],[1461974400000,0.004079132969755594],[1464652800000,-0.03762861516900706],[1467244800000,0.04458246274436251],[1469923200000,0.05244232845603092],[1472601600000,0.008798366844660066],[1475193600000,0.02487279073900428],[1477872000000,-0.008312066514736927],[1480464000000,-0.04516178099808155],[1483142400000,-0.00253000777882928],[1485820800000,0.06443157365365648],[1488240000000,0.0172576760705514],[1490918400000,0.03618912613075231],[1493510400000,0.01686599708457059],[1496188800000,0.02806028087761936],[1498780800000,0.009223494589371217],[1501459200000,0.05659486240172784],[1504137600000,0.02324349658517155],[1506729600000,-0.000446006112977404],[1509408000000,0.03227840242413471],[1512000000000,-0.00389711722161179],[1514678400000,0.03692579556081244]],"name":"EEM"},{"data":[[1359590400000,-0.006231005129417433],[1362009600000,0.005891158288782172],[1364688000000,0.0009842948395677453],[1367280000000,0.009639742024587505],[1369958400000,-0.02021366779059264],[1372550400000,-0.01577834797214273],[1375228800000,0.002687173816039667],[1377907200000,-0.008297452355519042],[1380499200000,0.01114359899718842],[1383177600000,0.008291721724408063],[1385769600000,-0.00250952636962154],[1388448000000,-0.005583398131913775],[1391126400000,0.01529136459641034],[1393545600000,0.003757446410282306],[1396224000000,-0.00148166522750337],[1398816000000,0.008183445420474555],[1401494400000,0.01172122747908144],[1404086400000,-0.0005759999241323754],[1406764800000,-0.002511922171255954],[1409443200000,0.01143138497567442],[1412035200000,-0.006168099667333671],[1414713600000,0.01058491356527913],[1417305600000,0.006549196413653036],[1419984000000,0.001474443477888165],[1422662400000,0.02031568233724279],[1425081600000,-0.008988593662998312],[1427760000000,0.003740476761274536],[1430352000000,-0.003233325876814241],[1433030400000,-0.004383400639489388],[1435622400000,-0.01082529592482562],[1438300800000,0.008584318573238825],[1440979200000,-0.003363714708896737],[1443571200000,0.008081148577714359],[1446249600000,0.0006859221199695398],[1448841600000,-0.003898459487237993],[1451520000000,-0.001918790971635609],[1454198400000,0.01232993921632985],[1456704000000,0.008831767411352054],[1459382400000,0.008708329473716248],[1461974400000,0.002546265307824314],[1464652800000,0.0001356573557051988],[1467244800000,0.01916682561382999],[1469923200000,0.005429721717349345],[1472601600000,-0.002156217100476532],[1475193600000,0.0005159559397114322],[1477872000000,-0.008205202652466603],[1480464000000,-0.0259898227907458],[1483142400000,0.002537731861294468],[1485820800000,0.002126482183515854],[1488240000000,0.006437875629680789],[1490918400000,-0.000552832187198149],[1493510400000,0.009029348510762425],[1496188800000,0.006847211401510123],[1498780800000,-0.0001825668234074485],[1501459200000,0.003334158525955644],[1504137600000,0.009369560068119398],[1506729600000,-0.005732152453695072],[1509408000000,0.0009775643818041857],[1512000000000,-0.001483962947528283],[1514678400000,0.004740370657067672]],"name":"AGG"}],"navigator":{"enabled":false},"scrollbar":{"enabled":false},"legend":{"enabled":true}},"theme":{"colors":["#f1c40f","#2ecc71","#9b59b6","#e74c3c","#34495e","#3498db","#1abc9c","#f39c12","#d35400"],"chart":{"backgroundColor":"#ECF0F1"},"xAxis":{"gridLineDashStyle":"Dash","gridLineWidth":1,"gridLineColor":"#BDC3C7","lineColor":"#BDC3C7","minorGridLineColor":"#BDC3C7","tickColor":"#BDC3C7","tickWidth":1},"yAxis":{"gridLineDashStyle":"Dash","gridLineColor":"#BDC3C7","lineColor":"#BDC3C7","minorGridLineColor":"#BDC3C7","tickColor":"#BDC3C7","tickWidth":1},"legendBackgroundColor":"rgba(0, 0, 0, 0.5)","background2":"#505053","dataLabelsColor":"#B0B0B3","textColor":"#34495e","contrastTextColor":"#F0F0F3","maskColor":"rgba(255,255,255,0.3)"},"conf_opts":{"global":{"Date":null,"VMLRadialGradientURL":"http =//code.highcharts.com/list(version)/gfx/vml-radial-gradient.png","canvasToolsURL":"http =//code.highcharts.com/list(version)/modules/canvas-tools.js","getTimezoneOffset":null,"timezoneOffset":0,"useUTC":true},"lang":{"contextButtonTitle":"Chart context menu","decimalPoint":".","downloadCSV":"Download CSV","downloadJPEG":"Download JPEG image","downloadPDF":"Download PDF document","downloadPNG":"Download PNG image","downloadSVG":"Download SVG vector image","downloadXLS":"Download XLS","drillUpText":"◁ Back to {series.name}","exitFullscreen":"Exit from full screen","exportData":{"annotationHeader":"Annotations","categoryDatetimeHeader":"DateTime","categoryHeader":"Category"},"hideData":"Hide data table","invalidDate":null,"loading":"Loading...","months":["January","February","March","April","May","June","July","August","September","October","November","December"],"noData":"No data to display","numericSymbolMagnitude":1000,"numericSymbols":["k","M","G","T","P","E"],"printChart":"Print chart","resetZoom":"Reset zoom","resetZoomTitle":"Reset zoom level 1:1","shortMonths":["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],"shortWeekdays":["Sat","Sun","Mon","Tue","Wed","Thu","Fri"],"thousandsSep":" ","viewData":"View data table","viewFullscreen":"View in full screen","weekdays":["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"]}},"type":"stock","fonts":[],"debug":false},"evals":[],"jsHooks":[]}</script>
+
+
+]
+
+---
+
+
+
+
+# <i class="fas fa-broom" role="presentation" aria-label="broom icon"></i> Visualizing Asset Returns `xts`
+
+
+
+.pull-left[
+
+&lt;br&gt;
+
+### `Highcharter` también tiene la capacidad de hacer histogramas. Un método es llamar primero a la función base `hist` en los datos junto con los argumentos para los breaks y `plot = FALSE`.
+
+
+
+
+
+]
+
+.pull-right[
+
+----
+
+
+```r
+library(highcharter)
+
+hc_hist &lt;- hist(asset_returns_xts[, symbols[1]],breaks = 50,plot = FALSE)
+
+
+hchart(hc_hist, color = "cornflowerblue") %&gt;%
+hc_title(text = paste(symbols[1], "Log Returns Distribution",
+         sep = " ")) %&gt;%
+         hc_add_theme(hc_theme_flat()) %&gt;%
+         hc_exporting(enabled = TRUE) %&gt;%
+         hc_legend(enabled = FALSE)  
+```
+
+----
+
+]
+
+---
+
+# <i class="fas fa-broom" role="presentation" aria-label="broom icon"></i> Visualizing Asset Returns `xts`
+
+
+<div id="htmlwidget-9339c841709baecceccc" style="width:900px;height:450px;" class="highchart html-widget"></div>
+<script type="application/json" data-for="htmlwidget-9339c841709baecceccc">{"x":{"hc_opts":{"chart":{"reflow":true,"zoomType":"x"},"title":{"text":"SPY Log Returns Distribution"},"yAxis":{"title":{"text":null}},"credits":{"enabled":false},"exporting":{"enabled":true},"boost":{"enabled":false},"plotOptions":{"series":{"label":{"enabled":false},"turboThreshold":0},"treemap":{"layoutAlgorithm":"squarified"}},"tooltip":{"formatter":"function() { return  this.point.name + '<br/>' + this.y; }"},"series":[{"data":[{"x":-0.06250000000000001,"y":1,"name":"(-0.065, -0.06]"},{"x":-0.05750000000000001,"y":0,"name":"(-0.06, -0.055]"},{"x":-0.05250000000000002,"y":1,"name":"(-0.055, -0.05]"},{"x":-0.04750000000000001,"y":0,"name":"(-0.05, -0.045]"},{"x":-0.04250000000000001,"y":0,"name":"(-0.045, -0.04]"},{"x":-0.03750000000000001,"y":1,"name":"(-0.04, -0.035]"},{"x":-0.03250000000000001,"y":2,"name":"(-0.035, -0.03]"},{"x":-0.02750000000000001,"y":1,"name":"(-0.03, -0.025]"},{"x":-0.02250000000000001,"y":1,"name":"(-0.025, -0.02]"},{"x":-0.01750000000000001,"y":3,"name":"(-0.02, -0.015]"},{"x":-0.01250000000000001,"y":3,"name":"(-0.015, -0.01]"},{"x":-0.007500000000000007,"y":0,"name":"(-0.01, -0.005]"},{"x":-0.002500000000000002,"y":2,"name":"(-0.005, 0]"},{"x":0.002499999999999995,"y":7,"name":"(-6.93889390390723e-18, 0.005]"},{"x":0.007499999999999993,"y":5,"name":"(0.00499999999999999, 0.01]"},{"x":0.0125,"y":4,"name":"(0.01, 0.015]"},{"x":0.0175,"y":4,"name":"(0.015, 0.02]"},{"x":0.02250000000000001,"y":8,"name":"(0.02, 0.025]"},{"x":0.0275,"y":3,"name":"(0.025, 0.03]"},{"x":0.0325,"y":2,"name":"(0.03, 0.035]"},{"x":0.03750000000000001,"y":5,"name":"(0.035, 0.04]"},{"x":0.0425,"y":1,"name":"(0.04, 0.045]"},{"x":0.0475,"y":2,"name":"(0.045, 0.05]"},{"x":0.0525,"y":2,"name":"(0.05, 0.055]"},{"x":0.05750000000000001,"y":0,"name":"(0.055, 0.06]"},{"x":0.06250000000000001,"y":0,"name":"(0.06, 0.065]"},{"x":0.06750000000000002,"y":1,"name":"(0.065, 0.07]"},{"x":0.07250000000000001,"y":0,"name":"(0.07, 0.075]"},{"x":0.0775,"y":0,"name":"(0.075, 0.08]"},{"x":0.08250000000000002,"y":1,"name":"(0.08, 0.085]"}],"type":"column","pointRange":0.005000000000000004,"groupPadding":0,"pointPadding":0,"borderWidth":0,"color":"cornflowerblue"}],"legend":{"enabled":false}},"theme":{"colors":["#f1c40f","#2ecc71","#9b59b6","#e74c3c","#34495e","#3498db","#1abc9c","#f39c12","#d35400"],"chart":{"backgroundColor":"#ECF0F1"},"xAxis":{"gridLineDashStyle":"Dash","gridLineWidth":1,"gridLineColor":"#BDC3C7","lineColor":"#BDC3C7","minorGridLineColor":"#BDC3C7","tickColor":"#BDC3C7","tickWidth":1},"yAxis":{"gridLineDashStyle":"Dash","gridLineColor":"#BDC3C7","lineColor":"#BDC3C7","minorGridLineColor":"#BDC3C7","tickColor":"#BDC3C7","tickWidth":1},"legendBackgroundColor":"rgba(0, 0, 0, 0.5)","background2":"#505053","dataLabelsColor":"#B0B0B3","textColor":"#34495e","contrastTextColor":"#F0F0F3","maskColor":"rgba(255,255,255,0.3)"},"conf_opts":{"global":{"Date":null,"VMLRadialGradientURL":"http =//code.highcharts.com/list(version)/gfx/vml-radial-gradient.png","canvasToolsURL":"http =//code.highcharts.com/list(version)/modules/canvas-tools.js","getTimezoneOffset":null,"timezoneOffset":0,"useUTC":true},"lang":{"contextButtonTitle":"Chart context menu","decimalPoint":".","downloadCSV":"Download CSV","downloadJPEG":"Download JPEG image","downloadPDF":"Download PDF document","downloadPNG":"Download PNG image","downloadSVG":"Download SVG vector image","downloadXLS":"Download XLS","drillUpText":"◁ Back to {series.name}","exitFullscreen":"Exit from full screen","exportData":{"annotationHeader":"Annotations","categoryDatetimeHeader":"DateTime","categoryHeader":"Category"},"hideData":"Hide data table","invalidDate":null,"loading":"Loading...","months":["January","February","March","April","May","June","July","August","September","October","November","December"],"noData":"No data to display","numericSymbolMagnitude":1000,"numericSymbols":["k","M","G","T","P","E"],"printChart":"Print chart","resetZoom":"Reset zoom","resetZoomTitle":"Reset zoom level 1:1","shortMonths":["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],"shortWeekdays":["Sat","Sun","Mon","Tue","Wed","Thu","Fri"],"thousandsSep":" ","viewData":"View data table","viewFullscreen":"View in full screen","weekdays":["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"]}},"type":"chart","fonts":[],"debug":false},"evals":["hc_opts.tooltip.formatter"],"jsHooks":[]}</script>
+
+---
+
+
+# <i class="fas fa-broom" role="presentation" aria-label="broom icon"></i> Visualizing Asset Returns `xts`
+
+
+```r
+autoplot(asset_returns_xts,facets = TRUE)
+```
+
+![](4_Returns_files/figure-html/unnamed-chunk-26-1.png)&lt;!-- --&gt;
+
+
+
+---
+
+# <i class="fas fa-broom" role="presentation" aria-label="broom icon"></i> Visualizing Asset Returns `tidyverse`
+
+
+
+.pull-left[
+
+
+&gt; `tidyverse` pide que estos datos estén en formato long o ordenado donde cada variable tiene su propia columna. Para que los retornos de activos estén ordenadas, necesitamos una columna llamada "date", una columna llamada "stock" y una columna llamada "returns".
+
+&lt;br&gt;
+
+* Este formato es más difícil de leer para un humano: solo podemos ver las primeras lecturas de un activo. Desde una perspectiva tidyverse, esto se considera "ordenado" y es el formato preferido.
+
+&lt;br&gt;
+
+* `ggplot2` es un paquete de visualización flexible y muy utilizado, y es parte del tidyverse.
+
+]
+
+.pull-right[
+
+----
+
+
+```r
+asset_returns_long &lt;-
+       asset_returns_dplyr_byhand %&gt;%
+       gather(asset, returns, -date) %&gt;%
+       group_by(asset)
+
+
+head(asset_returns_long, 10)
+```
+
+```
+## # A tibble: 10 × 3
+## # Groups:   asset [1]
+##    date       asset returns
+##    &lt;date&gt;     &lt;chr&gt;   &lt;dbl&gt;
+##  1 2012-12-31 SPY   NA     
+##  2 2013-01-31 SPY    0.0499
+##  3 2013-02-28 SPY    0.0127
+##  4 2013-03-31 SPY    0.0373
+##  5 2013-04-30 SPY    0.0190
+##  6 2013-05-31 SPY    0.0233
+##  7 2013-06-30 SPY   -0.0134
+##  8 2013-07-31 SPY    0.0504
+##  9 2013-08-31 SPY   -0.0305
+## 10 2013-09-30 SPY    0.0312
+```
+
+----
+
+]
+
+
+
+---
+
+
+# <i class="fas fa-broom" role="presentation" aria-label="broom icon"></i> Visualizing Asset Returns `tidyverse`
+
+
+
+.pull-left[
+
+----
+
+```r
+asset_returns_long %&gt;%
+ggplot(aes(x = returns, fill = asset)) +
+geom_histogram(alpha = 0.45, binwidth = .005) +
+ggtitle("Monthly Returns Since 2013")
+```
+----
+
+Recuerde que puede tener dinámica el gráfico con `ggplotly` del paquete `plotly`
+
+
+----
+
+```r
+library(plotly)
+
+g1&lt;-asset_returns_long %&gt;%
+ggplot(aes(x = returns, fill = asset)) +
+geom_histogram(alpha = 0.45, binwidth = .005) +
+ggtitle("Monthly Returns Since 2013")
+
+
+ggplotly(g1)
+```
+----
+
+]
+
+.pull-right[
+
+
+
+![](4_Returns_files/figure-html/unnamed-chunk-30-1.png)&lt;!-- --&gt;
+
+
+
+]
+
+
+
+---
+
+
+# <i class="fas fa-broom" role="presentation" aria-label="broom icon"></i> Visualizing Asset Returns `tidyverse`
+
+<div id="htmlwidget-e009b886ae549f43cca6" style="width:100%;height:70%;" class="plotly html-widget"></div>
+<script type="application/json" data-for="htmlwidget-e009b886ae549f43cca6">{"x":{"data":[{"orientation":"v","width":[0.0050000000000000044,0.0050000000000000044,0.0050000000000000044,0.0050000000000000044,0.0050000000000000044,0.0050000000000000044,0.0050000000000000044,0.0050000000000000044,0.0050000000000000044,0.0050000000000000044,0.0050000000000000044,0.0050000000000000044,0.0050000000000000044,0.0050000000000000044,0.0049999999999999906,0.0050000000000000044,0.0050000000000000044,0.0049999999999999906,0.0050000000000000044,0.0050000000000000044,0.0049999999999999906,0.0050000000000000044,0.0050000000000000044,0.0049999999999999906,0.0050000000000000044,0.0050000000000000044,0.0050000000000000044,0.0050000000000000044,0.0049999999999999767,0.0050000000000000044,0.0050000000000000044,0.0050000000000000044,0.0050000000000000044,0.0050000000000000044,0.0050000000000000044,0.0049999999999999767,0.0050000000000000044,0.0050000000000000044,0.0050000000000000044,0.0050000000000000044,0.0050000000000000044,0.0049999999999999767,0.0050000000000000044,0.0050000000000000044,0.0050000000000000044],"base":[1,1,0,1,1,0,2,2,4,5,3,8,4,7,11,5,10,5,11,12,19,15,19,12,15,12,11,9,6,7,3,3,8,2,1,2,0,1,0,0,0,0,0,1,1],"x":[-0.095000000000000001,-0.089999999999999997,-0.085000000000000006,-0.080000000000000002,-0.075000000000000011,-0.070000000000000007,-0.065000000000000002,-0.059999999999999998,-0.055000000000000007,-0.050000000000000003,-0.044999999999999998,-0.040000000000000008,-0.035000000000000003,-0.029999999999999999,-0.025000000000000001,-0.020000000000000004,-0.014999999999999999,-0.010000000000000002,-0.0050000000000000044,0,0.0049999999999999975,0.009999999999999995,0.014999999999999999,0.019999999999999997,0.024999999999999994,0.029999999999999999,0.035000000000000003,0.040000000000000008,0.044999999999999998,0.049999999999999989,0.054999999999999993,0.059999999999999998,0.065000000000000002,0.070000000000000007,0.075000000000000011,0.080000000000000002,0.084999999999999992,0.089999999999999997,0.095000000000000001,0.10000000000000001,0.10500000000000001,0.11,0.11499999999999999,0.12,0.125],"y":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,4,10,14,12,14,1,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"text":["count:  0<br />returns: -0.095<br />asset: AGG","count:  0<br />returns: -0.090<br />asset: AGG","count:  0<br />returns: -0.085<br />asset: AGG","count:  0<br />returns: -0.080<br />asset: AGG","count:  0<br />returns: -0.075<br />asset: AGG","count:  0<br />returns: -0.070<br />asset: AGG","count:  0<br />returns: -0.065<br />asset: AGG","count:  0<br />returns: -0.060<br />asset: AGG","count:  0<br />returns: -0.055<br />asset: AGG","count:  0<br />returns: -0.050<br />asset: AGG","count:  0<br />returns: -0.045<br />asset: AGG","count:  0<br />returns: -0.040<br />asset: AGG","count:  0<br />returns: -0.035<br />asset: AGG","count:  0<br />returns: -0.030<br />asset: AGG","count:  1<br />returns: -0.025<br />asset: AGG","count:  1<br />returns: -0.020<br />asset: AGG","count:  1<br />returns: -0.015<br />asset: AGG","count:  4<br />returns: -0.010<br />asset: AGG","count: 10<br />returns: -0.005<br />asset: AGG","count: 14<br />returns:  0.000<br />asset: AGG","count: 12<br />returns:  0.005<br />asset: AGG","count: 14<br />returns:  0.010<br />asset: AGG","count:  1<br />returns:  0.015<br />asset: AGG","count:  2<br />returns:  0.020<br />asset: AGG","count:  0<br />returns:  0.025<br />asset: AGG","count:  0<br />returns:  0.030<br />asset: AGG","count:  0<br />returns:  0.035<br />asset: AGG","count:  0<br />returns:  0.040<br />asset: AGG","count:  0<br />returns:  0.045<br />asset: AGG","count:  0<br />returns:  0.050<br />asset: AGG","count:  0<br />returns:  0.055<br />asset: AGG","count:  0<br />returns:  0.060<br />asset: AGG","count:  0<br />returns:  0.065<br />asset: AGG","count:  0<br />returns:  0.070<br />asset: AGG","count:  0<br />returns:  0.075<br />asset: AGG","count:  0<br />returns:  0.080<br />asset: AGG","count:  0<br />returns:  0.085<br />asset: AGG","count:  0<br />returns:  0.090<br />asset: AGG","count:  0<br />returns:  0.095<br />asset: AGG","count:  0<br />returns:  0.100<br />asset: AGG","count:  0<br />returns:  0.105<br />asset: AGG","count:  0<br />returns:  0.110<br />asset: AGG","count:  0<br />returns:  0.115<br />asset: AGG","count:  0<br />returns:  0.120<br />asset: AGG","count:  0<br />returns:  0.125<br />asset: AGG"],"type":"bar","textposition":"none","marker":{"autocolorscale":false,"color":"rgba(248,118,109,0.45)","line":{"width":1.8897637795275593,"color":"transparent"}},"name":"AGG","legendgroup":"AGG","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":[0.0050000000000000044,0.0050000000000000044,0.0050000000000000044,0.0050000000000000044,0.0050000000000000044,0.0050000000000000044,0.0050000000000000044,0.0050000000000000044,0.0050000000000000044,0.0050000000000000044,0.0050000000000000044,0.0050000000000000044,0.0050000000000000044,0.0050000000000000044,0.0049999999999999906,0.0050000000000000044,0.0050000000000000044,0.0049999999999999906,0.0050000000000000044,0.0050000000000000044,0.0049999999999999906,0.0050000000000000044,0.0050000000000000044,0.0049999999999999906,0.0050000000000000044,0.0050000000000000044,0.0050000000000000044,0.0050000000000000044,0.0049999999999999767,0.0050000000000000044,0.0050000000000000044,0.0050000000000000044,0.0050000000000000044,0.0050000000000000044,0.0050000000000000044,0.0049999999999999767,0.0050000000000000044,0.0050000000000000044,0.0050000000000000044,0.0050000000000000044,0.0050000000000000044,0.0049999999999999767,0.0050000000000000044,0.0050000000000000044,0.0050000000000000044],"base":[0,0,0,0,1,0,1,2,3,3,2,4,4,5,8,5,8,2,5,11,18,11,14,12,12,8,8,7,4,6,2,2,6,1,1,2,0,1,0,0,0,0,0,0,1],"x":[-0.095000000000000001,-0.089999999999999997,-0.085000000000000006,-0.080000000000000002,-0.075000000000000011,-0.070000000000000007,-0.065000000000000002,-0.059999999999999998,-0.055000000000000007,-0.050000000000000003,-0.044999999999999998,-0.040000000000000008,-0.035000000000000003,-0.029999999999999999,-0.025000000000000001,-0.020000000000000004,-0.014999999999999999,-0.010000000000000002,-0.0050000000000000044,0,0.0049999999999999975,0.009999999999999995,0.014999999999999999,0.019999999999999997,0.024999999999999994,0.029999999999999999,0.035000000000000003,0.040000000000000008,0.044999999999999998,0.049999999999999989,0.054999999999999993,0.059999999999999998,0.065000000000000002,0.070000000000000007,0.075000000000000011,0.080000000000000002,0.084999999999999992,0.089999999999999997,0.095000000000000001,0.10000000000000001,0.10500000000000001,0.11,0.11499999999999999,0.12,0.125],"y":[1,1,0,1,0,0,1,0,1,2,1,4,0,2,3,0,2,3,6,1,1,4,5,0,3,4,3,2,2,1,1,1,2,1,0,0,0,0,0,0,0,0,0,1,0],"text":["count:  1<br />returns: -0.095<br />asset: EEM","count:  1<br />returns: -0.090<br />asset: EEM","count:  0<br />returns: -0.085<br />asset: EEM","count:  1<br />returns: -0.080<br />asset: EEM","count:  0<br />returns: -0.075<br />asset: EEM","count:  0<br />returns: -0.070<br />asset: EEM","count:  1<br />returns: -0.065<br />asset: EEM","count:  0<br />returns: -0.060<br />asset: EEM","count:  1<br />returns: -0.055<br />asset: EEM","count:  2<br />returns: -0.050<br />asset: EEM","count:  1<br />returns: -0.045<br />asset: EEM","count:  4<br />returns: -0.040<br />asset: EEM","count:  0<br />returns: -0.035<br />asset: EEM","count:  2<br />returns: -0.030<br />asset: EEM","count:  3<br />returns: -0.025<br />asset: EEM","count:  0<br />returns: -0.020<br />asset: EEM","count:  2<br />returns: -0.015<br />asset: EEM","count:  3<br />returns: -0.010<br />asset: EEM","count:  6<br />returns: -0.005<br />asset: EEM","count:  1<br />returns:  0.000<br />asset: EEM","count:  1<br />returns:  0.005<br />asset: EEM","count:  4<br />returns:  0.010<br />asset: EEM","count:  5<br />returns:  0.015<br />asset: EEM","count:  0<br />returns:  0.020<br />asset: EEM","count:  3<br />returns:  0.025<br />asset: EEM","count:  4<br />returns:  0.030<br />asset: EEM","count:  3<br />returns:  0.035<br />asset: EEM","count:  2<br />returns:  0.040<br />asset: EEM","count:  2<br />returns:  0.045<br />asset: EEM","count:  1<br />returns:  0.050<br />asset: EEM","count:  1<br />returns:  0.055<br />asset: EEM","count:  1<br />returns:  0.060<br />asset: EEM","count:  2<br />returns:  0.065<br />asset: EEM","count:  1<br />returns:  0.070<br />asset: EEM","count:  0<br />returns:  0.075<br />asset: EEM","count:  0<br />returns:  0.080<br />asset: EEM","count:  0<br />returns:  0.085<br />asset: EEM","count:  0<br />returns:  0.090<br />asset: EEM","count:  0<br />returns:  0.095<br />asset: EEM","count:  0<br />returns:  0.100<br />asset: EEM","count:  0<br />returns:  0.105<br />asset: EEM","count:  0<br />returns:  0.110<br />asset: EEM","count:  0<br />returns:  0.115<br />asset: EEM","count:  1<br />returns:  0.120<br />asset: EEM","count:  0<br />returns:  0.125<br />asset: EEM"],"type":"bar","textposition":"none","marker":{"autocolorscale":false,"color":"rgba(163,165,0,0.45)","line":{"width":1.8897637795275593,"color":"transparent"}},"name":"EEM","legendgroup":"EEM","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":[0.0050000000000000044,0.0050000000000000044,0.0050000000000000044,0.0050000000000000044,0.0050000000000000044,0.0050000000000000044,0.0050000000000000044,0.0050000000000000044,0.0050000000000000044,0.0050000000000000044,0.0050000000000000044,0.0050000000000000044,0.0050000000000000044,0.0050000000000000044,0.0049999999999999906,0.0050000000000000044,0.0050000000000000044,0.0049999999999999906,0.0050000000000000044,0.0050000000000000044,0.0049999999999999906,0.0050000000000000044,0.0050000000000000044,0.0049999999999999906,0.0050000000000000044,0.0050000000000000044,0.0050000000000000044,0.0050000000000000044,0.0049999999999999767,0.0050000000000000044,0.0050000000000000044,0.0050000000000000044,0.0050000000000000044,0.0050000000000000044,0.0050000000000000044,0.0049999999999999767,0.0050000000000000044,0.0050000000000000044,0.0050000000000000044,0.0050000000000000044,0.0050000000000000044,0.0049999999999999767,0.0050000000000000044,0.0050000000000000044,0.0050000000000000044],"base":[0,0,0,0,0,0,1,2,1,3,1,2,3,3,4,2,6,1,3,6,13,9,8,9,8,5,5,6,4,4,2,0,4,1,0,2,0,1,0,0,0,0,0,0,1],"x":[-0.095000000000000001,-0.089999999999999997,-0.085000000000000006,-0.080000000000000002,-0.075000000000000011,-0.070000000000000007,-0.065000000000000002,-0.059999999999999998,-0.055000000000000007,-0.050000000000000003,-0.044999999999999998,-0.040000000000000008,-0.035000000000000003,-0.029999999999999999,-0.025000000000000001,-0.020000000000000004,-0.014999999999999999,-0.010000000000000002,-0.0050000000000000044,0,0.0049999999999999975,0.009999999999999995,0.014999999999999999,0.019999999999999997,0.024999999999999994,0.029999999999999999,0.035000000000000003,0.040000000000000008,0.044999999999999998,0.049999999999999989,0.054999999999999993,0.059999999999999998,0.065000000000000002,0.070000000000000007,0.075000000000000011,0.080000000000000002,0.084999999999999992,0.089999999999999997,0.095000000000000001,0.10000000000000001,0.10500000000000001,0.11,0.11499999999999999,0.12,0.125],"y":[0,0,0,0,1,0,0,0,2,0,1,2,1,2,4,3,2,1,2,5,5,2,6,3,4,3,3,1,0,2,0,2,2,0,1,0,0,0,0,0,0,0,0,0,0],"text":["count:  0<br />returns: -0.095<br />asset: EFA","count:  0<br />returns: -0.090<br />asset: EFA","count:  0<br />returns: -0.085<br />asset: EFA","count:  0<br />returns: -0.080<br />asset: EFA","count:  1<br />returns: -0.075<br />asset: EFA","count:  0<br />returns: -0.070<br />asset: EFA","count:  0<br />returns: -0.065<br />asset: EFA","count:  0<br />returns: -0.060<br />asset: EFA","count:  2<br />returns: -0.055<br />asset: EFA","count:  0<br />returns: -0.050<br />asset: EFA","count:  1<br />returns: -0.045<br />asset: EFA","count:  2<br />returns: -0.040<br />asset: EFA","count:  1<br />returns: -0.035<br />asset: EFA","count:  2<br />returns: -0.030<br />asset: EFA","count:  4<br />returns: -0.025<br />asset: EFA","count:  3<br />returns: -0.020<br />asset: EFA","count:  2<br />returns: -0.015<br />asset: EFA","count:  1<br />returns: -0.010<br />asset: EFA","count:  2<br />returns: -0.005<br />asset: EFA","count:  5<br />returns:  0.000<br />asset: EFA","count:  5<br />returns:  0.005<br />asset: EFA","count:  2<br />returns:  0.010<br />asset: EFA","count:  6<br />returns:  0.015<br />asset: EFA","count:  3<br />returns:  0.020<br />asset: EFA","count:  4<br />returns:  0.025<br />asset: EFA","count:  3<br />returns:  0.030<br />asset: EFA","count:  3<br />returns:  0.035<br />asset: EFA","count:  1<br />returns:  0.040<br />asset: EFA","count:  0<br />returns:  0.045<br />asset: EFA","count:  2<br />returns:  0.050<br />asset: EFA","count:  0<br />returns:  0.055<br />asset: EFA","count:  2<br />returns:  0.060<br />asset: EFA","count:  2<br />returns:  0.065<br />asset: EFA","count:  0<br />returns:  0.070<br />asset: EFA","count:  1<br />returns:  0.075<br />asset: EFA","count:  0<br />returns:  0.080<br />asset: EFA","count:  0<br />returns:  0.085<br />asset: EFA","count:  0<br />returns:  0.090<br />asset: EFA","count:  0<br />returns:  0.095<br />asset: EFA","count:  0<br />returns:  0.100<br />asset: EFA","count:  0<br />returns:  0.105<br />asset: EFA","count:  0<br />returns:  0.110<br />asset: EFA","count:  0<br />returns:  0.115<br />asset: EFA","count:  0<br />returns:  0.120<br />asset: EFA","count:  0<br />returns:  0.125<br />asset: EFA"],"type":"bar","textposition":"none","marker":{"autocolorscale":false,"color":"rgba(0,191,125,0.45)","line":{"width":1.8897637795275593,"color":"transparent"}},"name":"EFA","legendgroup":"EFA","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":[0.0050000000000000044,0.0050000000000000044,0.0050000000000000044,0.0050000000000000044,0.0050000000000000044,0.0050000000000000044,0.0050000000000000044,0.0050000000000000044,0.0050000000000000044,0.0050000000000000044,0.0050000000000000044,0.0050000000000000044,0.0050000000000000044,0.0050000000000000044,0.0049999999999999906,0.0050000000000000044,0.0050000000000000044,0.0049999999999999906,0.0050000000000000044,0.0050000000000000044,0.0049999999999999906,0.0050000000000000044,0.0050000000000000044,0.0049999999999999906,0.0050000000000000044,0.0050000000000000044,0.0050000000000000044,0.0050000000000000044,0.0049999999999999767,0.0050000000000000044,0.0050000000000000044,0.0050000000000000044,0.0050000000000000044,0.0050000000000000044,0.0050000000000000044,0.0049999999999999767,0.0050000000000000044,0.0050000000000000044,0.0050000000000000044,0.0050000000000000044,0.0050000000000000044,0.0049999999999999767,0.0050000000000000044,0.0050000000000000044,0.0050000000000000044],"base":[0,0,0,0,0,0,1,0,0,1,0,0,1,2,1,1,6,0,1,4,6,4,4,7,6,3,3,2,2,2,1,0,1,0,0,1,0,0,0,0,0,0,0,0,0],"x":[-0.095000000000000001,-0.089999999999999997,-0.085000000000000006,-0.080000000000000002,-0.075000000000000011,-0.070000000000000007,-0.065000000000000002,-0.059999999999999998,-0.055000000000000007,-0.050000000000000003,-0.044999999999999998,-0.040000000000000008,-0.035000000000000003,-0.029999999999999999,-0.025000000000000001,-0.020000000000000004,-0.014999999999999999,-0.010000000000000002,-0.0050000000000000044,0,0.0049999999999999975,0.009999999999999995,0.014999999999999999,0.019999999999999997,0.024999999999999994,0.029999999999999999,0.035000000000000003,0.040000000000000008,0.044999999999999998,0.049999999999999989,0.054999999999999993,0.059999999999999998,0.065000000000000002,0.070000000000000007,0.075000000000000011,0.080000000000000002,0.084999999999999992,0.089999999999999997,0.095000000000000001,0.10000000000000001,0.10500000000000001,0.11,0.11499999999999999,0.12,0.125],"y":[0,0,0,0,0,0,0,2,1,2,1,2,2,1,3,1,0,1,2,2,7,5,4,2,2,2,2,4,2,2,1,0,3,1,0,1,0,1,0,0,0,0,0,0,1],"text":["count:  0<br />returns: -0.095<br />asset: IJS","count:  0<br />returns: -0.090<br />asset: IJS","count:  0<br />returns: -0.085<br />asset: IJS","count:  0<br />returns: -0.080<br />asset: IJS","count:  0<br />returns: -0.075<br />asset: IJS","count:  0<br />returns: -0.070<br />asset: IJS","count:  0<br />returns: -0.065<br />asset: IJS","count:  2<br />returns: -0.060<br />asset: IJS","count:  1<br />returns: -0.055<br />asset: IJS","count:  2<br />returns: -0.050<br />asset: IJS","count:  1<br />returns: -0.045<br />asset: IJS","count:  2<br />returns: -0.040<br />asset: IJS","count:  2<br />returns: -0.035<br />asset: IJS","count:  1<br />returns: -0.030<br />asset: IJS","count:  3<br />returns: -0.025<br />asset: IJS","count:  1<br />returns: -0.020<br />asset: IJS","count:  0<br />returns: -0.015<br />asset: IJS","count:  1<br />returns: -0.010<br />asset: IJS","count:  2<br />returns: -0.005<br />asset: IJS","count:  2<br />returns:  0.000<br />asset: IJS","count:  7<br />returns:  0.005<br />asset: IJS","count:  5<br />returns:  0.010<br />asset: IJS","count:  4<br />returns:  0.015<br />asset: IJS","count:  2<br />returns:  0.020<br />asset: IJS","count:  2<br />returns:  0.025<br />asset: IJS","count:  2<br />returns:  0.030<br />asset: IJS","count:  2<br />returns:  0.035<br />asset: IJS","count:  4<br />returns:  0.040<br />asset: IJS","count:  2<br />returns:  0.045<br />asset: IJS","count:  2<br />returns:  0.050<br />asset: IJS","count:  1<br />returns:  0.055<br />asset: IJS","count:  0<br />returns:  0.060<br />asset: IJS","count:  3<br />returns:  0.065<br />asset: IJS","count:  1<br />returns:  0.070<br />asset: IJS","count:  0<br />returns:  0.075<br />asset: IJS","count:  1<br />returns:  0.080<br />asset: IJS","count:  0<br />returns:  0.085<br />asset: IJS","count:  1<br />returns:  0.090<br />asset: IJS","count:  0<br />returns:  0.095<br />asset: IJS","count:  0<br />returns:  0.100<br />asset: IJS","count:  0<br />returns:  0.105<br />asset: IJS","count:  0<br />returns:  0.110<br />asset: IJS","count:  0<br />returns:  0.115<br />asset: IJS","count:  0<br />returns:  0.120<br />asset: IJS","count:  1<br />returns:  0.125<br />asset: IJS"],"type":"bar","textposition":"none","marker":{"autocolorscale":false,"color":"rgba(0,176,246,0.45)","line":{"width":1.8897637795275593,"color":"transparent"}},"name":"IJS","legendgroup":"IJS","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":[0.0050000000000000044,0.0050000000000000044,0.0050000000000000044,0.0050000000000000044,0.0050000000000000044,0.0050000000000000044,0.0050000000000000044,0.0050000000000000044,0.0050000000000000044,0.0050000000000000044,0.0050000000000000044,0.0050000000000000044,0.0050000000000000044,0.0050000000000000044,0.0049999999999999906,0.0050000000000000044,0.0050000000000000044,0.0049999999999999906,0.0050000000000000044,0.0050000000000000044,0.0049999999999999906,0.0050000000000000044,0.0050000000000000044,0.0049999999999999906,0.0050000000000000044,0.0050000000000000044,0.0050000000000000044,0.0050000000000000044,0.0049999999999999767,0.0050000000000000044,0.0050000000000000044,0.0050000000000000044,0.0050000000000000044,0.0050000000000000044,0.0050000000000000044,0.0049999999999999767,0.0050000000000000044,0.0050000000000000044,0.0050000000000000044,0.0050000000000000044,0.0050000000000000044,0.0049999999999999767,0.0050000000000000044,0.0050000000000000044,0.0050000000000000044],"base":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"x":[-0.095000000000000001,-0.089999999999999997,-0.085000000000000006,-0.080000000000000002,-0.075000000000000011,-0.070000000000000007,-0.065000000000000002,-0.059999999999999998,-0.055000000000000007,-0.050000000000000003,-0.044999999999999998,-0.040000000000000008,-0.035000000000000003,-0.029999999999999999,-0.025000000000000001,-0.020000000000000004,-0.014999999999999999,-0.010000000000000002,-0.0050000000000000044,0,0.0049999999999999975,0.009999999999999995,0.014999999999999999,0.019999999999999997,0.024999999999999994,0.029999999999999999,0.035000000000000003,0.040000000000000008,0.044999999999999998,0.049999999999999989,0.054999999999999993,0.059999999999999998,0.065000000000000002,0.070000000000000007,0.075000000000000011,0.080000000000000002,0.084999999999999992,0.089999999999999997,0.095000000000000001,0.10000000000000001,0.10500000000000001,0.11,0.11499999999999999,0.12,0.125],"y":[0,0,0,0,0,0,1,0,0,1,0,0,1,2,1,1,6,0,1,4,6,4,4,7,6,3,3,2,2,2,1,0,1,0,0,1,0,0,0,0,0,0,0,0,0],"text":["count:  0<br />returns: -0.095<br />asset: SPY","count:  0<br />returns: -0.090<br />asset: SPY","count:  0<br />returns: -0.085<br />asset: SPY","count:  0<br />returns: -0.080<br />asset: SPY","count:  0<br />returns: -0.075<br />asset: SPY","count:  0<br />returns: -0.070<br />asset: SPY","count:  1<br />returns: -0.065<br />asset: SPY","count:  0<br />returns: -0.060<br />asset: SPY","count:  0<br />returns: -0.055<br />asset: SPY","count:  1<br />returns: -0.050<br />asset: SPY","count:  0<br />returns: -0.045<br />asset: SPY","count:  0<br />returns: -0.040<br />asset: SPY","count:  1<br />returns: -0.035<br />asset: SPY","count:  2<br />returns: -0.030<br />asset: SPY","count:  1<br />returns: -0.025<br />asset: SPY","count:  1<br />returns: -0.020<br />asset: SPY","count:  6<br />returns: -0.015<br />asset: SPY","count:  0<br />returns: -0.010<br />asset: SPY","count:  1<br />returns: -0.005<br />asset: SPY","count:  4<br />returns:  0.000<br />asset: SPY","count:  6<br />returns:  0.005<br />asset: SPY","count:  4<br />returns:  0.010<br />asset: SPY","count:  4<br />returns:  0.015<br />asset: SPY","count:  7<br />returns:  0.020<br />asset: SPY","count:  6<br />returns:  0.025<br />asset: SPY","count:  3<br />returns:  0.030<br />asset: SPY","count:  3<br />returns:  0.035<br />asset: SPY","count:  2<br />returns:  0.040<br />asset: SPY","count:  2<br />returns:  0.045<br />asset: SPY","count:  2<br />returns:  0.050<br />asset: SPY","count:  1<br />returns:  0.055<br />asset: SPY","count:  0<br />returns:  0.060<br />asset: SPY","count:  1<br />returns:  0.065<br />asset: SPY","count:  0<br />returns:  0.070<br />asset: SPY","count:  0<br />returns:  0.075<br />asset: SPY","count:  1<br />returns:  0.080<br />asset: SPY","count:  0<br />returns:  0.085<br />asset: SPY","count:  0<br />returns:  0.090<br />asset: SPY","count:  0<br />returns:  0.095<br />asset: SPY","count:  0<br />returns:  0.100<br />asset: SPY","count:  0<br />returns:  0.105<br />asset: SPY","count:  0<br />returns:  0.110<br />asset: SPY","count:  0<br />returns:  0.115<br />asset: SPY","count:  0<br />returns:  0.120<br />asset: SPY","count:  0<br />returns:  0.125<br />asset: SPY"],"type":"bar","textposition":"none","marker":{"autocolorscale":false,"color":"rgba(231,107,243,0.45)","line":{"width":1.8897637795275593,"color":"transparent"}},"name":"SPY","legendgroup":"SPY","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null}],"layout":{"margin":{"t":40.840182648401829,"r":7.3059360730593621,"b":37.260273972602747,"l":37.260273972602747},"plot_bgcolor":"rgba(235,235,235,1)","paper_bgcolor":"rgba(255,255,255,1)","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724},"title":{"text":"Monthly Returns Since 2013","font":{"color":"rgba(0,0,0,1)","family":"","size":17.534246575342465},"x":0,"xref":"paper"},"xaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[-0.10875,0.13875000000000001],"tickmode":"array","ticktext":["-0.10","-0.05","0.00","0.05","0.10"],"tickvals":[-0.10000000000000001,-0.050000000000000003,0,0.050000000000000003,0.099999999999999992],"categoryorder":"array","categoryarray":["-0.10","-0.05","0.00","0.05","0.10"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.6529680365296811,"tickwidth":0.66417600664176002,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(255,255,255,1)","gridwidth":0.66417600664176002,"zeroline":false,"anchor":"y","title":{"text":"returns","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724}},"hoverformat":".2f"},"yaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[-1.55,32.549999999999997],"tickmode":"array","ticktext":["0","10","20","30"],"tickvals":[0,10,20,30],"categoryorder":"array","categoryarray":["0","10","20","30"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.6529680365296811,"tickwidth":0.66417600664176002,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(255,255,255,1)","gridwidth":0.66417600664176002,"zeroline":false,"anchor":"x","title":{"text":"count","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724}},"hoverformat":".2f"},"shapes":[{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":1,"y0":0,"y1":1}],"showlegend":true,"legend":{"bgcolor":"rgba(255,255,255,1)","bordercolor":"transparent","borderwidth":1.8897637795275593,"font":{"color":"rgba(0,0,0,1)","family":"","size":11.68949771689498},"title":{"text":"asset","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724}}},"hovermode":"closest","barmode":"relative"},"config":{"doubleClick":"reset","modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"source":"A","attrs":{"774c55ab6c4e":{"x":{},"fill":{},"type":"bar"}},"cur_data":"774c55ab6c4e","visdat":{"774c55ab6c4e":["function (y) ","x"]},"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+
+
+---
+
+
+
+# <i class="fas fa-broom" role="presentation" aria-label="broom icon"></i> Visualizing Asset Returns `tidyverse`
+
+
+
+.pull-left[
+
+----
+
+```r
+asset_returns_long %&gt;%
+ggplot(aes(x = returns, fill = asset)) +
+geom_histogram(alpha = 0.45, binwidth = .01) +
+facet_wrap(~asset) +
+ggtitle("Monthly Returns Since 2013") +
+theme_update(plot.title = element_text(hjust = 0.5))
+```
+----
+
+
+]
+
+.pull-right[
+
+
+
+![](4_Returns_files/figure-html/unnamed-chunk-33-1.png)&lt;!-- --&gt;
+
+
+
+]
+
+
+---
+
+
+# <i class="fas fa-broom" role="presentation" aria-label="broom icon"></i> Visualizing Asset Returns `tidyverse`
+
+
+
+.pull-left[
+
+----
+
+```r
+asset_returns_long %&gt;%
+ggplot(aes(x = returns, colour = asset)) +
+geom_density(alpha = 1) +
+ggtitle("Monthly Returns Density Since 2013") +
+xlab("monthly returns") +
+ylab("distribution") +
+theme_update(plot.title = element_text(hjust = 0.5))
+```
+----
+
+
+]
+
+.pull-right[
+
+
+
+![](4_Returns_files/figure-html/unnamed-chunk-35-1.png)&lt;!-- --&gt;
+
+
+
+]
+
+
+---
+
+
+
+
+# <i class="fas fa-broom" role="presentation" aria-label="broom icon"></i> Visualizing Asset Returns `tidyverse`
+
+
+
+.pull-left[
+
+----
+
+```r
+asset_returns_long %&gt;%
+ggplot(aes(x = returns)) +
+geom_density(aes(color = asset), alpha = 1) +
+geom_histogram(aes(fill = asset), alpha = 0.45, binwidth = .01) +
+guides(fill = FALSE) +
+facet_wrap(~asset) +
+ggtitle("Monthly Returns Since 2013") +
+xlab("monthly returns") +
+ylab("distribution") +
+theme_update(plot.title = element_text(hjust = 0.5))
+```
+----
+
+
+]
+
+.pull-right[
+
+
+
+![](4_Returns_files/figure-html/unnamed-chunk-37-1.png)&lt;!-- --&gt;
+
+
+
+]
+
+
+---
+
+
+
+# <i class="fas fa-broom" role="presentation" aria-label="broom icon"></i> Visualizing Asset Returns `tidyverse`
+
+
+
+.pull-left[
+
+----
+
+```r
+asset_returns_long %&gt;%
+  ggplot(aes(x = date, y = returns, color=asset)) +
+  geom_line()+
+  ggtitle("Monthly Returns Since 2013") +
+  xlab("Date") +
+  ylab("Returns") +
+  theme_update(plot.title = element_text(hjust = 0.5))
+```
+----
+
+
+]
+
+.pull-right[
+
+
+
+![](4_Returns_files/figure-html/unnamed-chunk-39-1.png)&lt;!-- --&gt;
+
+
+
+]
+
+
+---
+
+
+name: portafolio
+class: inverse, center, middle
+background-color: #00081d
+
+# <i class="fas fa-broom" role="presentation" aria-label="broom icon"></i>
+# Construcción de portafolio
+----
+
+.right[
+.bottom[
+####  [<i class="far fa-bell" role="presentation" aria-label="bell icon"></i>](#menu)
+]
+]
+
+
+---
+
+
+
+# <i class="fas fa-broom" role="presentation" aria-label="broom icon"></i> Building a Portfolio
+
+
+
+.pull-left[
+
+Recopilamos rendimientos individuales en una cartera, que es un conjunto ponderado de rendimientos de activos. 
+
+En consecuencia, lo primero que debemos hacer es asignar un peso a cada activo. Recuerde que nuestra cartera tendrá la siguiente combinación de activos:
+
+&lt;br&gt;
+
+* SPY (S&amp;P500 ETF) `weighted 25%`
+* EFA (a non-US equities ETF) `weighted 25%`
+* IJS (a small-cap value ETF) `weighted 20%`
+* EEM (an emerging-markets ETF) `weighted 20%`
+* AGG (a bond ETF) `weighted 10%`
+
+
+&gt; Siempre es mejor asegurarse que la suma de las proporciones de los activos sea del 100%.
+
+
+]
+
+.pull-right[
+
+
+
+
+```r
+w &lt;- c(0.25, 0.25, 0.20, 0.20, 0.10)
+
+tibble(w, symbols)
+```
+
+```
+## # A tibble: 5 × 2
+##       w symbols
+##   &lt;dbl&gt; &lt;chr&gt;  
+## 1  0.25 SPY    
+## 2  0.25 EFA    
+## 3  0.2  IJS    
+## 4  0.2  EEM    
+## 5  0.1  AGG
+```
+
+```r
+# Corroborar la suma de las proporciones
+tibble(w, symbols) %&gt;%
+summarise(total_weight = sum(w))
+```
+
+```
+## # A tibble: 1 × 1
+##   total_weight
+##          &lt;dbl&gt;
+## 1            1
+```
+
+
+]
+
+
+
+---
+
+
+
+
+# <i class="fas fa-broom" role="presentation" aria-label="broom icon"></i> Building a Portfolio
+
+
+
+.pull-left[
+
+* Ahora usamos esos pesos para convertir los rendimientos de 5 activos en los rendimientos de una cartera.
+
+&lt;br&gt;
+
+* El rendimiento de una cartera de activos múltiples es igual a la suma de los rendimientos ponderados de cada activo.
+
+&lt;br&gt;
+
+* Podemos implementar eso asignando pesos a las variables de acuerdo con nuestro vector de pesos w.
+
+
+
+
+]
+
+.pull-right[
+
+
+
+
+```r
+w_1 &lt;- w[1]
+w_2 &lt;- w[2]
+w_3 &lt;- w[3]
+w_4 &lt;- w[4]
+w_5 &lt;- w[5]
+
+
+
+asset1 &lt;- asset_returns_xts[,1]
+asset2 &lt;- asset_returns_xts[,2]
+asset3 &lt;- asset_returns_xts[,3]
+asset4 &lt;- asset_returns_xts[,4]
+asset5 &lt;- asset_returns_xts[,5]
+
+
+portfolio_returns_byhand &lt;-
+                  (w_1 * asset1) +
+                  (w_2 * asset2) +
+                  (w_3 * asset3) +
+                  (w_4 * asset4) +
+                  (w_5 * asset5)
+
+names(portfolio_returns_byhand) &lt;- "returns"
+```
+
+
+]
+
+
+
+---
+
+
+
+# <i class="fas fa-broom" role="presentation" aria-label="broom icon"></i> Building a Portfolio `xts`
+
+
+
+.pull-left[
+
+&gt; Usaremos `Return.portfolio()` de `PerformanceAnalytics`, para calcular los retornos de la cartera. La función requiere dos argumentos para una cartera, un objeto de rendimiento `xts` y un vector de pesos. No es necesario, pero también vamos a establecer `rebalance_on = "months"` para que podamos confirmar que coincide con nuestros cálculos manuales anteriores.
+
+&lt;br&gt;
+
+.center[
+Recuerde, en el cálculo manual, establecemos los pesos de la cartera como fijos, lo que significa que nunca cambiaron mes a mes. Eso equivale a reequilibrar cada mes. En la práctica, no hay una temporalidad estable para rebalancear el portafolio. Esto depende de las condiciones del mercado.
+]
+
+
+
+]
+
+.pull-right[
+
+
+
+
+```r
+portfolio_returns_xts_rebalanced_monthly &lt;-
+                       Return.portfolio(asset_returns_xts,
+                       weights = w,
+                       rebalance_on = "months") %&gt;%
+                       `colnames&lt;-`("returns")
+
+head(portfolio_returns_xts_rebalanced_monthly, 10)
+```
+
+```
+##                  returns
+## 2013-01-31  0.0308487461
+## 2013-02-28 -0.0008695671
+## 2013-03-31  0.0186623794
+## 2013-04-30  0.0206248765
+## 2013-05-31 -0.0053528046
+## 2013-06-30 -0.0229488334
+## 2013-07-31  0.0411705308
+## 2013-08-31 -0.0254689389
+## 2013-09-30  0.0544304080
+## 2013-10-31  0.0351854139
+```
+
+
+]
+
+
+
+---
+
+
+# <i class="fas fa-broom" role="presentation" aria-label="broom icon"></i> Building a Portfolio `xts`
+
+### Visualizando...
+
+.pull-left[
+
+
+```r
+highchart(type = "stock") %&gt;%
+hc_title(text = "Portfolio Monthly Returns") %&gt;%
+hc_add_series(portfolio_returns_xts_rebalanced_monthly$returns,
+name = "Rebalanced Monthly",
+color = "cornflowerblue") %&gt;%
+hc_add_theme(hc_theme_flat()) %&gt;%
+hc_navigator(enabled = FALSE) %&gt;%
+hc_scrollbar(enabled = FALSE) %&gt;%
+hc_legend(enabled = TRUE) %&gt;%
+hc_exporting(enabled = TRUE)
+```
+
+
+
+]
+
+.pull-right[
+
+
+
+<div id="htmlwidget-42743c2b148c1a2aa8fa" style="width:450px;height:450px;" class="highchart html-widget"></div>
+<script type="application/json" data-for="htmlwidget-42743c2b148c1a2aa8fa">{"x":{"hc_opts":{"chart":{"reflow":true},"title":{"text":"Portfolio Monthly Returns"},"yAxis":{"title":{"text":null}},"credits":{"enabled":false},"exporting":{"enabled":true},"boost":{"enabled":false},"plotOptions":{"series":{"label":{"enabled":false},"turboThreshold":0},"treemap":{"layoutAlgorithm":"squarified"}},"series":[{"data":[[1359590400000,0.03084874614405098],[1362009600000,-0.0008695670867318039],[1364688000000,0.01866237936752246],[1367280000000,0.02062487647958755],[1369958400000,-0.0053528046297453],[1372550400000,-0.02294883337302656],[1375228800000,0.04117053077547284],[1377907200000,-0.02546893889136548],[1380499200000,0.0544304079930753],[1383177600000,0.03518541389729246],[1385769600000,0.01622659581710439],[1388448000000,0.01298621316266235],[1391126400000,-0.04601498886437483],[1393545600000,0.04207524244918481],[1396224000000,0.01103390160655082],[1398816000000,0.003600261097420399],[1401494400000,0.01792381385086839],[1404086400000,0.01963288271613428],[1406764800000,-0.01791898059345221],[1409443200000,0.02558199465999311],[1412035200000,-0.04241304272648849],[1414713600000,0.02280848020448056],[1417305600000,0.005433070144959196],[1419984000000,-0.01370349045969355],[1422662400000,-0.01623574863029009],[1425081600000,0.04814444803073936],[1427760000000,-0.008166841076702513],[1430352000000,0.02065024723721742],[1433030400000,-0.003636928243412996],[1435622400000,-0.01924754713931764],[1438300800000,-0.007039406086609357],[1440979200000,-0.06330210274741677],[1443571200000,-0.03101039194939859],[1446249600000,0.06156345927644491],[1448841600000,-0.001595734259898007],[1451520000000,-0.02867001196317298],[1454198400000,-0.04811214021686261],[1456704000000,-0.005323131382784507],[1459382400000,0.07544014325183146],[1461974400000,0.0117564332326594],[1464652800000,-0.002629661357027246],[1467244800000,0.00723627961161899],[1469923200000,0.03960659435366076],[1472601600000,0.00542720608140046],[1475193600000,0.01008333691319985],[1477872000000,-0.02008310023817328],[1480464000000,0.01796844201874093],[1483142400000,0.01773912428435875],[1485820800000,0.02319960970492652],[1488240000000,0.01937510279121835],[1490918400000,0.01413961324489144],[1493510400000,0.01375514870128725],[1496188800000,0.01393031577511139],[1498780800000,0.009984486615514765],[1501459200000,0.02478210470983244],[1504137600000,0.0006890165169290974],[1506729600000,0.02662479370399518],[1509408000000,0.01772282611459208],[1512000000000,0.01569930851450119],[1514678400000,0.0134762756501996]],"name":"Rebalanced Monthly","color":"cornflowerblue"}],"navigator":{"enabled":false},"scrollbar":{"enabled":false},"legend":{"enabled":true}},"theme":{"colors":["#f1c40f","#2ecc71","#9b59b6","#e74c3c","#34495e","#3498db","#1abc9c","#f39c12","#d35400"],"chart":{"backgroundColor":"#ECF0F1"},"xAxis":{"gridLineDashStyle":"Dash","gridLineWidth":1,"gridLineColor":"#BDC3C7","lineColor":"#BDC3C7","minorGridLineColor":"#BDC3C7","tickColor":"#BDC3C7","tickWidth":1},"yAxis":{"gridLineDashStyle":"Dash","gridLineColor":"#BDC3C7","lineColor":"#BDC3C7","minorGridLineColor":"#BDC3C7","tickColor":"#BDC3C7","tickWidth":1},"legendBackgroundColor":"rgba(0, 0, 0, 0.5)","background2":"#505053","dataLabelsColor":"#B0B0B3","textColor":"#34495e","contrastTextColor":"#F0F0F3","maskColor":"rgba(255,255,255,0.3)"},"conf_opts":{"global":{"Date":null,"VMLRadialGradientURL":"http =//code.highcharts.com/list(version)/gfx/vml-radial-gradient.png","canvasToolsURL":"http =//code.highcharts.com/list(version)/modules/canvas-tools.js","getTimezoneOffset":null,"timezoneOffset":0,"useUTC":true},"lang":{"contextButtonTitle":"Chart context menu","decimalPoint":".","downloadCSV":"Download CSV","downloadJPEG":"Download JPEG image","downloadPDF":"Download PDF document","downloadPNG":"Download PNG image","downloadSVG":"Download SVG vector image","downloadXLS":"Download XLS","drillUpText":"◁ Back to {series.name}","exitFullscreen":"Exit from full screen","exportData":{"annotationHeader":"Annotations","categoryDatetimeHeader":"DateTime","categoryHeader":"Category"},"hideData":"Hide data table","invalidDate":null,"loading":"Loading...","months":["January","February","March","April","May","June","July","August","September","October","November","December"],"noData":"No data to display","numericSymbolMagnitude":1000,"numericSymbols":["k","M","G","T","P","E"],"printChart":"Print chart","resetZoom":"Reset zoom","resetZoomTitle":"Reset zoom level 1:1","shortMonths":["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],"shortWeekdays":["Sat","Sun","Mon","Tue","Wed","Thu","Fri"],"thousandsSep":" ","viewData":"View data table","viewFullscreen":"View in full screen","weekdays":["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"]}},"type":"stock","fonts":[],"debug":false},"evals":[],"jsHooks":[]}</script>
+
+
+]
+
+
+
+---
+
+
+
+# <i class="fas fa-broom" role="presentation" aria-label="broom icon"></i> Building a Portfolio `xts`
+
+### Visualizando...
+
+
+
+```r
+hc_portfolio &lt;-
+hist(portfolio_returns_xts_rebalanced_monthly$returns,
+breaks = 50,
+plot = FALSE)
+hchart(hc_portfolio,
+color = "cornflowerblue",
+name = "Portfolio") %&gt;%
+hc_title(text = "Portfolio Returns Distribution") %&gt;%
+hc_add_theme(hc_theme_flat()) %&gt;%
+hc_exporting(enabled = TRUE)
+```
+
+
+
+---
+
+
+# <i class="fas fa-broom" role="presentation" aria-label="broom icon"></i> Building a Portfolio `xts`
+
+
+
+<div id="htmlwidget-c6296cd2dfef0b3269f9" style="width:900px;height:450px;" class="highchart html-widget"></div>
+<script type="application/json" data-for="htmlwidget-c6296cd2dfef0b3269f9">{"x":{"hc_opts":{"chart":{"reflow":true,"zoomType":"x"},"title":{"text":"Portfolio Returns Distribution"},"yAxis":{"title":{"text":null}},"credits":{"enabled":false},"exporting":{"enabled":true},"boost":{"enabled":false},"plotOptions":{"series":{"label":{"enabled":false},"turboThreshold":0},"treemap":{"layoutAlgorithm":"squarified"}},"tooltip":{"formatter":"function() { return  this.point.name + '<br/>' + this.y; }"},"series":[{"data":[{"x":-0.06300000000000001,"y":1,"name":"(-0.064, -0.062]"},{"x":-0.06100000000000001,"y":0,"name":"(-0.062, -0.06]"},{"x":-0.05900000000000001,"y":0,"name":"(-0.06, -0.058]"},{"x":-0.05700000000000002,"y":0,"name":"(-0.058, -0.056]"},{"x":-0.05500000000000001,"y":0,"name":"(-0.056, -0.054]"},{"x":-0.05300000000000002,"y":0,"name":"(-0.054, -0.052]"},{"x":-0.05100000000000002,"y":0,"name":"(-0.052, -0.05]"},{"x":-0.04900000000000002,"y":1,"name":"(-0.05, -0.048]"},{"x":-0.04700000000000001,"y":1,"name":"(-0.048, -0.046]"},{"x":-0.04500000000000001,"y":0,"name":"(-0.046, -0.044]"},{"x":-0.04300000000000001,"y":1,"name":"(-0.044, -0.042]"},{"x":-0.04100000000000002,"y":0,"name":"(-0.042, -0.04]"},{"x":-0.03900000000000001,"y":0,"name":"(-0.04, -0.038]"},{"x":-0.03700000000000002,"y":0,"name":"(-0.038, -0.036]"},{"x":-0.03500000000000002,"y":0,"name":"(-0.036, -0.034]"},{"x":-0.03300000000000002,"y":0,"name":"(-0.034, -0.032]"},{"x":-0.03100000000000001,"y":1,"name":"(-0.032, -0.03]"},{"x":-0.02900000000000001,"y":1,"name":"(-0.03, -0.028]"},{"x":-0.02700000000000001,"y":0,"name":"(-0.028, -0.026]"},{"x":-0.02500000000000002,"y":1,"name":"(-0.026, -0.024]"},{"x":-0.02300000000000001,"y":1,"name":"(-0.024, -0.022]"},{"x":-0.02100000000000002,"y":1,"name":"(-0.022, -0.02]"},{"x":-0.01900000000000002,"y":1,"name":"(-0.02, -0.018]"},{"x":-0.01700000000000002,"y":2,"name":"(-0.018, -0.016]"},{"x":-0.01500000000000001,"y":0,"name":"(-0.016, -0.014]"},{"x":-0.01300000000000001,"y":1,"name":"(-0.014, -0.012]"},{"x":-0.01100000000000001,"y":0,"name":"(-0.012, -0.01]"},{"x":-0.009000000000000015,"y":1,"name":"(-0.01, -0.00800000000000001]"},{"x":-0.007000000000000013,"y":1,"name":"(-0.00800000000000001, -0.00600000000000001]"},{"x":-0.005000000000000015,"y":2,"name":"(-0.00600000000000002, -0.00400000000000001]"},{"x":-0.003000000000000017,"y":2,"name":"(-0.00400000000000002, -0.00200000000000002]"},{"x":-0.001000000000000008,"y":2,"name":"(-0.00200000000000001, -6.93889390390723e-18]"},{"x":0.0009999999999999939,"y":1,"name":"(-6.93889390390723e-18, 0.00199999999999999]"},{"x":0.002999999999999989,"y":1,"name":"(0.00199999999999999, 0.00399999999999999]"},{"x":0.004999999999999991,"y":2,"name":"(0.00399999999999999, 0.00599999999999999]"},{"x":0.006999999999999992,"y":1,"name":"(0.00599999999999999, 0.00799999999999999]"},{"x":0.008999999999999987,"y":1,"name":"(0.00799999999999999, 0.00999999999999999]"},{"x":0.01099999999999998,"y":3,"name":"(0.00999999999999998, 0.012]"},{"x":0.01299999999999998,"y":4,"name":"(0.012, 0.014]"},{"x":0.01499999999999999,"y":2,"name":"(0.014, 0.016]"},{"x":0.01699999999999999,"y":5,"name":"(0.016, 0.018]"},{"x":0.01899999999999999,"y":3,"name":"(0.018, 0.02]"},{"x":0.02099999999999999,"y":2,"name":"(0.02, 0.022]"},{"x":0.02299999999999999,"y":2,"name":"(0.022, 0.024]"},{"x":0.02499999999999998,"y":2,"name":"(0.024, 0.026]"},{"x":0.02699999999999998,"y":1,"name":"(0.026, 0.028]"},{"x":0.02899999999999998,"y":0,"name":"(0.028, 0.03]"},{"x":0.03099999999999999,"y":1,"name":"(0.03, 0.032]"},{"x":0.03299999999999999,"y":0,"name":"(0.032, 0.034]"},{"x":0.03499999999999999,"y":1,"name":"(0.034, 0.036]"},{"x":0.03699999999999999,"y":0,"name":"(0.036, 0.038]"},{"x":0.03899999999999999,"y":1,"name":"(0.038, 0.04]"},{"x":0.04099999999999999,"y":1,"name":"(0.04, 0.042]"},{"x":0.04299999999999998,"y":1,"name":"(0.042, 0.044]"},{"x":0.04499999999999998,"y":0,"name":"(0.044, 0.046]"},{"x":0.04699999999999999,"y":0,"name":"(0.046, 0.048]"},{"x":0.04899999999999999,"y":1,"name":"(0.048, 0.05]"},{"x":0.05099999999999999,"y":0,"name":"(0.05, 0.052]"},{"x":0.05299999999999999,"y":0,"name":"(0.052, 0.054]"},{"x":0.05499999999999999,"y":1,"name":"(0.054, 0.056]"},{"x":0.05699999999999998,"y":0,"name":"(0.056, 0.058]"},{"x":0.05899999999999998,"y":0,"name":"(0.058, 0.06]"},{"x":0.06099999999999998,"y":1,"name":"(0.06, 0.062]"},{"x":0.06299999999999999,"y":0,"name":"(0.062, 0.064]"},{"x":0.06499999999999999,"y":0,"name":"(0.064, 0.066]"},{"x":0.06699999999999999,"y":0,"name":"(0.066, 0.068]"},{"x":0.06899999999999999,"y":0,"name":"(0.068, 0.07]"},{"x":0.07099999999999999,"y":0,"name":"(0.07, 0.072]"},{"x":0.073,"y":0,"name":"(0.072, 0.074]"},{"x":0.07500000000000001,"y":1,"name":"(0.074, 0.076]"}],"type":"column","pointRange":0.002000000000000002,"groupPadding":0,"pointPadding":0,"borderWidth":0,"color":"cornflowerblue","name":"Portfolio"}]},"theme":{"colors":["#f1c40f","#2ecc71","#9b59b6","#e74c3c","#34495e","#3498db","#1abc9c","#f39c12","#d35400"],"chart":{"backgroundColor":"#ECF0F1"},"xAxis":{"gridLineDashStyle":"Dash","gridLineWidth":1,"gridLineColor":"#BDC3C7","lineColor":"#BDC3C7","minorGridLineColor":"#BDC3C7","tickColor":"#BDC3C7","tickWidth":1},"yAxis":{"gridLineDashStyle":"Dash","gridLineColor":"#BDC3C7","lineColor":"#BDC3C7","minorGridLineColor":"#BDC3C7","tickColor":"#BDC3C7","tickWidth":1},"legendBackgroundColor":"rgba(0, 0, 0, 0.5)","background2":"#505053","dataLabelsColor":"#B0B0B3","textColor":"#34495e","contrastTextColor":"#F0F0F3","maskColor":"rgba(255,255,255,0.3)"},"conf_opts":{"global":{"Date":null,"VMLRadialGradientURL":"http =//code.highcharts.com/list(version)/gfx/vml-radial-gradient.png","canvasToolsURL":"http =//code.highcharts.com/list(version)/modules/canvas-tools.js","getTimezoneOffset":null,"timezoneOffset":0,"useUTC":true},"lang":{"contextButtonTitle":"Chart context menu","decimalPoint":".","downloadCSV":"Download CSV","downloadJPEG":"Download JPEG image","downloadPDF":"Download PDF document","downloadPNG":"Download PNG image","downloadSVG":"Download SVG vector image","downloadXLS":"Download XLS","drillUpText":"◁ Back to {series.name}","exitFullscreen":"Exit from full screen","exportData":{"annotationHeader":"Annotations","categoryDatetimeHeader":"DateTime","categoryHeader":"Category"},"hideData":"Hide data table","invalidDate":null,"loading":"Loading...","months":["January","February","March","April","May","June","July","August","September","October","November","December"],"noData":"No data to display","numericSymbolMagnitude":1000,"numericSymbols":["k","M","G","T","P","E"],"printChart":"Print chart","resetZoom":"Reset zoom","resetZoomTitle":"Reset zoom level 1:1","shortMonths":["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],"shortWeekdays":["Sat","Sun","Mon","Tue","Wed","Thu","Fri"],"thousandsSep":" ","viewData":"View data table","viewFullscreen":"View in full screen","weekdays":["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"]}},"type":"chart","fonts":[],"debug":false},"evals":["hc_opts.tooltip.formatter"],"jsHooks":[]}</script>
+
+
+
+
+
+
+---
+
+
+
+# <i class="fas fa-broom" role="presentation" aria-label="broom icon"></i> Building a Portfolio `tidyverse`
+
+
+
+.pull-left[
+
+&gt; Usamos `case_when()` para asignar pesos por activo, de modo que en el caso de que la columna de activos sea igual al activo 1 (SPY), asignamos un peso de 0,25, o w[1], y así sucesivamente.
+
+&lt;br&gt;
+
+----
+
+```r
+asset_returns_long %&gt;%
+      group_by(asset) %&gt;%
+      mutate(weights = case_when(asset == symbols[1] ~ w[1],
+      asset == symbols[2] ~ w[2],
+      asset == symbols[3] ~ w[3],
+      asset == symbols[4] ~ w[4],
+      asset == symbols[5] ~ w[5])) %&gt;%
+
+  
+head(20)
+```
+----
+
+]
+
+.pull-right[
+
+
+
+
+```
+## # A tibble: 20 × 4
+## # Groups:   asset [1]
+##    date       asset  returns weights
+##    &lt;date&gt;     &lt;chr&gt;    &lt;dbl&gt;   &lt;dbl&gt;
+##  1 2012-12-31 SPY   NA          0.25
+##  2 2013-01-31 SPY    0.0499     0.25
+##  3 2013-02-28 SPY    0.0127     0.25
+##  4 2013-03-31 SPY    0.0373     0.25
+##  5 2013-04-30 SPY    0.0190     0.25
+##  6 2013-05-31 SPY    0.0233     0.25
+##  7 2013-06-30 SPY   -0.0134     0.25
+##  8 2013-07-31 SPY    0.0504     0.25
+##  9 2013-08-31 SPY   -0.0305     0.25
+## 10 2013-09-30 SPY    0.0312     0.25
+## 11 2013-10-31 SPY    0.0453     0.25
+## 12 2013-11-30 SPY    0.0292     0.25
+## 13 2013-12-31 SPY    0.0256     0.25
+## 14 2014-01-31 SPY   -0.0359     0.25
+## 15 2014-02-28 SPY    0.0445     0.25
+## 16 2014-03-31 SPY    0.00826    0.25
+## 17 2014-04-30 SPY    0.00693    0.25
+## 18 2014-05-31 SPY    0.0229     0.25
+## 19 2014-06-30 SPY    0.0204     0.25
+## 20 2014-07-31 SPY   -0.0135     0.25
+```
+
+
+]
+
+
+
+---
+
+
+
+# <i class="fas fa-broom" role="presentation" aria-label="broom icon"></i> Building a Portfolio `tidyverse`
+
+
+
+.pull-left[
+
+&gt; A continuación, necesitamos implementar la ecuación para los rendimientos de la cartera. Esta tarea es un poco complicada pero sirve como una buena manera de usar la función `group_by()` con fechas. 
+
+* Primero añadimos un nuevo objeto llamado `weighted_returns` que es el producto del rendimiento mensual de cada activo y su peso. 
+
+* Luego, `group_by()` agrupa la columna de fecha porque cada uno de nuestros rendimientos ponderados debe sumarse para cada fecha. 
+
+* Una vez que agrupamos por fecha, podemos usar `summarise(total = sum(weighted_returns))` para sumar los rendimientos ponderados mensuales.
+
+
+
+]
+
+.pull-right[
+
+
+
+
+```r
+portfolio_returns_dplyr_byhand &lt;-
+      asset_returns_long %&gt;%
+      group_by(asset) %&gt;%
+      mutate(weights = case_when(asset == symbols[1] ~ w[1],
+                                 asset == symbols[2] ~ w[2],
+                                 asset == symbols[3] ~ w[3],
+                                 asset == symbols[4] ~ w[4],
+                                 asset == symbols[5] ~ w[5]),
+                                 weighted_returns = returns * weights) %&gt;%
+      group_by(date) %&gt;%
+      summarise(returns = sum(weighted_returns))
+
+
+head(portfolio_returns_dplyr_byhand, 10)
+```
+
+
+]
+
+
+
+---
+
+
+# <i class="fas fa-broom" role="presentation" aria-label="broom icon"></i> Building a Portfolio `tidyquant`
+
+
+
+.pull-left[
+
+&gt; En tidyquant, comenzamos de nuevo con nuestro objeto `asset_returns_long` largo y con formato ordenado, pero lo convertimos en rendimientos de cartera usando `tq_portafolio()`. 
+
+* La función `tq_portfolio` toma un `tibble` y luego solicita una columna de activos para agrupar, una columna de retornos para encontrar datos de retorno y un vector de ponderaciones.
+
+* Es similar a `Return.portfolio()` y, por lo tanto, también acepta el argumento `rebalance_on = "months"`. Dado que estamos reequilibrando por meses, deberíamos obtener nuevamente un objeto de rendimiento de cartera que coincida con nuestros objetos existentes.
+
+
+
+
+
+]
+
+.pull-right[
+
+
+
+
+```r
+portfolio_returns_tq_rebalanced_monthly &lt;-
+          asset_returns_long %&gt;%
+          tq_portfolio(assets_col = asset,
+                       returns_col = returns,
+                       weights = w,
+                       col_rename = "returns",
+                       rebalance_on = "months")
+
+head(portfolio_returns_tq_rebalanced_monthly, 10)
+```
+
+
+]
+
+
+
+---
+
+
+
+
+
+
+# <i class="fas fa-broom" role="presentation" aria-label="broom icon"></i> Building a Portfolio `tidyquant`
+
+### Visualizando...
+
+.pull-left[
+
+
+```r
+portfolio_returns_tq_rebalanced_monthly %&gt;%
+   ggplot(aes(x = date, y = returns)) +
+   geom_point(colour = "cornflowerblue")+
+   xlab("date") +
+   ylab("monthly return") +
+   theme_update(plot.title = element_text(hjust = 0.5)) +
+   ggtitle("Portfolio Returns Scatter") +
+   scale_x_date(breaks = pretty_breaks(n=6))
+```
+
+
+
+
+]
+
+.pull-right[
+
+
+
+![](4_Returns_files/figure-html/unnamed-chunk-52-1.png)&lt;!-- --&gt;
+
+
+]
+
+
+---
+
+
+
+
+
+# <i class="fas fa-broom" role="presentation" aria-label="broom icon"></i> Building a Portfolio `tidyquant`
+
+### Visualizando...
+
+.pull-left[
+
+
+```r
+portfolio_returns_tq_rebalanced_monthly %&gt;%
+     ggplot(aes(x = returns)) +
+     geom_histogram(binwidth = .005,
+     fill = "cornflowerblue",
+     color = "cornflowerblue") +
+     ggtitle("Portfolio Returns Distribution") +
+     theme_update(plot.title = element_text(hjust = 0.5))
+```
+
+
+
+
+]
+
+.pull-right[
+
+
+
+![](4_Returns_files/figure-html/unnamed-chunk-54-1.png)&lt;!-- --&gt;
+
+
+]
+
+
+
+---
+
+
+
+# <i class="fas fa-broom" role="presentation" aria-label="broom icon"></i> Building a Portfolio `tidyverse`
+
+### Visualizando...
+
+.pull-left[
+
+
+```r
+asset_returns_long %&gt;%
+         ggplot(aes(x = returns,
+         fill = asset)) +
+         geom_histogram(alpha = 0.15,
+         binwidth = .01) +
+         geom_histogram(data = portfolio_returns_tq_rebalanced_monthly,
+         fill = "cornflowerblue",
+         binwidth = .01) +
+         ggtitle("Portfolio and Asset Monthly Returns") +
+         theme_update(plot.title = element_text(hjust = 0.5))
+```
+
+
+
+
+]
+
+.pull-right[
+
+
+
+![](4_Returns_files/figure-html/unnamed-chunk-56-1.png)&lt;!-- --&gt;
+
+
+]
+
+
+
+---
+
+
+
+
+
+
+# <i class="fas fa-broom" role="presentation" aria-label="broom icon"></i> Building a Portfolio `tidyverse`
+
+### Visualizando...
+
+.pull-left[
+
+
+```r
+portfolio_returns_tq_rebalanced_monthly %&gt;%
+             ggplot(aes(x = returns)) +
+             geom_histogram(binwidth = .01,
+             colour = "cornflowerblue",
+             fill = "cornflowerblue") +
+             geom_density(alpha = 1, color = "red") +
+             xlab("monthly returns") +
+             ylab("distribution") +
+             theme_update(plot.title = element_text(hjust = 0.5)) +
+             ggtitle("Portfolio Histogram and Density")
+```
+
+
+
+
+]
+
+.pull-right[
+
+
+
+![](4_Returns_files/figure-html/unnamed-chunk-58-1.png)&lt;!-- --&gt;
+
+
+]
+
+
+
+---
+
+
+name: shiny
+class: inverse, center, middle
+background-color: #00081d
+
+# <i class="fas fa-broom" role="presentation" aria-label="broom icon"></i>
+# Shiny App
+----
+
+.right[
+.bottom[
+####  [<i class="far fa-bell" role="presentation" aria-label="bell icon"></i>](#menu)
+]
+]
+
+
+---
+
+# <i class="fas fa-broom" role="presentation" aria-label="broom icon"></i> Shiny App
+
+.center[
+&lt;img src="img/Dashboard.JPG" width="100%" /&gt;
+]
+
+
+---
+
+
+
+# <i class="fas fa-broom" role="presentation" aria-label="broom icon"></i> Shiny App
+
+
+.scroll-box-18[
+````
+---
+title: "Returns Distribution"
+runtime: shiny
+output:
+  flexdashboard::flex_dashboard:
+    orientation: rows
+---
+
+
+```{r setup, message = FALSE}
+library(tidyverse)
+library(highcharter)
+library(tidyquant)
+library(timetk)
+```
+
+Sidebar {.sidebar}
+=====================================
+  
+```{r}
+
+fluidRow(
+  column(6,
+  textInput("stock1", "Stock 1", "SPY")),
+  column(5,
+  numericInput("w1", "Weight %", 25, min = 1, max = 100))
+)  
+
+fluidRow(
+  column(6,
+  textInput("stock2", "Stock 2", "EFA")),
+  column(5,
+  numericInput("w2", "Weight %", 25, min = 1, max = 100))
+)
+
+fluidRow(
+  column(6,
+  textInput("stock3", "Stock 3", "IJS")),
+  column(5,
+  numericInput("w3", "Weight %", 20, min = 1, max = 100))
+)
+
+fluidRow(
+  column(6,
+  textInput("stock4", "Stock 4", "EEM")),
+  column(5,
+  numericInput("w4", "Weight %", 20, min = 1, max = 100))
+)
+
+fluidRow(
+  column(6,
+  textInput("stock5", "Stock 5", "AGG")),
+  column(5,
+  numericInput("w5", "Weight %", 10, min = 1, max = 100))
+)
+
+fluidRow(
+  column(7,
+  dateInput("date", "Starting Date", "2013-01-01", format = "yyyy-mm-dd"))
+)
+
+fluidRow(
+  column(7,
+  selectInput("rebalance", "Rebalance",
+              c("Yearly" = "years",
+                "Monthly" = "months",
+                "Weekly" = "weeks"))
+  )
+)
+
+actionButton("go", "Submit")
+
+portfolio_returns_byhand &lt;- eventReactive(input$go, {
+  
+  symbols &lt;- c(input$stock1, input$stock2, input$stock3, input$stock4, input$stock5)
+  
+  prices &lt;- getSymbols(symbols, src = 'yahoo', from = input$date, 
+             auto.assign = TRUE, warnings = FALSE) %&gt;% 
+  map(~Ad(get(.))) %&gt;% 
+  reduce(merge) %&gt;%
+    `colnames&lt;-`(symbols)
+
+  w &lt;- c(input$w1/100, input$w2/100, 
+         input$w3/100, input$w4/100, input$w5/100)
+  
+  asset_returns_long &lt;- 
+      prices %&gt;% 
+      to.monthly(indexAt = "last", OHLC = FALSE) %&gt;% 
+      tk_tbl(preserve_index = TRUE, rename_index = "date") %&gt;%
+      gather(asset, returns, -date) %&gt;% 
+      group_by(asset) %&gt;%  
+      mutate(returns = (log(returns) - log(lag(returns))))
+
+  portfolio_returns_byhand &lt;- 
+    asset_returns_long %&gt;% 
+    tq_portfolio(assets_col = asset, 
+               returns_col = returns, 
+               weights = w,
+               col_rename = "returns")
+  
+})
+
+```
+
+Returns
+=====================================  
+
+
+Row {.tabset .tabset-fade}
+-------------------------------------
+
+
+### Histogram
+
+```{r}
+renderPlot({
+  portfolio_returns_byhand() %&gt;% 
+    ggplot(aes(x = returns)) +
+    geom_histogram(alpha = 0.25, binwidth = .01, fill = "cornflowerblue")
+})
+```
+
+### Density
+
+```{r}
+renderPlot({
+  portfolio_returns_byhand() %&gt;% 
+    ggplot(aes(x = returns)) +
+  geom_density(size = 1, color = "red") 
+})
+```
+
+
+### Histogram + Density
+
+```{r}
+renderPlot({
+  portfolio_returns_byhand() %&gt;% 
+    ggplot(aes(x = returns)) +
+    geom_histogram(alpha = 0.25, binwidth = .01, fill = "cornflowerblue") +
+    geom_density(geom = "line", size = 1, color = "red") 
+})
+```
+````
+]
+
+
+---
+
+
+
+
+
+# <i class="fas fa-broom" role="presentation" aria-label="broom icon"></i> Shiny App
+
+
+.scroll-box-18[
+
+````
+---
+title: "Ejemplo 2"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: rows
+    vertical_layout: fill
+runtime: shiny
+---
+
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library(shiny)
+library(tidyverse)
+library(highcharter)
+library(plotly)
+library(timetk)
+library(tidyquant)
+library(scales)
+library(reshape2)
+library(ggplot2)
+library(plotly)
+library(quantmod)
+library(timeSeries)
+library(fPortfolio)
+library(caTools)
+
+```
+
+
+Sidebar {.sidebar}
+=====================================
+
+```{r}
+#checkboxGroupInput("checkGroup", label = h3("Checkbox group"), 
+#    choices = list("BKNG" = "BKNG", "META" = "META", "MELI" = "MELI"),
+#    selected = "BKNG")
+
+##checkboxInput("widget66", label = "INTC", value = TRUE)
+
+
+textInput("widget6", "Stock 1", "INTC")
+sliderInput("peso1", label="%", value=20, min = 0, max = 100, step = 1)
+textInput("widget6.1", "Stock 2", "BKNG")
+sliderInput("peso2", label= "% ", value=20, min = 0, max = 100, step = 1)
+textInput("widget6.2", "Stock 3", "META")
+sliderInput("peso3", label= "% ", value=20, min = 0, max = 100, step = 1)
+textInput("widget6.3", "Stock 4", "MELI")
+sliderInput("peso4", label= "% ", value=20, min = 0, max = 100, step = 1)
+textInput("widget6.4", "Stock 5", "EBAY")
+sliderInput("peso5", label= "% ", value=20, min = 0, max = 100, step = 1)
+
+dateRangeInput("dates", label = "Seleccione la fecha",
+               start="2010-01-01", end ="2022-10-31")
+
+
+####### Reactivos
+
+Stock_Ind&lt;- reactive({
+  
+prices &lt;- getSymbols(c(input$widget6, input$widget6.1,input$widget6.2,input$widget6.3,input$widget6.4), src = "yahoo",
+               from = input$dates[1],
+               to = input$dates[2],
+               auto.assign = TRUE,
+               warnings = FALSE) %&gt;% 
+  map(~Ad(get(.))) %&gt;% 
+  reduce(merge) %&gt;%
+    `colnames&lt;-`(c(input$widget6,input$widget6.1,input$widget6.2,input$widget6.3,input$widget6.4))
+
+})
+
+
+
+retornos &lt;- reactive({ 
+  Return.calculate(Stock_Ind(),
+                   method = "log") %&gt;%
+  na.omit()
+})
+
+
+pesos&lt;- reactive({
+c(input$peso1,input$peso2,input$peso3,input$peso4,input$peso5)/100
+})
+
+
+
+asset_returns_long&lt;- reactive({
+  retornos() %&gt;%
+  tk_tbl(preserve_index = TRUE, # convierte de xts a formato tibble, preservando el índice y nombrándolo como "date"
+           rename_index = "date") %&gt;%
+  gather(asset, returns, -date) %&gt;% #aquí lo pasa a formato long, y lo agrupa por activo
+  group_by(asset)
+})
+
+
+portfolio_returns_xts &lt;-reactive({
+  Return.portfolio(retornos(),
+                   weights = pesos()) %&gt;%
+  `colnames&lt;-`("returns")
+  })
+
+
+
+```
+
+
+
+
+
+Precios de acciones
+=======================================================================
+
+### Boxplot | Precios acciones
+
+```{r}
+
+
+Stock_Ind2&lt;- reactive({
+
+DatosPre_&lt;-as.data.frame(Stock_Ind())
+VarLong &lt;- names(DatosPre_)
+
+Datos2&lt;-DatosPre_ %&gt;%  gather(VarLong, key = variable, value = index) 
+
+})
+
+
+renderPlotly({
+
+Stock_Ind2()  %&gt;% 
+  plot_ly(y = ~index, color = ~variable, type = "box", colors = "viridis")
+})
+  
+
+
+
+```
+
+
+###  Serie | Precios acciones
+```{r}
+
+renderHighchart({
+  library(viridisLite)
+  cols &lt;- viridis(5)
+##cols &lt;- substr(cols, 0, 7)
+
+  highchart(type = "stock") %&gt;%
+    hc_title(text = "") %&gt;%
+    hc_add_series(Stock_Ind()[,1],
+                  name = input$widget6) %&gt;%
+    hc_add_series(Stock_Ind()[,2],
+                  name = input$widget6.1) %&gt;%
+    hc_add_series(Stock_Ind()[,3],
+                  name = input$widget6.2) %&gt;%
+    hc_add_series(Stock_Ind()[,4],
+                  name = input$widget6.3) %&gt;%
+    hc_add_series(Stock_Ind()[,5],
+                  name = input$widget6.4) %&gt;%
+    hc_add_theme(hc_theme_elementary()) %&gt;%
+    hc_navigator(enabled = FALSE) %&gt;%
+    hc_scrollbar(enabled = FALSE) %&gt;%
+    hc_exporting(enabled = TRUE) %&gt;%
+    hc_legend(enabled = TRUE) %&gt;%
+    hc_colors(cols)
+})
+  
+```
+
+
+Retornos de acciones
+=======================================================================
+
+
+
+### Densidad | Retornos acciones
+
+
+```{r}
+
+
+renderPlotly({
+  
+library(viridis)
+  
+p&lt;-asset_returns_long() %&gt;%
+  ggplot(aes(x = returns, colour = asset)) +
+  geom_density(alpha = 1) +
+  ggtitle("") +
+  xlab("retornos mensuales") +
+  ylab("distribución") +
+  scale_color_viridis(discrete=TRUE) +
+  theme_update(plot.title = element_text(hjust = 0.5))+ 
+  theme_light()
+
+ggplotly(p)
+})
+
+```
+
+
+Portafolio
+=====================================
+
+row
+-------------------------------------
+
+### Retornos del Portafolio
+```{r}
+
+renderHighchart(
+ highchart(type = "stock") %&gt;%
+  hc_title(text = "") %&gt;%
+  hc_add_series(portfolio_returns_xts()$returns,
+                name = "Portfolio returns",
+                color ="#3B528BFF")%&gt;% ##"cornflowerblue") %&gt;%
+  hc_add_theme(hc_theme_elementary()) %&gt;%
+  hc_navigator(enabled = FALSE) %&gt;%
+  hc_scrollbar(enabled = FALSE) %&gt;%
+  hc_legend(enabled = TRUE) %&gt;%
+  hc_exporting(enabled = TRUE)
+)
+
+
+
+```
+
+
+
+````
+]
+
+
+
+
+---
+
+
+
+class: inverse, center, middle
+background-color: #00081d
+
+
+
+
+.pull-left[
+
+.center[
+&lt;br&gt;&lt;br&gt;
+
+# Gracias!!!
+
+&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;
+
+
+
+### Preguntas?
+]
+
+
+]
+
+
+.pull-right[
+
+
+.center[
+
+&lt;br&gt;&lt;br&gt;&lt;br&gt;
+
+
+.center[
+&lt;img style="border-radius: 50%;" src="img/avatar.png"
+width="100px" href="https://www.joaquibarandica.com"
+/&gt;
+
+<span>&lt;i class="fas  fa-envelope faa-passing animated "&gt;&lt;/i&gt;</span> orlando.joaqui@correounivalle.edu.co 
+]
+
+
+&lt;img src="img/qr-code.png" width="50%" style="display: block; margin: auto;" /&gt;
+
+
+.center[
+www.joaquibarandica.com
+]
+
+
+
+]
+
+
+]
+
+
+&lt;br&gt;&lt;br&gt;&lt;br&gt;
+----
+
+*The images used to set the presentation are from [pixabay](https://pixabay.com/).*
+
+
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script src="cols_macro.js"></script>
+<script>var slideshow = remark.create({
+"ratio": "16:9",
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

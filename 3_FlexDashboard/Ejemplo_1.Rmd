@@ -7,6 +7,8 @@ output:
 runtime: shiny
 ---
 
+
+
 ```{r setup, include=FALSE}
 # Paquetes
 library(flexdashboard)
@@ -37,6 +39,8 @@ df <- tibble(
   ) |>
   ungroup()
 ```
+
+
 
 Sidebar {.sidebar}
 -------------------------------------
@@ -109,6 +113,7 @@ kpis <- reactive({
     sharpe = sharpe_aprox
   )
 })
+
 
 valueBox(
   renderValueBox({
