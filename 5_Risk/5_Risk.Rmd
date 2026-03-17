@@ -2238,7 +2238,7 @@ La diversificación es más efectiva cuando los activos no se mueven igual.
 <br/>
 
 ```{r Markoc, echo=FALSE, fig.align="center", out.width="120%"}
-knitr::include_graphics("img/Imagen4.PNG")
+knitr::include_graphics("img/Imagen4.jpg")
 ```
 
 ]
@@ -2273,7 +2273,7 @@ knitr::include_graphics("img/Imagen4.PNG")
   - el menor riesgo para un retorno esperado dado.
 
 ```{r Marko2c, echo=FALSE, fig.align="center", out.width="50%"}
-knitr::include_graphics("img/Imagen5.PNG")
+knitr::include_graphics("img/Imagen5.jpg")
 ```
 
 ---
