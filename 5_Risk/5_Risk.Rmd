@@ -1,9 +1,9 @@
 ---
-title: "Risk"
-subtitle: "<br/> Introduction to Analytics of Finance"
-author: "PhD.(C). Orlando Joaqui-Barandica"
-institute: "Universidad del Valle - Escuela Ingeniería Industrial"
-date: "2022"
+title: "Analítica en la Gestión Financiera"
+subtitle: "<br/> Del dato al modelo"
+author: "Orlando Joaqui-Barandica, PhD."
+institute: "Universidad del Valle"
+date: " "
 output:
   xaringan::moon_reader:
     lib_dir: libs
@@ -208,87 +208,80 @@ summarise(returns = sum(weighted_returns))
 
 ```
 
-class: left, bottom
-background-image: url("img/back1.jpg")
+
+```{r xaringanExtra-clipboard, echo=FALSE}
+xaringanExtra::use_clipboard()
+```
+
+
+class: inverse, left, bottom
+background-image: url("img/fondo.jpg")
 background-size: cover
 
 
 # **`r rmarkdown::metadata$title`**
 ----
 
-## **`r rmarkdown::metadata$institute`**
+## **`r rmarkdown::metadata$subtitle`**
 
 ### `r rmarkdown::metadata$author`
 ### `r rmarkdown::metadata$date`
 
-```{r xaringanExtra-share-again, echo=FALSE}
-xaringanExtra::use_share_again()
-```
-
-```{r xaringanExtra-clipboard, echo=FALSE}
-xaringanExtra::use_clipboard()
-```
 
 ---
-name: hola
-class: inverse, middle, center
-background-color: #E31D1D
-
-<img style="border-radius: 50%;" src="img/uv3.jpg"
-width="150px"
-/>
-
-# Universidad del Valle
-
---
-
-## Maestría en Análitica e Inteligencia de Negocios
----
 
 
-
-
-
-<br><br>
-
-.center[
-<img style="border-radius: 50%;" src="img/avatar.png"
-width="160px" href="https://www.joaquibarandica.com"
-/>
-
-[PhD.(C) Orlando Joaqui-Barandica](https://www.joaquibarandica.com) <br/>
-Universidad del Valle
-]
-
-<br>
-
-
-
-.center[
-
-*PhD.(C) Ingeniería con enfásis en Ingeniería Industrial* 
- 
-*MSc. Economía Aplicada*
- 
-*Estadístico*
-
-<br>
-
-`r icon::fa("link", animate = "spin")` [www.joaquibarandica.com](https://www.joaquibarandica.com)
-
-]
-
-
-
-
-
----
 
 class: center, middle
 
-<img src="img/gifinc.jpg" width="50%"/>
 
-### [https://gifinc.univalle.edu.co/](https://gifinc.univalle.edu.co/)
+
+
+
+```{r, echo=FALSE, fig.align="center", out.width="20%"}
+knitr::include_graphics("img/univalle.jpg")
+```
+
+
+
+---
+
+
+
+
+
+
+class: center, middle
+
+
+.center[
+
+<br>
+
+
+
+<a href="https://www.joaquibarandica.com" target="_blank">
+  <img src="img/avatar.png"
+       style="border-radius: 80%; width: 220px; max-width: 30%; height: auto;"
+       alt="Avatar"/>
+</a>
+
+
+## Orlando Joaqui-Barandica
+
+
+Doctor en Ingeniería, Enf. Ingeniería Industrial **|** Magíster en Economía Aplicada **|** Estadístico.
+
+
+
+`r anicon::faa("envelope", animate = "passing")` orlando.joaqui@correounivalle.edu.co 
+]
+
+
+
+.center[
+### [www.joaquibarandica.com](https://www.joaquibarandica.com)
+]
 
 
 
@@ -573,7 +566,9 @@ portfolio_sd_tidyquant_builtin_percent <-
 
 
 ----
+
 .scroll-box-14[
+
 ```{r eval =FALSE, echo=TRUE, message=FALSE, warning=FALSE , fig.height = 6 }
 
 
@@ -604,7 +599,9 @@ portfolio_returns_tq_rebalanced_monthly %>%
             theme(plot.title = element_text(hjust = 0.5))
   
 ```
+
 ]
+
 ----
 
 ]
@@ -661,6 +658,7 @@ theme(plot.title = element_text(hjust = 0.5))
 
 
 ----
+
 .scroll-box-14[
 ```{r eval =FALSE, echo=TRUE, message=FALSE, warning=FALSE , fig.height = 6 }
 
@@ -693,7 +691,9 @@ portfolio_returns_tq_rebalanced_monthly %>%
           theme(plot.title = element_text(hjust = 0.5))
   
 ```
+
 ]
+
 ----
 
 ]
@@ -2001,6 +2001,7 @@ abline(v=quantile(returns_gbm, c(0.05), na.rm=TRUE) )
 ---
 
 
+
 name: Markowitz
 class: inverse, center, middle
 background-color: #00081d
@@ -2012,11 +2013,9 @@ background-color: #00081d
 
 .right[
 .bottom[
-####  [`r icon("bell")`](#menu)
+#### [`r icon("bell")`](#menu)
 ]
 ]
-
-
 
 ---
 
@@ -2025,26 +2024,23 @@ background-color: #00081d
 <br/>
 
 .center[
-### Modelo pionero, es el primero que incorpora un trade off entre la rentabilidad y el riesgo.
+### Modelo pionero en teoría de portafolios: incorpora el trade-off entre rentabilidad esperada y riesgo.
 ]
 
 <br/>
 
 .pull-left[
 
-<br/>
+**Supuestos generales:**
 
-**Supuestos:**
-
-
-- Rendimientos se distribuyen de manera normal.
-- Inversionistas son racionales y aversos a riesgo.
-- Información simétrica.
+- Los inversionistas son racionales y aversos al riesgo.
+- Las decisiones se toman con base en la media y la varianza de los rendimientos.
+- La información es simétrica.
 - No hay costos de transacción.
-- No hay apalancamiento.
+- No se permite venta en corto en la versión básica.
+- Los pesos del portafolio agotan el presupuesto disponible.
 
 ]
-
 
 .pull-right[
 
@@ -2052,9 +2048,7 @@ background-color: #00081d
 
 ## Rentabilidad vs Riesgo
 
-
-
-```{r Marko1, echo=FALSE, fig.align="center", out.width="40%"}
+```{r Marko1c, echo=FALSE, fig.align="center", out.width="40%"}
 knitr::include_graphics("https://media.giphy.com/media/JqKOU2VAUx9bt9K4PK/giphy.gif")
 ```
 
@@ -2063,142 +2057,343 @@ knitr::include_graphics("https://media.giphy.com/media/JqKOU2VAUx9bt9K4PK/giphy.
 ]
 
 
+
+
+
+
+---
+
+# `r icon("apple")` Supuestos del modelo de Markowitz
+
+.pull-left[
+
+### 1. Inversionistas racionales y aversos al riesgo
+
+- Se asume que los inversionistas toman decisiones de forma lógica.
+- Entre dos portafolios con el mismo retorno esperado, preferirán el de menor riesgo.
+- Y entre dos portafolios con el mismo riesgo, elegirán el de mayor retorno esperado.
+
+]
+
+.pull-right[
+
+### 2. Decisiones basadas en media y varianza
+
+- El inversionista resume su decisión en dos elementos:
+  - la rentabilidad esperada,
+  - y la variabilidad o riesgo.
+- Por eso, el modelo compara portafolios usando:
+  - $E(R_p)$
+  - $\sigma_p^2$ o $\sigma_p$
+
+]
+
+.center[
+### En este enfoque, invertir bien significa balancear retorno y riesgo.
+]
+
+---
+
+# `r icon("apple")` Supuestos del modelo de Markowitz
+
+.pull-left[
+
+### 3. Información simétrica
+
+- Todos los inversionistas tienen acceso a la misma información relevante del mercado.
+- No existen agentes con ventajas informativas sistemáticas.
+- Esto implica que las decisiones se toman bajo un mismo conjunto de datos y expectativas comparables.
+
+]
+
+.pull-right[
+
+### 4. No hay costos de transacción
+
+- Se supone que comprar o vender activos no genera comisiones, impuestos ni otros costos.
+- Así, el modelo se concentra únicamente en la relación entre riesgo y retorno.
+- En la realidad, estos costos sí existen y pueden alterar la composición óptima del portafolio.
+
+]
+
+.center[
+### Estos supuestos simplifican el problema para enfocarse en la lógica de la diversificación.
+]
+
+---
+
+# `r icon("apple")` Supuestos del modelo de Markowitz
+
+.pull-left[
+
+### 5. No se permite venta en corto
+
+- En la versión básica, los pesos del portafolio deben ser no negativos:
+  
+$$w_i \geq 0$$
+
+- Esto significa que solo se puede invertir con recursos propios en los activos seleccionados.
+- No se consideran posiciones apostando a la caída del precio de un activo.
+
+]
+
+.pull-right[
+
+### 6. Los pesos agotan el presupuesto disponible
+
+- La suma de los pesos del portafolio debe ser igual a 1:
+
+$$\sum_{i=1}^{n} w_i = 1$$
+
+- Esto implica que todo el capital disponible se distribuye entre los activos del portafolio.
+- No queda dinero sin asignar y no se invierte más de lo que se tiene.
+
+]
+
+.center[
+### En conjunto, estos supuestos permiten construir una versión básica y operativa del problema de optimización.
+]
+
+
+
 ---
 
 # `r icon("apple")` Modelo de Markowitz
 
-
-
 .pull-left[
 
-## Rentabilidad
+#### Rentabilidad esperada del portafolio
 
-$$E(R_{(P)})$$
+$$E(R_p)=w_AE(R_A)+w_BE(R_B)$$
 
-## Riesgo
+Para \(n\) activos:
 
-$$\sigma^2_{R_{(P)}} = w_{R_{(A)}} \sigma^2_{R_{(A)}} + w_{R_{(B)}} \sigma^2_{R_{(B)}} + 2w_Aw_BCov_{R_{(A)}R_{(B)}}$$
-
-$$Cov_{R_{(A)}R_{(B)}} = \rho_{R_{(A)}R_{(B)}} \sigma_{R_{(A)}} \sigma_{R_{(B)}}$$
+$$E(R_p)=\sum_{i=1}^n w_iE(R_i)$$
 
 
-$$w_A + w_B = 1$$
+“La rentabilidad esperada del portafolio es el promedio ponderado de los rendimientos esperados de los activos que lo componen. Cada peso $(w_i)$ refleja la proporción del capital invertida en cada activo, por lo que los activos con mayor participación tienen mayor influencia sobre el retorno esperado total.”
+
 
 ]
 
 
 
+
+
+
+
+
 .pull-right[
 
-<br/>
+
+### Riesgo del portafolio con dos activos
+
+$$\sigma_p^2 = w_A^2\sigma_A^2 + w_B^2\sigma_B^2 + 2w_Aw_BCov(R_A,R_B)$$
+
+$$Cov(R_A,R_B)=\rho_{A,B}\sigma_A\sigma_B$$
+
+$$w_A+w_B=1$$
+
+"El riesgo del portafolio no depende solo del riesgo individual de cada activo, sino también de la covarianza entre ellos. Esto significa que la relación conjunta entre los rendimientos puede aumentar o reducir el riesgo total, lo que da origen al beneficio de la diversificación."
+
+
+
+]
+
+---
+
+
+
+# `r icon("apple")` Modelo de Markowitz
+
+.pull-left[
+
+- La gráfica muestra las combinaciones posibles entre dos activos, A y B.
+- Los extremos representan invertir el 100% en A o el 100% en B.
+- Los puntos intermedios corresponden a portafolios formados por ambas inversiones.
+- Cuando $\rho = 1$, la combinación sigue una línea recta y el beneficio de diversificar es prácticamente nulo.
+- A medida que la correlación disminuye, la curva se desplaza hacia la izquierda.
+- Esto indica que se puede alcanzar el mismo retorno esperado con un menor nivel de riesgo.
+- Cuando $\rho = -1$, el efecto de la diversificación es máximo.
+
+**Idea clave:**  
+La diversificación es más efectiva cuando los activos no se mueven igual.
+
+
+]
+
+
+
+
+
+
+
+
+.pull-right[
+
+
+
+
 <br/>
 <br/>
 
-```{r Marko, echo=FALSE, fig.align="center", out.width="120%"}
+```{r Markoc, echo=FALSE, fig.align="center", out.width="120%"}
 knitr::include_graphics("img/Imagen4.PNG")
 ```
 
+]
+
+---
+
+
+
+
+# `r icon("apple")` Diversificación y covarianza
+
+- El riesgo del portafolio no depende solo del riesgo individual de cada activo.
+- También depende de cómo se mueven los activos entre sí.
+- Si la correlación entre activos es baja o negativa, el riesgo total puede disminuir.
+- Por eso, un activo riesgoso por sí solo puede mejorar el perfil riesgo-retorno del portafolio.
+
+.center[
+
+### La diversificación funciona porque la covarianza importa.
 
 ]
 
 ---
 
-# `r icon("apple")` Modelo de Markowitz
+# `r icon("apple")` Frontera de portafolios
 
+- Curva XY: frontera de varianza mínima.
+- Curva OX: frontera eficiente.
+- Punto O: portafolio de varianza mínima global.
+- La frontera eficiente contiene los portafolios que ofrecen:
+  - el mayor retorno para un nivel de riesgo dado, o
+  - el menor riesgo para un retorno esperado dado.
 
-- Curva XY: Frontera de varianza mínima.
-- Curva OX: Frontera eficiente.
-- Punto O: Punto de varianza mínima global
-
-
-```{r Marko2, echo=FALSE, fig.align="center", out.width="50%"}
+```{r Marko2c, echo=FALSE, fig.align="center", out.width="50%"}
 knitr::include_graphics("img/Imagen5.PNG")
 ```
 
-
 ---
 
-# `r icon("apple")` Modelo de Markowitz
+# `r icon("apple")` Formulación 1: maximización del retorno
 
 .pull-left[
 
-$$Max (R_p) = \sum_{i=1}^n w_i R_i$$
+$$\max E(R_p)=\sum_{i=1}^n w_iE(R_i)$$
 
 sujeto a:
 
-- Restricción paramétrica:
+- Restricción de riesgo objetivo:
 
-La suma total de los pesos de cada valor de la cartera multiplicados por la covarianza de la misma, debe ser igual a la Varianza estimada de la cartera. Para cada valor de $V*$ tendremos una composición de la cartera diferente.
-
-$$\sigma^2_p = \sum_{i=1}^n \sum_{j=1}^n w_i w_j \sigma_{i,j} = V^*$$
-
-
-
-]
-
-
-
-.pull-right[
-
+$$\sigma_p^2=\sum_{i=1}^n\sum_{j=1}^n w_iw_j\sigma_{ij}=V^*$$
 
 - Restricción presupuestaria:
 
-La suma total de los pesos de cada valor de la cartera no puede sumar más de 1.
+$$\sum_{i=1}^n w_i=1$$
 
-$$\sum_{i=1}^n w_i = 1$$
 - No negatividad:
 
-$$w_i \geq 0$$
+$$w_i\geq 0$$
 
 ]
 
+.pull-right[
+
+**Interpretación:**
+
+Se busca la combinación de activos que maximiza el retorno esperado, manteniendo fijo un nivel de riesgo \(V^*\).
+
+Cada valor de \(V^*\) genera una composición distinta del portafolio.
+
+]
 
 ---
 
-# `r icon("apple")` Modelo de Markowitz
+# `r icon("apple")` Formulación 2: minimización del riesgo
 
 .pull-left[
 
-$$Min \quad \sigma^2 (R_p) = \sum_{i=1}^n \sum_{j=1}^n w_i w_j \sigma_{i,j}$$
+$$\min \sigma_p^2=\sum_{i=1}^n\sum_{j=1}^n w_iw_j\sigma_{ij}$$
 
 sujeto a:
 
-- Restricción paramétrica:
+- Restricción de retorno objetivo:
 
-
-
-$$E (R_p) = \sum_{i=1}^n w_i E(R_i)$$
-
-
-
-]
-
-
-
-.pull-right[
-
+$$E(R_p)=\sum_{i=1}^n w_iE(R_i)=\mu^*$$
 
 - Restricción presupuestaria:
 
-$$\sum_{i=1}^n w_i = 1$$
+$$\sum_{i=1}^n w_i=1$$
+
 - No negatividad:
 
-$$w_i \geq 0$$
+$$w_i\geq 0$$
 
 ]
 
+.pull-right[
+
+**Interpretación:**
+
+Se busca el portafolio de menor riesgo posible para alcanzar un retorno objetivo $\mu^*$.
+
+La frontera eficiente surge al resolver este problema para distintos niveles de retorno esperado.
+
+]
 
 ---
 
+# `r icon("apple")` Interpretación económica
+
+- Un portafolio eficiente domina a otro si ofrece más retorno con el mismo riesgo.
+- O si ofrece menos riesgo para el mismo retorno.
+- El inversionista elegirá sobre la frontera eficiente según su perfil de riesgo.
+- Markowitz no selecciona un único portafolio universal:
+  selecciona el mejor portafolio condicionado a las preferencias o restricciones del inversionista.
+
+.center[
+### No se trata de elegir activos aislados, sino combinaciones óptimas.
+]
+
+---
+
+# `r icon("apple")` Aplicación práctica
+
+**¿Para qué sirve este modelo?**
+
+- Diseñar portafolios diversificados.
+- Comparar combinaciones de activos según riesgo y retorno.
+- Identificar el portafolio de mínima varianza global.
+- Encontrar el portafolio tangente o de mayor Sharpe.
+- Servir como base para modelos posteriores como CAPM y optimización con restricciones adicionales.
+
+---
 
 # `r icon("circle")` Código en R
 
-
 .scroll-output[
 
-```{r eval =FALSE, echo=TRUE, message=FALSE, warning=FALSE , fig.height = 6 }
+```{r eval = FALSE, echo = TRUE, message = FALSE, warning = FALSE, fig.height = 6}
 
-#Librerías
+
+
+
+# Markowitz
+
+
+# =========================================================
+# LIBRERÍAS
+# =========================================================
+# quantmod: descarga y manejo de datos financieros
+# timeSeries: convierte los datos al formato requerido por fPortfolio
+# fPortfolio: construye la frontera eficiente y portafolios óptimos
+# caTools: utilidades varias (aunque en este script no se usa directamente)
+# dplyr: manipulación de datos
+# PerformanceAnalytics: cálculo de retornos y métricas financieras
+# ggplot2: visualización de resultados
 
 library("quantmod")
 library("timeSeries")
@@ -2209,117 +2404,244 @@ library("PerformanceAnalytics")
 library("ggplot2")
 
 
-
 ###########################################################
 ###################### PASOS PREVIOS ######################
 ###########################################################
 
-#Vector de TICKERS
+# Vector con los tickers de las acciones seleccionadas.
+# Cada ticker representa un activo financiero que hará parte del portafolio.
+tickers <- c("TSLA", "NEM", "NFLX", "BAC", "AMZN", "JNJ")
 
-tickers<-c("TSLA","NEM","NFLX", "BAC","AMZN","JNJ")
 
-#Extrayendo la data
+# ---------------------------------------------------------
+# DESCARGA DE PRECIOS
+# ---------------------------------------------------------
+# Se crea un objeto vacío donde se almacenarán los precios
+# de cierre de cada una de las acciones.
+PrecPort <- NULL
 
-PrecPort<- NULL
+# Recorremos el vector de tickers y descargamos los precios
+# desde Yahoo Finance a partir del 1 de enero de 2019.
+# El argumento auto.assign = FALSE evita que cada serie se
+# guarde automáticamente en el entorno de trabajo.
+# [,4] selecciona la cuarta columna del objeto descargado,
+# que corresponde al precio de cierre.
 for (Ticker in tickers)
-PrecPort<-cbind(PrecPort, getSymbols(Ticker, from= '2019-01-01', auto.assign=FALSE)[,4])
-PrecPort 
+  PrecPort <- cbind(PrecPort, getSymbols(Ticker, from = '2019-01-01',
+                                         auto.assign = FALSE)[,4])
 
-#Renombrando los encabezados de las columnas
+# Visualización de la matriz de precios
+PrecPort
 
-colnames(PrecPort)<-tickers
 
-#Calculando los retornos
+# ---------------------------------------------------------
+# ORGANIZACIÓN DE LA BASE
+# ---------------------------------------------------------
+# Se renombran las columnas de la matriz de precios con los
+# tickers de las acciones seleccionadas.
+colnames(PrecPort) <- tickers
 
-RetPort <- na.omit(ROC(PrecPort, type="discrete"))
+
+# ---------------------------------------------------------
+# CÁLCULO DE RETORNOS
+# ---------------------------------------------------------
+# Se calculan los retornos discretos de cada activo.
+# ROC mide la variación porcentual entre un periodo y el siguiente.
+# na.omit elimina el primer valor faltante generado por el cálculo.
+RetPort <- na.omit(ROC(PrecPort, type = "discrete"))
+
+# Visualización de los retornos
 RetPort
 
-#Convirtiendo los retornos en series de tiempo
+
+# ---------------------------------------------------------
+# CONVERSIÓN A timeSeries
+# ---------------------------------------------------------
+# La librería fPortfolio trabaja mejor con objetos de clase
+# timeSeries, por eso convertimos la matriz de retornos.
 RetPort <- as.timeSeries(RetPort)
 
+# Visualización final de los retornos en formato timeSeries
 RetPort
+
 
 ###############################################################################
 ###################### FRONTERA Y PORTAFOLIOS EFICIENTES ######################
 ###############################################################################
 
-#Calculando la frontera eficiente
+# ---------------------------------------------------------
+# CÁLCULO DE LA FRONTERA EFICIENTE
+# ---------------------------------------------------------
+# Se estima la frontera eficiente usando los retornos históricos.
+# constraints = "LongOnly" impone la restricción de no venta en corto,
+# es decir, todos los pesos del portafolio deben ser no negativos.
+fronteraEff <- portfolioFrontier(RetPort, constraints = "LongOnly")
 
-fronteraEff <- portfolioFrontier(RetPort, constraints= "LongOnly",)
 
-#Graficando la frontera
-#En el gráfico, se pueden incorporar los siguientes elementos:
-# 1: Frontera Eficiente
-# 2: El portafolio con la mínima varianza global
+# ---------------------------------------------------------
+# GRÁFICOS DE LA FRONTERA
+# ---------------------------------------------------------
+# En el gráfico pueden incorporarse varios elementos:
+# 1: Frontera eficiente
+# 2: Portafolio de mínima varianza global
 # 3: Línea tangente al portafolio
 # 4: Riesgo y retorno de cada activo
-# 5: Portafolio con activos del mismo peso
+# 5: Portafolio con pesos iguales
 # 6: Fronteras de dos activos
-# 7: Portafolios de Monte Carlo
+# 7: Portafolios simulados por Monte Carlo
 # 8: Ratio de Sharpe
 
-plot(fronteraEff,c(1,2,3))
+# Gráfico con algunos elementos básicos de interés
+plot(fronteraEff, c(1,2,3))
 
+# Gráfico general por defecto
 plot(fronteraEff)
 
 
-#Riesgos y Retornos de la frontera
-
+# ---------------------------------------------------------
+# PUNTOS DE RIESGO Y RETORNO DE LA FRONTERA
+# ---------------------------------------------------------
+# Se extraen los pares de riesgo-retorno que conforman la
+# frontera eficiente. Esto puede ser útil para análisis posteriores.
 Riesgo_Retorno <- frontierPoints(fronteraEff)
 
-#Matrices de correlación y covarianza
 
-MatrizCorr<-cor(RetPort)
-MatrizCov<-cov(RetPort)
 
+# ---------------------------------------------------------
+# MATRICES DE CORRELACIÓN Y COVARIANZA
+# ---------------------------------------------------------
+# La matriz de correlación permite observar qué tan relacionados
+# están los movimientos de los activos.
+MatrizCorr <- cor(RetPort)
+
+# La matriz de covarianza es clave en Markowitz, pues recoge
+# no solo la volatilidad individual de cada activo sino también
+# cómo se mueven conjuntamente.
+MatrizCov <- cov(RetPort)
+
+# Mostrar ambas matrices
 MatrizCov
 MatrizCorr
 
-#Pesos en las fronteras eficientes
-fronteraPesos<-getWeights(fronteraEff)
-colnames(fronteraPesos)<-tickers
 
-barplot(t(fronteraPesos), main="Pesos de los activos en la Frontera Eficiente",col=cm.colors(ncol(fronteraPesos)+2), legend=colnames(fronteraPesos))
+# ---------------------------------------------------------
+# PESOS DE LOS PORTAFOLIOS SOBRE LA FRONTERA EFICIENTE
+# ---------------------------------------------------------
+# Se extraen los pesos de los activos para cada portafolio
+# perteneciente a la frontera eficiente.
+fronteraPesos <- getWeights(fronteraEff)
+
+# Renombramos columnas con los tickers
+colnames(fronteraPesos) <- tickers
+
+# Se construye un gráfico de barras apiladas para visualizar
+# cómo cambian los pesos de las acciones a lo largo de la frontera.
+barplot(t(fronteraPesos),
+        main = "Pesos de los activos en la Frontera Eficiente",
+        col = cm.colors(ncol(fronteraPesos) + 2),
+        legend = colnames(fronteraPesos))
 
 
-#Puntos interesantes:
+###########################################################
+#################### PUNTOS INTERESANTES ##################
+###########################################################
 
-  #Varianza mínima global
-  VMG<-minvariancePortfolio(RetPort, spec=portfolioSpec(), constraints="LongOnly")
-  VMG
-  
-    #Reporte de los pesos asignados:
-    VMG_Pesos<-getWeights(VMG)
-    DF_VMG_Pesos<-data.frame(VMG_Pesos)
-    acciones<-colnames(fronteraPesos)
-    
-    ggplot(data=DF_VMG_Pesos,aes(x=acciones,y=VMG_Pesos,fill=acciones))+
-      geom_bar(stat="identity",position=position_dodge(),colour="black")+
-      geom_text(aes(label=sprintf("%.02f %%",VMG_Pesos*100)),
-                position=position_dodge(width=0.9),vjust=-0.25,check_overlap=TRUE)+
-      ggtitle("Pesos de las acciones del portafolio de varianza minima global")+
-      theme(plot.title = element_text(hjust=0.5))+
-      labs(x="Acciones",y="Pesos (%)")
-      
-  #Punto de la Línea de Mercado de Capitales tangente a la Frontera Eficiente  
-  LMC<-tangencyPortfolio(RetPort, spec=portfolioSpec(), constraints="LongOnly")
-  LMC
-  
-    #Reporte de los pesos asignados:
-    LMC_Pesos<-getWeights(LMC)
-    DF_LMC_Pesos<-data.frame(LMC_Pesos)
-    acciones<-colnames(fronteraPesos)
-    ggplot(data=DF_LMC_Pesos,aes(x=acciones,y=LMC_Pesos,fill=acciones))+
-      geom_bar(stat="identity",position=position_dodge(),colour="black")+
-      geom_text(aes(label=sprintf("%.02f %%",LMC_Pesos*100)),
-                position=position_dodge(width=0.9),vjust=-0.25,check_overlap=TRUE)+
-      ggtitle("Pesos de las acciones del portafolio de mercado")+
-      theme(plot.title = element_text(hjust=0.5))+
-      labs(x="Acciones",y="Pesos (%)")
+# ---------------------------------------------------------
+# PORTAFOLIO DE VARIANZA MÍNIMA GLOBAL
+# ---------------------------------------------------------
+# Este portafolio corresponde al punto de la frontera
+# que tiene el menor nivel de riesgo posible.
+VMG <- minvariancePortfolio(RetPort,
+                            spec = portfolioSpec(),
+                            constraints = "LongOnly")
 
-  
+# Resumen del portafolio de varianza mínima global
+VMG
+
+
+#Covariance Risk Budgets: aporte de cada activo al riesgo total del portafolio, medido desde la estructura de covarianza.
+#Target Returns and Risks: resumen de desempeño del portafolio
+
+# ---------------------------------------------------------
+# PESOS DEL PORTAFOLIO DE VARIANZA MÍNIMA GLOBAL
+# ---------------------------------------------------------
+# Extraemos los pesos asignados a cada activo dentro del VMG.
+VMG_Pesos <- getWeights(VMG)
+
+# Convertimos los pesos en data.frame para facilitar el gráfico.
+DF_VMG_Pesos <- data.frame(VMG_Pesos)
+
+# Guardamos los nombres de las acciones
+acciones <- colnames(fronteraPesos)
+
+# Gráfico de barras con los pesos del portafolio de mínima varianza
+ggplot(data = DF_VMG_Pesos, aes(x = acciones, y = VMG_Pesos, fill = acciones)) +
+  geom_bar(stat = "identity", position = position_dodge(), colour = "black") +
+  geom_text(aes(label = sprintf("%.02f %%", VMG_Pesos * 100)),
+            position = position_dodge(width = 0.9),
+            vjust = -0.25,
+            check_overlap = TRUE) +
+  ggtitle("Pesos de las acciones del portafolio de varianza mínima global") +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  labs(x = "Acciones", y = "Pesos (%)")
+
+
+# ---------------------------------------------------------
+# PORTAFOLIO TANGENTE
+# ---------------------------------------------------------
+# Este portafolio es el que maximiza la relación retorno/riesgo,
+# es decir, el mayor Ratio de Sharpe dentro del conjunto eficiente.
+# En teoría, corresponde al punto donde la Línea de Mercado de Capitales
+# es tangente a la frontera eficiente.
+LMC <- tangencyPortfolio(RetPort,
+                         spec = portfolioSpec(),
+                         constraints = "LongOnly")
+
+# Resumen del portafolio tangente
+LMC
+
+# El portafolio tangente busca el mejor balance entre ganar más
+# y asumir menos riesgo. En otras palabras, identifica el portafolio
+# que ofrece la mayor recompensa por cada unidad de riesgo tomada.
+
+
+# ---------------------------------------------------------
+# PESOS DEL PORTAFOLIO TANGENTE
+# ---------------------------------------------------------
+# Extraemos los pesos del portafolio tangente.
+LMC_Pesos <- getWeights(LMC)
+
+# Convertimos a data.frame para graficar
+DF_LMC_Pesos <- data.frame(LMC_Pesos)
+
+# Nombres de las acciones
+acciones <- colnames(fronteraPesos)
+
+# Gráfico de barras con la composición del portafolio tangente
+ggplot(data = DF_LMC_Pesos, aes(x = acciones, y = LMC_Pesos, fill = acciones)) +
+  geom_bar(stat = "identity", position = position_dodge(), colour = "black") +
+  geom_text(aes(label = sprintf("%.02f %%", LMC_Pesos * 100)),
+            position = position_dodge(width = 0.9),
+            vjust = -0.25,
+            check_overlap = TRUE) +
+  ggtitle("Pesos de las acciones del portafolio tangente") +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  labs(x = "Acciones", y = "Pesos (%)")
+
 ```
 
+]
+
+---
+
+# `r icon("circle")` Nota final
+
+- El modelo de Markowitz constituye la base de la teoría moderna de portafolios.
+- Su principal aporte es mostrar que el riesgo de una cartera depende no solo del riesgo individual de cada activo, sino también de su relación conjunta.
+- En la práctica, es una herramienta útil para entender diversificación, frontera eficiente y asignación óptima de pesos.
+
+.center[
+### Diversificar no es invertir en muchos activos, sino combinarlos inteligentemente.
 ]
 
 
