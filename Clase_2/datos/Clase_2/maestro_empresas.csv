@@ -1,0 +1,9 @@
+id_empresa,empresa,sector,moneda_reporte
+E001,Andina Alimentos,Alimentos,COP
+E002,Andina Energía,Energía,COP
+ E003,Andina Logística,Logística,USD
+E004,Andina Café,Agroindustria,usd 
+E005,Andina Textiles,Textil,COP
+E006,Andina Tecnología,Tecnología,USD
+E007,Andina Construcción,Construcción,COP
+E008,Andina Servicios,,COP

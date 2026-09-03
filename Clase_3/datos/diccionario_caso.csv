@@ -1,0 +1,14 @@
+variable,descripcion,tipo,unidad_medida,frecuencia,llave_nivel
+unidad,Código de la unidad de negocio,texto,-,Trimestral,unidad + periodo
+sector,Sector económico de la unidad,categoría,-,Trimestral,unidad + periodo
+periodo,Periodo fiscal en formato AAAAQn,texto,trimestre,Trimestral,unidad + periodo
+moneda,Moneda en que se reportan las magnitudes monetarias,categoría,COP o USD,Trimestral,unidad + periodo
+ingresos_mill,Ingresos operacionales,numérico,millones de la moneda reportada,Trimestral,unidad + periodo
+ebitda_mill,EBITDA,numérico,millones de la moneda reportada,Trimestral,unidad + periodo
+utilidad_neta_mill,Utilidad neta,numérico,millones de la moneda reportada,Trimestral,unidad + periodo
+activos_mill,Activos totales,numérico,millones de la moneda reportada,Trimestral,unidad + periodo
+patrimonio_mill,Patrimonio contable,numérico,millones de la moneda reportada,Trimestral,unidad + periodo
+deuda_mill,Deuda financiera,numérico,millones de la moneda reportada,Trimestral,unidad + periodo
+caja_mill,Caja y equivalentes,numérico,millones de la moneda reportada,Trimestral,unidad + periodo
+activo_corriente_mill,Activo corriente,numérico,millones de la moneda reportada,Trimestral,unidad + periodo
+pasivo_corriente_mill,Pasivo corriente,numérico,millones de la moneda reportada,Trimestral,unidad + periodo

@@ -1,0 +1,1885 @@
+---
+title: "Analítica de Datos para la Gestión Financiera"
+subtitle: "<br/> Adquisición, integración y calidad de datos financieros"
+author: "Orlando Joaqui-Barandica, PhD."
+institute: "Universidad del Valle"
+date: " "
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    css:
+      - default
+      - rladies
+      - rladies-fonts
+      - fonts_mtheme.css
+      - cols.css
+    seal: false
+    nature:
+      beforeInit: "cols_macro.js"
+      ratio: 16:9
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+
+```{r setup, include = FALSE}
+library(knitr)
+library(tidyverse)
+library(scales)
+library(lubridate)
+
+knitr::opts_chunk$set(echo = FALSE,
+                      dpi = 300,
+                      warning = FALSE,
+                      message = FALSE,
+                      error = FALSE)
+
+options(htmltools.dir.version = FALSE)
+
+xaringanExtra::use_share_again()
+xaringanExtra::use_clipboard()
+xaringanExtra::use_panelset()
+```
+
+
+class: inverse, left, bottom
+background-image: url("img/fondo.jpg")
+background-size: cover
+
+# **`r rmarkdown::metadata$title`**
+----
+
+## **`r rmarkdown::metadata$subtitle`**
+
+### `r rmarkdown::metadata$author`
+### `r rmarkdown::metadata$date`
+
+
+
+```{r xaringanExtra, echo=FALSE}
+xaringanExtra::use_xaringan_extra("tile_view")
+```
+
+
+---
+
+class: center, middle
+
+```{r, echo=FALSE, fig.align="center", out.width="20%"}
+knitr::include_graphics("img/univalle.jpg")
+```
+
+---
+
+class: center, middle
+
+.center[
+
+<br>
+
+<a href="https://www.joaquibarandica.com" target="_blank">
+  <img src="img/avatar.png"
+       style="border-radius: 80%; width: 220px; max-width: 30%; height: auto;"
+       alt="Avatar"/>
+</a>
+
+## Orlando Joaqui-Barandica
+
+Doctor en Ingeniería, Enf. Ingeniería Industrial **|** Magíster en Economía Aplicada **|** Estadístico.
+
+orlando.joaqui@correounivalle.edu.co
+]
+
+.center[
+### [www.joaquibarandica.com](https://www.joaquibarandica.com)
+]
+
+---
+
+<!-- DOCENTE: 3 min. Conectar explícitamente con la sesión 1. -->
+
+# ¿Dónde estamos en el ciclo analítico?
+
+En la sesión anterior formulamos el proceso general:
+
+.center[
+.font120[
+**Problema → Datos → Preparación → Análisis → Evaluación → Producto**
+]
+]
+
+<br>
+
+Hoy nos concentraremos en dos fases que condicionan todo lo que viene después:
+
+.center[
+.orange[
+**Data Understanding + Data Preparation**
+]
+]
+
+----
+
+> Ningún modelo, gráfico o dashboard corrige automáticamente una base mal definida, mal integrada o inconsistente.
+
+---
+
+# Contenido de la sesión
+
+<br>
+
+.pull-left[
+
+### 1. Adquisición y fuentes de datos
+
+### 2. Unidad de análisis, granularidad y llaves
+
+### 3. Integración de fuentes financieras
+
+]
+
+.pull-right[
+
+### 4. Calidad y validación de datos
+
+### 5. Pipeline reproducible de preparación
+
+### 6. Actividad aplicada en salas
+
+]
+
+---
+
+<!-- DOCENTE: 3 min. Objetivos formales. -->
+
+# Objetivos de la sesión
+
+Al finalizar la clase, el estudiante debe poder:
+
+1. Reconocer diferentes **mecanismos de adquisición** de información financiera y documentar su procedencia.
+2. Definir correctamente la **unidad de análisis, granularidad y llave** de una base.
+3. Integrar fuentes evitando cambios no controlados en el número y significado de las observaciones.
+4. Evaluar dimensiones básicas de **calidad del dato** mediante reglas verificables.
+5. Organizar un flujo de preparación **reproducible, trazable y auditable**.
+6. Implementar las operaciones principales tanto en **R como en Python**.
+
+---
+
+class: inverse, center, middle
+background-color: #122140
+
+# 1. Adquisición de datos financieros
+## Fuente, procedencia y reproducibilidad
+
+---
+
+<!-- DOCENTE: 4 min. Diferenciar “tener un archivo” de “adquirir datos”. -->
+
+# Adquirir datos no es simplemente descargar un archivo
+
+La adquisición implica conocer y documentar:
+
+- **quién produce** la información;
+- **cómo se obtiene**;
+- con qué **frecuencia** se actualiza;
+- qué **periodo** cubre;
+- en qué **unidad y moneda** está expresada;
+- cuándo fue **extraída**;
+- qué transformaciones ocurrieron antes de llegar al analista.
+
+----
+
+.center[
+.orange[**Un archivo sin procedencia es un conjunto de números; una fuente documentada es un insumo analítico.**]
+]
+
+---
+
+<!-- DOCENTE: 4 min. Mapa de fuentes. -->
+
+# Fuentes frecuentes en gestión financiera
+
+| Tipo de fuente | Ejemplos | Riesgo habitual |
+|---|---|---|
+| **Mercado** | precios, tasas, índices, FX, commodities | horarios, frecuencia, ajustes |
+| **Corporativa** | EEFF, presupuesto, cuentas por cobrar | unidades, cierres, reclasificaciones |
+| **Transaccional** | pagos, ventas, cartera, movimientos | volumen, duplicados, timestamps |
+| **Institucional** | bancos centrales, reguladores, DANE | revisiones, cambios metodológicos |
+| **Externa** | macro, clima, noticias, indicadores sectoriales | cobertura, sincronización temporal |
+
+----
+
+> La fuente debe seleccionarse en función de la pregunta, no porque sea fácil de descargar.
+
+---
+
+<!-- DOCENTE: 4 min. Formas de adquisición. -->
+
+# Tres mecanismos de adquisición
+
+.pull-left[
+
+### Archivos
+
+- CSV / TXT
+- Excel
+- Parquet
+- exportaciones de plataformas
+
+Ventaja: sencillos de inspeccionar.
+
+Riesgo: versiones manuales y copias sin control.
+]
+
+.pull-right[
+
+### Conexiones
+
+- APIs
+- bases de datos
+- servicios institucionales
+- data warehouses
+
+Ventaja: actualización sistemática.
+
+Riesgo: credenciales, cambios de esquema y dependencia del servicio.
+]
+
+---
+
+<!-- DOCENTE: 3 min. Diferenciar snapshot vs flujo. -->
+
+# Snapshot vs fuente dinámica
+
+.pull-left[
+
+### Snapshot
+
+Una fotografía de los datos en una fecha determinada.
+
+Ejemplo:
+
+`estados_financieros_2026_08_31.csv`
+
+Es útil para:
+
+- auditoría;
+- replicación;
+- evaluación histórica.
+]
+
+.pull-right[
+
+### Fuente dinámica
+
+El contenido puede cambiar cada vez que se consulta.
+
+Ejemplo:
+
+- API de precios;
+- base transaccional;
+- consulta institucional.
+
+Exige registrar **fecha y parámetros de extracción**.
+]
+
+----
+
+.center[
+.blue2[**Reproducir un análisis requiere reproducir también la adquisición.**]
+]
+
+---
+
+<!-- DOCENTE: 4 min. Metadata mínima. -->
+
+# Ficha mínima de una fuente
+
+Antes de utilizar una base, debería ser posible responder:
+
+| Campo | Ejemplo |
+|---|---|
+| Fuente | Banco de la República |
+| Recurso | TRM |
+| Periodo | 2022-01-01 a 2026-08-31 |
+| Frecuencia | diaria |
+| Unidad | COP/USD |
+| Fecha de extracción | 2026-08-31 |
+| Método | API / CSV / descarga manual |
+| Responsable | equipo analítico |
+
+----
+
+> Este registro parece administrativo, pero se vuelve crítico cuando el resultado debe actualizarse o auditarse.
+
+---
+
+<!-- DOCENTE: 4 min. Código paralelo: archivos. -->
+
+# Adquisición desde archivos: R | Python
+
+.pull-left[
+
+### R
+
+```r
+library(readr)
+library(readxl)
+
+datos_csv <- read_csv(
+  "Datos/estados_financieros_raw.csv"
+)
+
+datos_excel <- read_excel(
+  "Datos/estados_financieros.xlsx",
+  sheet = "EEFF"
+)
+```
+
+]
+
+.pull-right[
+
+### Python
+
+```python
+import pandas as pd
+
+datos_csv = pd.read_csv(
+    "Datos/estados_financieros_raw.csv"
+)
+
+datos_excel = pd.read_excel(
+    "Datos/estados_financieros.xlsx",
+    sheet_name="EEFF"
+)
+```
+
+]
+
+----
+
+.center[
+**La primera validación ocurre inmediatamente después de importar: dimensiones, nombres, tipos y cobertura.**
+]
+
+---
+
+<!-- DOCENTE: 4 min. Código paralelo: API. No ejecutar en el Rmd. -->
+
+# Adquisición desde una API: R | Python
+
+.pull-left[
+
+### R
+
+```r
+library(httr2)
+
+respuesta <- request(url) |>
+  req_url_query(
+    fecha_inicio = "2026-01-01"
+  ) |>
+  req_perform()
+
+datos <- resp_body_json(respuesta)
+```
+
+]
+
+.pull-right[
+
+### Python
+
+```python
+import requests
+
+respuesta = requests.get(
+    url,
+    params={"fecha_inicio": "2026-01-01"}
+)
+
+respuesta.raise_for_status()
+datos = respuesta.json()
+```
+
+]
+
+----
+
+> Automatizar la descarga no elimina la obligación de validar el contenido recibido.
+
+---
+
+class: inverse, center, middle
+background-color: #122140
+
+# 2. Unidad de análisis, granularidad y llaves
+## Antes de unir tablas, entender qué representa cada fila
+
+---
+
+<!-- DOCENTE: 5 min. Este concepto es central. -->
+
+# ¿Qué representa una fila?
+
+La **unidad de análisis** es la entidad mínima sobre la cual se construirá el análisis.
+
+Ejemplos:
+
+- **empresa–trimestre**;
+- **activo–día**;
+- **cliente–mes**;
+- **transacción**;
+- **empresa–producto–mes**.
+
+----
+
+.center[
+.orange[**Si no puede explicar qué representa una fila, todavía no está listo para integrar la base.**]
+]
+
+---
+
+<!-- DOCENTE: 4 min. Diferencia conceptual. -->
+
+# Unidad de análisis ≠ unidad de observación original
+
+Suponga que el objetivo es comparar liquidez **empresa–trimestre**.
+
+Pero las fuentes disponibles son:
+
+- ventas a nivel **factura**;
+- TRM a nivel **día**;
+- estados financieros **trimestrales**.
+
+Entonces las fuentes no comparten la misma granularidad.
+
+----
+
+.center[
+.blue2[**Antes del join debe decidirse cómo llevar cada fuente a una escala compatible con la pregunta.**]
+]
+
+---
+
+<!-- DOCENTE: 5 min. Granularidad. -->
+
+# Granularidad
+
+La granularidad describe el **nivel de detalle** de una observación.
+
+| Base | Granularidad |
+|---|---|
+| Precio de acción | activo–día |
+| Estado financiero | empresa–trimestre |
+| Cartera | cliente–crédito–fecha |
+| Presupuesto | centro de costo–mes |
+| Nómina | empleado–periodo |
+
+Una base más granular contiene más detalle, pero no necesariamente más información útil para una decisión específica.
+
+---
+
+<!-- DOCENTE: 4 min. Error común. -->
+
+# El error de mezclar granularidades
+
+Suponga:
+
+**EEFF:** una fila por empresa y trimestre.
+
+**TRM:** una fila por día.
+
+Unir directamente por empresa y trimestre sin resumir previamente la TRM puede producir varias filas por estado financiero.
+
+----
+
+### Consecuencia
+
+Los estados financieros quedan repetidos y cualquier suma posterior puede quedar inflada.
+
+.center[
+.orange[**El join puede ejecutarse sin error y aun así destruir la validez del análisis.**]
+]
+
+---
+
+<!-- DOCENTE: 4 min. Llaves. -->
+
+# Llave o identificador
+
+Una **llave** es una variable —o combinación de variables— que identifica de forma única la unidad de análisis.
+
+Ejemplos:
+
+```text
+empresa + trimestre
+activo + fecha
+cliente + crédito + fecha_corte
+pais + mes
+```
+
+Una llave correcta debe ser:
+
+- suficientemente estable;
+- interpretable;
+- única para la granularidad esperada.
+
+---
+
+<!-- DOCENTE: 5 min. Mostrar natural vs surrogate. -->
+
+# Llaves naturales y llaves técnicas
+
+.pull-left[
+
+### Llave natural
+
+Proviene del dominio.
+
+Ejemplos:
+
+- NIT;
+- ticker + fecha;
+- código de crédito.
+
+Ventaja: tiene significado.
+
+Riesgo: puede cambiar o venir mal digitada.
+]
+
+.pull-right[
+
+### Llave técnica
+
+Identificador construido por el sistema.
+
+Ejemplos:
+
+- `id_empresa = E001`;
+- `customer_id = 83472`.
+
+Ventaja: estable y compacta.
+
+Riesgo: requiere una tabla maestra para interpretarla.
+]
+
+---
+
+<!-- DOCENTE: 4 min. Validar llave en R/Python. -->
+
+# ¿La llave es realmente única?
+
+.pull-left[
+
+### R
+
+```r
+estados |>
+  count(id_empresa, periodo) |>
+  filter(n > 1)
+```
+
+Si la tabla queda vacía, no se encontraron duplicados de la llave.
+
+]
+
+.pull-right[
+
+### Python
+
+```python
+duplicados = (
+    estados
+    .groupby(["id_empresa", "periodo"])
+    .size()
+    .reset_index(name="n")
+    .query("n > 1")
+)
+```
+
+]
+
+----
+
+> `duplicated()` puede detectar filas idénticas; una llave permite detectar duplicados **lógicos**.
+
+---
+
+<!-- DOCENTE: 4 min. Tipos. -->
+
+# Tipos de datos también forman parte de la estructura
+
+Una variable puede llegar con el tipo equivocado:
+
+- fecha almacenada como texto;
+- tasa almacenada como porcentaje con símbolo `%`;
+- monto almacenado con separadores;
+- código numérico interpretado como número cuando debería ser texto.
+
+----
+
+Ejemplo:
+
+```text
+"4.250,50"  ≠  4250.50
+"01"        ≠  1   cuando representa un código
+"31/12/26"  requiere una convención de fecha
+```
+
+---
+
+<!-- DOCENTE: 4 min. Fechas R/Python. -->
+
+# Normalización de fechas: R | Python
+
+.pull-left[
+
+### R
+
+```r
+library(lubridate)
+
+datos <- datos |>
+  mutate(
+    fecha = parse_date_time(
+      fecha,
+      orders = c("ymd", "dmy")
+    )
+  )
+```
+
+]
+
+.pull-right[
+
+### Python
+
+```python
+import pandas as pd
+
+datos["fecha"] = pd.to_datetime(
+    datos["fecha"],
+    dayfirst=True,
+    errors="coerce"
+)
+```
+
+]
+
+----
+
+.center[
+**Después de convertir, siempre se revisan los valores que terminaron como NA / NaT.**
+]
+
+---
+
+class: inverse, center, middle
+background-color: #122140
+
+# 3. Integración de fuentes financieras
+## Joins, cardinalidad y reconciliación
+
+---
+
+<!-- DOCENTE: 4 min. Concepto general. -->
+
+# Integrar no es “pegar columnas”
+
+La integración busca combinar información de fuentes distintas **sin alterar el significado de la unidad de análisis**.
+
+Para integrar correctamente debe definirse:
+
+1. **qué tabla determina la población principal**;
+2. cuáles son las **llaves comunes**;
+3. qué **cardinalidad** existe entre las tablas;
+4. qué hacer con observaciones **sin correspondencia**.
+
+---
+
+<!-- DOCENTE: 5 min. Tipos de join con significado. -->
+
+# Joins principales
+
+| Operación | Pregunta que responde |
+|---|---|
+| **left join** | conservar toda mi población principal y traer información adicional |
+| **inner join** | conservar solamente observaciones presentes en ambas fuentes |
+| **full join** | conservar la unión completa de ambas fuentes |
+| **anti join** | identificar observaciones que no encontraron correspondencia |
+
+----
+
+.center[
+.orange[**El tipo de join es una decisión sobre la muestra, no una preferencia de sintaxis.**]
+]
+
+---
+
+<!-- DOCENTE: 5 min. Cardinalidad. -->
+
+# Cardinalidad
+
+.pull-left[
+
+### 1 : 1
+Una observación en A corresponde a una en B.
+
+Ejemplo:
+
+empresa–trimestre ↔ empresa–trimestre
+
+### N : 1
+Muchas observaciones en A corresponden a una en B.
+
+Ejemplo:
+
+empresa–trimestre ↔ maestro de empresas
+]
+
+.pull-right[
+
+### 1 : N
+Una observación en A corresponde a varias en B.
+
+Ejemplo:
+
+empresa ↔ múltiples créditos
+
+### N : N
+Varias observaciones de A corresponden a varias de B.
+
+**Requiere especial cuidado.**
+]
+
+---
+
+<!-- DOCENTE: 5 min. Explosión de filas. -->
+
+# La “explosión” de filas
+
+Tabla A:
+
+| empresa | trimestre | ingresos |
+|---|---|---:|
+| A | 2025Q1 | 100 |
+
+Tabla B:
+
+| empresa | trimestre | tasa |
+|---|---|---:|
+| A | 2025Q1 | 0.10 |
+| A | 2025Q1 | 0.11 |
+
+Después del join aparecen **dos filas**.
+
+----
+
+> Si luego suma ingresos, obtiene 200 aunque el valor original era 100.
+
+.center[
+.orange[**Una duplicación posterior al join suele ser un problema de cardinalidad, no de aritmética.**]
+]
+
+---
+
+<!-- DOCENTE: 5 min. Regla práctica. -->
+
+# Regla práctica antes y después de un join
+
+Antes:
+
+```text
+¿Cuántas filas tiene A?
+¿Cuántas filas tiene B?
+¿La llave es única donde debería serlo?
+```
+
+Después:
+
+```text
+¿Cuántas filas quedaron?
+¿Qué observaciones no empataron?
+¿Aparecieron nuevos NA?
+¿Cambió la unidad de análisis?
+```
+
+----
+
+.center[
+.blue2[**El número de filas es una de las primeras pruebas de integridad después de integrar.**]
+]
+
+---
+
+<!-- DOCENTE: 5 min. Left join paralelo. -->
+
+# Integración: R | Python
+
+.pull-left[
+
+### R
+
+```r
+base <- estados |>
+  left_join(
+    maestro,
+    by = "id_empresa"
+  )
+```
+
+]
+
+.pull-right[
+
+### Python
+
+```python
+base = estados.merge(
+    maestro,
+    on="id_empresa",
+    how="left"
+)
+```
+
+]
+
+----
+
+.center[
+**El código es sencillo. La parte difícil es demostrar que `id_empresa` representa la relación correcta.**
+]
+
+---
+
+<!-- DOCENTE: 5 min. Anti join equivalence. -->
+
+# ¿Qué registros no encontraron correspondencia?
+
+.pull-left[
+
+### R
+
+```r
+sin_maestro <- estados |>
+  anti_join(
+    maestro,
+    by = "id_empresa"
+  )
+```
+
+]
+
+.pull-right[
+
+### Python
+
+```python
+revision = estados.merge(
+    maestro,
+    on="id_empresa",
+    how="left",
+    indicator=True
+)
+
+sin_maestro = revision[
+    revision["_merge"] == "left_only"
+]
+```
+
+]
+
+----
+
+> Los registros sin correspondencia no deberían desaparecer silenciosamente.
+
+---
+
+<!-- DOCENTE: 5 min. Frecuencia alignment. -->
+
+# Integración temporal: la fecha exacta no siempre es la llave correcta
+
+Ejemplo:
+
+- estados financieros: **trimestral**;
+- TRM: **diaria**.
+
+Antes de integrar debe definirse qué representación de la TRM es coherente con el análisis:
+
+- cierre del trimestre;
+- promedio del trimestre;
+- promedio mensual;
+- otra regla financiera justificada.
+
+----
+
+.center[
+.orange[**Resumir una fuente temporal es una decisión analítica.**]
+]
+
+---
+
+<!-- DOCENTE: 5 min. Stock vs flow. -->
+
+# Variables de stock y variables de flujo
+
+.pull-left[
+
+### Stock
+
+Se observa en un punto del tiempo.
+
+Ejemplos:
+
+- activos;
+- deuda;
+- efectivo;
+- inventario.
+
+Para conversión monetaria puede ser razonable una tasa de **cierre**.
+]
+
+.pull-right[
+
+### Flujo
+
+Se acumula durante un periodo.
+
+Ejemplos:
+
+- ventas;
+- EBITDA;
+- utilidad;
+- gastos.
+
+Puede requerir una tasa **promedio del periodo**.
+]
+
+----
+
+> La regla concreta depende del objetivo y del estándar contable/financiero utilizado.
+
+---
+
+<!-- DOCENTE: 5 min. Conversión de moneda. -->
+
+# Unidades y monedas: estandarizar antes de comparar
+
+.pull-left[
+
+### R
+
+```r
+base <- base |>
+  mutate(
+    factor_unidad = if_else(
+      unidad == "miles", 0.001, 1
+    ),
+    activos_mill = activos * factor_unidad
+  )
+```
+
+]
+
+.pull-right[
+
+### Python
+
+```python
+base["factor_unidad"] = np.where(
+    base["unidad"].eq("miles"),
+    0.001,
+    1
+)
+
+base["activos_mill"] = (
+    base["activos"] * base["factor_unidad"]
+)
+```
+
+]
+
+----
+
+.center[
+**Comparar cifras exige primero llevarlas a una definición, unidad y moneda compatibles.**
+]
+
+---
+
+<!-- DOCENTE: 5 min. FX example concept. -->
+
+# Conversión monetaria: no aplicar una sola tasa a todo
+
+Si una empresa reporta en USD y se desea construir una base en COP:
+
+- partidas de **balance** pueden requerir TRM de cierre;
+- partidas de **resultado** pueden requerir TRM promedio;
+- empresas que ya reportan en COP no deberían volver a convertirse.
+
+----
+
+.center[
+.orange[**La tasa de cambio forma parte de la definición de la variable final. Debe quedar documentada.**]
+]
+
+---
+
+class: inverse, center, middle
+background-color: #122140
+
+# 4. Calidad de datos financieros
+## Convertir “parece bien” en reglas verificables
+
+---
+
+<!-- DOCENTE: 4 min. Definir calidad operacionalmente. -->
+
+# ¿Qué significa que una base tenga calidad?
+
+No significa que sea perfecta.
+
+Significa que posee un nivel de calidad **suficiente para el uso analítico previsto** y que sus limitaciones son conocidas.
+
+----
+
+.center[
+.font115[
+**Calidad = adecuación del dato para una decisión específica**
+]
+]
+
+----
+
+> Una base puede ser adecuada para análisis descriptivo y no ser adecuada para estimar un modelo causal o un pronóstico.
+
+---
+
+<!-- DOCENTE: 5 min. Dimensiones. -->
+
+# Dimensiones básicas de calidad
+
+| Dimensión | Pregunta |
+|---|---|
+| **Completitud** | ¿faltan datos necesarios? |
+| **Unicidad** | ¿existen duplicados de la unidad esperada? |
+| **Validez** | ¿los valores respetan formato y dominio? |
+| **Consistencia** | ¿variables relacionadas son coherentes entre sí? |
+| **Integridad referencial** | ¿las llaves existen en las tablas relacionadas? |
+| **Oportunidad** | ¿la información está suficientemente actualizada? |
+
+---
+
+<!-- DOCENTE: 5 min. Missingness. -->
+
+# Datos faltantes: NA no significa cero
+
+Un faltante puede representar situaciones distintas:
+
+- el valor **no existe**;
+- el valor existe pero **no fue reportado**;
+- el sistema **falló** al capturarlo;
+- la variable **no aplica**;
+- el registro quedó perdido durante una integración.
+
+----
+
+.center[
+.orange[**Antes de imputar o eliminar un NA, debe entenderse por qué falta.**]
+]
+
+---
+
+<!-- DOCENTE: 4 min. Missing code parallel. -->
+
+# Auditoría de faltantes: R | Python
+
+.pull-left[
+
+### R
+
+```r
+faltantes <- datos |>
+  summarise(
+    across(
+      everything(),
+      ~ sum(is.na(.x))
+    )
+  )
+```
+
+]
+
+.pull-right[
+
+### Python
+
+```python
+faltantes = (
+    datos
+    .isna()
+    .sum()
+    .sort_values(ascending=False)
+)
+```
+
+]
+
+----
+
+> Conviene complementar el conteo con porcentaje y patrón temporal/grupal de faltantes.
+
+---
+
+<!-- DOCENTE: 4 min. Completeness metric. -->
+
+# Una medida sencilla de completitud
+
+Para una variable con \(n\) observaciones:
+
+.center[
+.font120[
+\[
+\text{Completitud} = 1 - \frac{\#\text{faltantes}}{n}
+\]
+]
+]
+
+Ejemplo:
+
+- 1.000 observaciones;
+- 80 faltantes.
+
+\[
+1 - \frac{80}{1000} = 0.92
+\]
+
+**Completitud = 92%**.
+
+----
+
+> El porcentaje no decide por sí solo si la variable es utilizable.
+
+---
+
+<!-- DOCENTE: 5 min. Duplicates. -->
+
+# Duplicados: exactos y lógicos
+
+.pull-left[
+
+### Duplicado exacto
+
+Toda la fila se repite.
+
+Puede originarse por:
+
+- exportaciones concatenadas;
+- carga repetida;
+- errores operativos.
+]
+
+.pull-right[
+
+### Duplicado lógico
+
+La llave se repite, pero otras variables son diferentes.
+
+Ejemplo:
+
+`empresa = E03, periodo = 2025Q2`
+
+aparece dos veces con EBITDA distinto.
+]
+
+----
+
+.center[
+.orange[**El duplicado lógico es más peligroso porque exige decidir cuál registro es válido.**]
+]
+
+---
+
+<!-- DOCENTE: 5 min. Validity rules. -->
+
+# Reglas de validez
+
+Una regla de validez verifica si una variable respeta un dominio esperado.
+
+Ejemplos:
+
+```text
+activos > 0
+pasivos >= 0
+fecha_corte <= fecha_actual
+moneda ∈ {COP, USD, EUR}
+periodo cumple formato YYYYQn
+```
+
+----
+
+> Una regla debe provenir del significado de la variable, no de una preferencia estadística.
+
+---
+
+<!-- DOCENTE: 5 min. Accounting consistency. -->
+
+# Reglas de consistencia financiera
+
+Los datos financieros permiten construir controles de dominio.
+
+Ejemplo básico:
+
+\[
+Activos = Pasivos + Patrimonio
+\]
+
+En datos reales puede aceptarse una tolerancia por redondeo:
+
+\[
+\frac{|Activos - Pasivos - Patrimonio|}{Activos} < 1\%
+\]
+
+----
+
+.center[
+.blue2[**Una validación financiera utiliza conocimiento del dominio para auditar el dato.**]
+]
+
+---
+
+<!-- DOCENTE: 5 min. R/Python accounting rule. -->
+
+# Validación contable: R | Python
+
+.pull-left[
+
+### R
+
+```r
+revision <- datos |>
+  mutate(
+    error_balance = abs(
+      activos - pasivos - patrimonio
+    ) / activos,
+    balance_ok = error_balance < 0.01
+  )
+```
+
+]
+
+.pull-right[
+
+### Python
+
+```python
+datos["error_balance"] = (
+    (datos["activos"]
+     - datos["pasivos"]
+     - datos["patrimonio"]).abs()
+    / datos["activos"]
+)
+
+datos["balance_ok"] = (
+    datos["error_balance"] < 0.01
+)
+```
+
+]
+
+---
+
+<!-- DOCENTE: 4 min. Cross-variable checks. -->
+
+# Otras validaciones entre variables
+
+Dependiendo del contexto, pueden revisarse condiciones como:
+
+- activos corrientes ≤ activos totales;
+- efectivo ≤ activos corrientes;
+- pasivos corrientes ≤ pasivos totales;
+- patrimonio consistente con la identidad contable;
+- moneda de la observación consistente con el maestro de empresas;
+- periodo presente en la tabla de referencia correspondiente.
+
+----
+
+> Las reglas no prueban que el dato sea verdadero; detectan observaciones que requieren revisión.
+
+---
+
+<!-- DOCENTE: 5 min. Outlier vs error. -->
+
+# Valor extremo ≠ dato incorrecto
+
+Un valor extremo puede ser:
+
+1. un **error** de digitación o unidad;
+2. un evento financiero **real**;
+3. una observación estructuralmente diferente;
+4. una señal que precisamente interesa detectar.
+
+----
+
+.center[
+.orange[**Eliminar outliers durante limpieza sin investigarlos puede eliminar información financiera relevante.**]
+]
+
+---
+
+<!-- DOCENTE: 4 min. Quality indicators. -->
+
+# Indicadores de calidad del dataset
+
+Un reporte mínimo puede incluir:
+
+| Indicador | Ejemplo |
+|---|---:|
+| Filas recibidas | 64 |
+| Llaves duplicadas | 1 |
+| Registros sin maestro | 1 |
+| Variables con faltantes | 2 |
+| Registros que incumplen identidad contable | 1 |
+| Registros con unidad no estandarizada | 1 |
+
+----
+
+.center[
+.blue2[**La calidad también puede convertirse en datos y ser monitoreada.**]
+]
+
+---
+
+<!-- DOCENTE: 5 min. Audit function concept. -->
+
+# Convertir validaciones en una rutina
+
+.pull-left[
+
+### R
+
+```r
+reporte_calidad <- datos |>
+  summarise(
+    filas = n(),
+    faltantes_ebitda = sum(is.na(ebitda)),
+    balance_invalido = sum(!balance_ok)
+  )
+```
+
+]
+
+.pull-right[
+
+### Python
+
+```python
+reporte_calidad = {
+    "filas": len(datos),
+    "faltantes_ebitda":
+        datos["ebitda"].isna().sum(),
+    "balance_invalido":
+        (~datos["balance_ok"]).sum()
+}
+```
+
+]
+
+----
+
+> El siguiente paso natural será automatizar estas reglas dentro del pipeline.
+
+---
+
+class: inverse, center, middle
+background-color: #122140
+
+# 5. Pipeline reproducible de preparación
+## Del archivo original a la base analítica
+
+---
+
+<!-- DOCENTE: 5 min. Capas. -->
+
+# Tres capas de datos
+
+.center[
+.font120[
+**RAW → CLEAN → ANALYTIC**
+]
+]
+
+<br>
+
+.pull-left[
+
+### RAW
+Copia fiel de la fuente.
+
+- no se edita manualmente;
+- conserva evidencia del origen.
+
+### CLEAN
+Datos estandarizados y validados.
+
+- tipos;
+- llaves;
+- unidades;
+- limpieza.
+]
+
+.pull-right[
+
+### ANALYTIC
+Base diseñada para responder la pregunta.
+
+- unidad de análisis definida;
+- fuentes integradas;
+- variables derivadas necesarias.
+]
+
+---
+
+<!-- DOCENTE: 4 min. Folder structure. -->
+
+# Una estructura mínima de proyecto
+
+```text
+proyecto/
+│
+├── Datos/
+│   ├── raw/
+│   ├── clean/
+│   └── analytic/
+│
+├── Codigo/
+│   ├── 01_adquisicion.R
+│   ├── 02_calidad.R
+│   └── 03_integracion.R
+│
+├── Reportes/
+└── README.md
+```
+
+----
+
+.center[
+.orange[**La organización del proyecto también forma parte de la reproducibilidad.**]
+]
+
+---
+
+<!-- DOCENTE: 5 min. Sequence. -->
+
+# Pipeline mínimo de preparación
+
+.center[
+.font110[
+**Extraer → Inspeccionar → Estandarizar → Validar → Integrar → Volver a validar → Exportar**
+]
+]
+
+<br>
+
+Cada paso debería poder ejecutarse nuevamente sin depender de cambios manuales intermedios.
+
+----
+
+> El objetivo no es tener “un archivo limpio”, sino poder explicar cómo se obtuvo.
+
+---
+
+<!-- DOCENTE: 4 min. Assertions. -->
+
+# Validaciones que detienen el proceso
+
+Algunas reglas son suficientemente importantes para impedir que el pipeline continúe.
+
+.pull-left[
+
+### R
+
+```r
+stopifnot(
+  nrow(base_final) == nrow(estados)
+)
+
+stopifnot(
+  sum(duplicated(base_final[c(
+    "id_empresa", "periodo"
+  )])) == 0
+)
+```
+
+]
+
+.pull-right[
+
+### Python
+
+```python
+assert len(base_final) == len(estados)
+
+assert not base_final.duplicated(
+    subset=["id_empresa", "periodo"]
+).any()
+```
+
+]
+
+----
+
+.center[
+.blue2[**Una buena validación falla explícitamente; no deja que el error continúe silenciosamente.**]
+]
+
+---
+
+<!-- DOCENTE: 4 min. Export. -->
+
+# Exportar no significa perder la trazabilidad
+
+.pull-left[
+
+### R
+
+```r
+write_csv(
+  base_final,
+  "Datos/analytic/base_financiera.csv"
+)
+```
+
+]
+
+.pull-right[
+
+### Python
+
+```python
+base_final.to_csv(
+    "Datos/analytic/base_financiera.csv",
+    index=False
+)
+```
+
+]
+
+----
+
+El archivo final debe poder ser reconstruido ejecutando el pipeline desde las fuentes RAW.
+
+---
+
+<!-- DOCENTE: 5 min. IA role. -->
+
+# ¿Dónde puede ayudar la IA en esta sesión?
+
+La IA puede:
+
+- proponer código para importar e integrar;
+- sugerir conversiones de tipos;
+- identificar posibles pruebas de calidad;
+- traducir procedimientos R ↔ Python;
+- convertir validaciones repetitivas en funciones;
+- documentar el pipeline.
+
+Pero debe recibir **contexto explícito** sobre:
+
+- unidad de análisis;
+- llave;
+- granularidad;
+- unidades;
+- significado financiero de las variables.
+
+---
+
+<!-- DOCENTE: 5 min. AI anti-pattern. -->
+
+# Un prompt técnicamente insuficiente
+
+> “Une estas dos bases y límpialas.”
+
+No especifica:
+
+- cuál es la tabla principal;
+- cuáles son las llaves;
+- qué representa una fila;
+- qué hacer con no coincidencias;
+- qué cardinalidad se espera;
+- qué reglas financieras deben cumplirse.
+
+----
+
+### Mejor formulación
+
+> “La unidad final debe ser empresa–trimestre. `estados` es la tabla principal. Integre `maestro` por `id_empresa`, conserve todas las observaciones de `estados`, reporte llaves sin correspondencia y verifique que el número de filas no aumente.”
+
+---
+
+<!-- DOCENTE: 4 min. Synthesis before activity. -->
+
+# Antes de analizar, cinco preguntas
+
+1. **¿Qué representa una fila?**
+2. **¿Cuál es la llave?**
+3. **¿Las fuentes tienen la misma granularidad?**
+4. **¿Qué reglas de calidad deberían cumplirse?**
+5. **¿Puedo reconstruir la base final desde las fuentes originales?**
+
+----
+
+.center[
+.orange[**Si estas cinco respuestas no están claras, el análisis todavía no está listo.**]
+]
+
+---
+
+class: inverse, center, middle
+background-color: #122140
+
+# 6. Actividad aplicada
+## Auditoría e integración de fuentes financieras
+
+---
+
+<!-- DOCENTE: 5 min. Explicar el caso antes de enviar a salas. -->
+
+# Caso: Grupo Andino
+
+La dirección financiera de **Grupo Andino** desea construir una base trimestral para comparar la situación financiera de ocho empresas del grupo.
+
+Se reciben tres fuentes:
+
+```text
+Datos/maestro_empresas.csv
+Datos/estados_financieros_raw.csv
+Datos/trm_trimestral.csv
+```
+
+La gerencia quiere trabajar posteriormente con indicadores de:
+
+- rentabilidad;
+- liquidez;
+- endeudamiento;
+- evolución financiera.
+
+----
+
+> **Hoy no deben calcular todavía el EDA completo.** Primero deben demostrar que la base es utilizable.
+
+---
+
+# Archivos disponibles
+
+### `maestro_empresas.csv`
+
+Identifica cada empresa, sector y moneda de reporte.
+
+### `estados_financieros_raw.csv`
+
+Contiene estados financieros trimestrales sin depurar.
+
+### `trm_trimestral.csv`
+
+Contiene TRM promedio y de cierre por trimestre.
+
+----
+
+.center[
+.blue2[**Algunos archivos contienen problemas deliberados de calidad. No asuman que todo lo recibido es correcto.**]
+]
+
+---
+
+# Trabajo en salas — Parte 1
+
+### A. Comprensión de las fuentes
+
+1. Definan la **unidad de análisis** que debería tener la base final.
+2. Identifiquen la **llave** esperada de cada archivo.
+3. Describan la granularidad y frecuencia de cada fuente.
+4. Elaboren una pequeña ficha de procedencia para los tres archivos.
+
+----
+
+### Producto
+
+Una tabla de máximo una página con:
+
+`fuente | unidad | llave | frecuencia | variables principales | observaciones`
+
+---
+
+# Trabajo en salas — Parte 2
+
+### B. Auditoría inicial
+
+Sobre cada fuente:
+
+1. revisen dimensiones y tipos;
+2. detecten faltantes;
+3. detecten duplicados de la llave;
+4. identifiquen valores o formatos inconsistentes;
+5. propongan reglas financieras de validación.
+
+----
+
+### No corrijan automáticamente
+
+Primero documenten **qué encontraron** y luego decidan cómo tratarlo.
+
+---
+
+# Trabajo en salas — Parte 3
+
+### C. Estandarización e integración
+
+Construyan una base con unidad:
+
+.center[
+.font120[**empresa × trimestre**]
+]
+
+La base debe:
+
+- incorporar información del maestro;
+- estandarizar unidades;
+- convertir a COP cuando corresponda;
+- utilizar TRM promedio/cierre de forma justificada;
+- conservar trazabilidad de las variables originales.
+
+---
+
+# Trabajo en salas — Parte 4
+
+### D. Validación posterior al join
+
+Comprueben como mínimo:
+
+1. número de filas antes y después de integrar;
+2. llaves sin correspondencia;
+3. duplicados de `id_empresa + periodo`;
+4. faltantes generados por la integración;
+5. identidad `activos = pasivos + patrimonio`;
+6. coherencia entre activos corrientes y activos totales.
+
+----
+
+.center[
+.orange[**No basta con que el código termine sin error. Deben demostrar que la integración conserva el significado de la base.**]
+]
+
+---
+
+# Trabajo en salas — Parte 5
+
+### E. Reporte de calidad
+
+Construyan un resumen que muestre como mínimo:
+
+- número de observaciones finales;
+- número de llaves duplicadas;
+- porcentaje de faltantes en variables principales;
+- número de registros que incumplen reglas financieras;
+- observaciones que requieran revisión manual.
+
+Luego respondan:
+
+> **¿Consideran que la base está lista para realizar análisis financiero? ¿Qué limitaciones quedan abiertas?**
+
+---
+
+# Entrega de la actividad
+
+Cada grupo debe presentar brevemente:
+
+1. **unidad de análisis y llaves**;
+2. principales problemas encontrados;
+3. decisiones de limpieza e integración;
+4. tres validaciones implementadas;
+5. resultado del reporte de calidad;
+6. una conclusión sobre la viabilidad de la base.
+
+----
+
+### Archivos sugeridos
+
+```text
+Codigo_actividad.R  o  Codigo_actividad.py
+base_analitica.csv
+reporte_calidad.csv
+```
+
+---
+
+# Conexión con el Taller 1
+
+La actividad de hoy utiliza un caso suministrado por el docente.
+
+El **Taller 1** seguirá exactamente la misma lógica, pero cada grupo deberá:
+
+- formular su propio problema financiero;
+- seleccionar y documentar fuentes reales;
+- construir su base analítica;
+- demostrar calidad, consistencia y trazabilidad;
+- justificar por qué el caso puede continuar durante el resto del curso.
+
+----
+
+.center[
+.orange[**El dataset construido en el Taller 1 será el insumo para los talleres posteriores.**]
+]
+
+---
+
+# Qué NO debería contener todavía el Taller 1
+
+No es necesario desarrollar aún:
+
+- un EDA exhaustivo;
+- inferencia estadística completa;
+- modelos;
+- dashboards;
+- automatizaciones complejas.
+
+----
+
+### El objetivo del Taller 1 es más básico y más importante
+
+.center[
+.font120[
+**demostrar que existe una pregunta viable y una base confiable para estudiarla.**
+]
+]
+
+---
+
+# Cierre de la sesión
+
+.center[
+.font110[
+**Fuente → Unidad → Llave → Calidad → Integración → Validación → Base analítica**
+]
+]
+
+<br>
+
+Tres ideas centrales:
+
+1. La calidad del análisis comienza **antes** del modelo.
+2. Un join puede ser sintácticamente correcto y metodológicamente incorrecto.
+3. Una base analítica debe poder ser **reconstruida y auditada**.
+
+---
+
+class: inverse, center, middle
+background-color: #122140
+
+# Gracias!!!
+
+### Preguntas?
+

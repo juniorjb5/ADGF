@@ -1,0 +1,2567 @@
+---
+title: "Analítica de Datos para la Gestión Financiera"
+subtitle: "<br/> Fundamentos y ciclo de vida analítico"
+author: "Orlando Joaqui-Barandica, PhD."
+institute: "Universidad del Valle"
+date: " "
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    css:
+      - default
+      - rladies
+      - rladies-fonts
+      - fonts_mtheme.css
+      - cols.css
+    seal: false
+    nature:
+      beforeInit: "cols_macro.js"
+      ratio: 16:9
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+
+```{r setup, include = FALSE}
+library(knitr)                              # paquete que trae funciones útiles para R Markdown
+library(tidyverse)                          # ecosistema principal para manipulación y visualización
+library(scales)                             # formatos para ejes y números
+
+knitr::opts_chunk$set(echo = FALSE,         # FALSE: los bloques ejecutados NO se muestran
+                      dpi = 300,            # gráficos de alta resolución
+                      warning = FALSE,      # mensajes de advertencia NO se muestran
+                      message = FALSE,      # mensajes de paquetes NO se muestran
+                      error = FALSE)        # errores NO se muestran en la presentación
+
+options(htmltools.dir.version = FALSE)
+
+xaringanExtra::use_share_again()
+xaringanExtra::use_clipboard()
+xaringanExtra::use_panelset()
+```
+
+
+class: inverse, left, bottom
+background-image: url("img/fondo.jpg")
+background-size: cover
+
+# **`r rmarkdown::metadata$title`**
+----
+
+## **`r rmarkdown::metadata$subtitle`**
+
+### `r rmarkdown::metadata$author`
+### `r rmarkdown::metadata$date`
+
+---
+
+
+class: center, middle
+
+```{r, echo=FALSE, fig.align="center", out.width="20%"}
+knitr::include_graphics("img/univalle.jpg")
+```
+
+---
+
+
+class: center, middle
+
+.center[
+
+<br>
+
+<a href="https://www.joaquibarandica.com" target="_blank">
+  <img src="img/avatar.png"
+       style="border-radius: 80%; width: 220px; max-width: 30%; height: auto;"
+       alt="Avatar"/>
+</a>
+
+## Orlando Joaqui-Barandica
+
+Doctor en Ingeniería, Enf. Ingeniería Industrial **|** Magíster en Economía Aplicada **|** Estadístico.
+
+orlando.joaqui@correounivalle.edu.co
+]
+
+.center[
+### [www.joaquibarandica.com](https://www.joaquibarandica.com)
+]
+
+---
+
+<!-- DOCENTE: 3 min. Ubicar la asignatura y dejar claro que no es un curso de sintaxis. -->
+
+# ¿Qué estudia esta asignatura?
+
+La **Analítica de Datos para la Gestión Financiera** estudia cómo convertir datos económicos y financieros en evidencia que pueda utilizarse para apoyar una decisión.
+
+No se limita a:
+
+- programar en R o Python,
+- producir gráficos,
+- estimar modelos,
+- construir tableros.
+
+----
+
+.center[
+.orange[**El objeto de estudio es el proceso analítico completo: desde la pregunta financiera hasta un producto que pueda ser utilizado, actualizado y auditado.**]
+]
+
+---
+
+<!-- DOCENTE: 4 min. Introducir el mapa del curso, sin desarrollar cada sesión. -->
+
+# Mapa general del curso
+
+.font90[
+
+1. **Fundamentos de Analítica de Datos y ciclo de vida analítico en finanzas**
+2. **Adquisición, integración y calidad de datos financieros**
+3. **Análisis exploratorio, métricas e inferencia en finanzas**
+4. **Visualización programática y reportes reproducibles**
+5. **Dashboards y aplicaciones analíticas interactivas**
+6. **Automatización de flujos analíticos, reportes y alertas**
+7. **Modelación, escenarios y soporte analítico a decisiones financieras**
+8. **Integración y despliegue de productos de analítica financiera**
+
+]
+
+----
+
+.center[
+.blue2[**R y Python serán entornos de implementación. La lógica analítica es común a ambos.**]
+]
+
+---
+
+<!-- DOCENTE: 3 min. Objetivos explícitos de la sesión. -->
+
+# Objetivos de la sesión
+
+Al finalizar la clase, el estudiante debe poder:
+
+1. Diferenciar **analítica descriptiva, diagnóstica, predictiva y prescriptiva**.
+2. Reconocer las fases del **ciclo de vida analítico CRISP-DM**.
+3. Formular un problema financiero en términos de **decisión, unidad de análisis, datos, método y producto**.
+4. Distinguir entre **análisis**, **modelo** y **producto analítico**.
+5. Reconocer el papel de **R, Python e IA** dentro de un flujo reproducible.
+6. Diseñar, a nivel inicial, un flujo que pueda terminar en **reporte, dashboard, alerta o proceso automatizado**.
+
+---
+
+<!-- DOCENTE: 2 min. Explicar la dinámica recurrente de la asignatura. -->
+
+# Dinámica de trabajo
+
+.pull-left[
+
+## Primera mitad — 90 min
+
+- conceptos y definiciones;
+- ejemplos financieros;
+- demostraciones guiadas;
+- implementación paralela **R / Python** cuando aplique.
+]
+
+.pull-right[
+
+## Segunda mitad — 90 min
+
+- trabajo en salas virtuales;
+- caso aplicado;
+- uso libre de IA como apoyo;
+- entrega corta;
+- discusión y contraste de resultados.
+]
+
+----
+
+.center[
+.orange[**La práctica no es un ejercicio adicional: es la segunda parte de la clase.**]
+]
+
+---
+
+class: inverse, center, middle
+background-color: #122140
+
+# 1. Fundamentos de Analítica de Datos
+## De la información a la decisión financiera
+
+---
+
+<!-- DOCENTE: 4 min. Definición formal y alcance. -->
+
+# ¿Qué entendemos por analítica de datos?
+
+La analítica de datos combina:
+
+- **datos**, que representan hechos observados;
+- **métodos**, que permiten resumir, relacionar, estimar o proyectar;
+- **tecnología**, que permite ejecutar y reproducir el análisis;
+- **criterio de dominio**, que da significado financiero al resultado.
+
+----
+
+.center[
+.font130[
+**Datos → Evidencia → Interpretación → Decisión**
+]
+]
+
+----
+
+> Un resultado técnicamente correcto puede ser irrelevante si no responde una pregunta de decisión.
+
+---
+
+<!-- DOCENTE: 4 min. Explicar que los niveles no son una escalera obligatoria. -->
+
+# Cuatro niveles de analítica
+
+.pull-left[
+
+### Descriptiva
+**¿Qué ocurrió?**
+
+- KPIs
+- tendencias
+- distribuciones
+- comparación con benchmark
+
+### Diagnóstica
+**¿Qué está asociado con lo ocurrido?**
+
+- descomposición
+- comparación por grupos
+- relaciones entre variables
+- análisis de drivers
+]
+
+.pull-right[
+
+### Predictiva
+**¿Qué podría ocurrir?**
+
+- pronóstico
+- clasificación
+- estimación de probabilidad
+- predicción de riesgo
+
+### Prescriptiva
+**¿Qué acción conviene tomar?**
+
+- escenarios
+- reglas de decisión
+- optimización
+- asignación de recursos
+]
+
+---
+
+<!-- DOCENTE: 4 min. Un solo problema visto desde los cuatro niveles. -->
+
+# Un mismo problema, cuatro preguntas distintas
+
+Suponga que la gerencia observa una caída de la rentabilidad.
+
+.panelset[
+.panel[.panel-name[Descriptiva]
+
+**¿Qué ocurrió con el ROA, ROE y margen durante los últimos ocho trimestres?**
+]
+.panel[.panel-name[Diagnóstica]
+
+**¿La caída está asociada principalmente con menor margen, menor rotación o mayor costo financiero?**
+]
+.panel[.panel-name[Predictiva]
+
+**Si continúan las condiciones actuales, ¿qué rango de rentabilidad es esperable el próximo trimestre?**
+]
+.panel[.panel-name[Prescriptiva]
+
+**¿Qué combinación de reducción de costos, capital de trabajo y deuda permitiría recuperar el objetivo de rentabilidad?**
+]
+]
+
+---
+
+<!-- DOCENTE: 3 min. Distinción clave para el resto del curso. -->
+
+# Análisis ≠ producto analítico
+
+.pull-left[
+
+### Análisis
+Es el conjunto de procedimientos utilizados para producir evidencia.
+
+Ejemplos:
+
+- cálculo de KPIs,
+- análisis exploratorio,
+- regresión,
+- escenario de sensibilidad.
+]
+
+.pull-right[
+
+### Producto analítico
+Es la forma operativa en que el resultado se entrega y utiliza.
+
+Ejemplos:
+
+- reporte reproducible,
+- dashboard,
+- aplicación,
+- alerta,
+- archivo de decisión,
+- proceso automatizado.
+]
+
+----
+
+.center[
+.orange[**Un proyecto puede tener un análisis correcto y, aun así, fracasar en su uso si el producto no responde a la forma en que se toma la decisión.**]
+]
+
+---
+
+<!-- DOCENTE: 3 min. Introducir outputs que aparecerán más adelante en el curso. -->
+
+# Productos analíticos en gestión financiera
+
+| Producto | Uso principal | Ejemplo |
+|---|---|---|
+| **Reporte reproducible** | análisis periódico | cierre mensual de KPIs |
+| **Dashboard** | consulta e interacción | seguimiento de liquidez y deuda |
+| **Aplicación analítica** | simulación / exploración | sensibilidad de margen o tasa |
+| **Alerta** | atención por excepción | indicador fuera de umbral |
+| **Pipeline automatizado** | actualización sistemática | descarga → cálculo → reporte |
+| **Modelo** | estimación o predicción | beta, riesgo, pronóstico |
+
+----
+
+.center[
+.blue2[**Durante el curso no construiremos solamente análisis: construiremos componentes de productos analíticos.**]
+]
+
+---
+
+class: inverse, center, middle
+background-color: #122140
+
+# 2. Ciclo de vida analítico
+## CRISP-DM como marco de trabajo
+
+---
+
+<!-- DOCENTE: 5 min. Definición formal de CRISP-DM. -->
+
+# CRISP-DM
+
+**CRISP-DM** significa *Cross-Industry Standard Process for Data Mining*.
+
+Propone seis fases:
+
+.center[
+.font110[
+**Business Understanding** → **Data Understanding** → **Data Preparation** → **Modeling** → **Evaluation** → **Deployment**
+]
+]
+
+<br>
+
+No debe interpretarse como una secuencia rígida.
+
+----
+
+> En un proyecto real es normal regresar a fases anteriores cuando aparecen limitaciones de datos, problemas de definición o resultados que no son útiles para la decisión.
+
+.footnote[Shearer (2000). *The CRISP-DM Model: The New Blueprint for Data Mining*.]
+
+---
+
+<!-- DOCENTE: 4 min. Primera fase. -->
+
+# 1. Business Understanding
+
+Antes de abrir una base de datos, el proyecto debe precisar:
+
+- **qué decisión** se quiere apoyar;
+- **quién** utilizará el resultado;
+- cuál es el **horizonte** relevante;
+- cuáles son las **restricciones** del problema;
+- cómo se reconocerá un resultado **útil**.
+
+----
+
+.center[
+.orange[**Una pregunta analítica no empieza por el algoritmo. Empieza por la decisión.**]
+]
+
+---
+
+<!-- DOCENTE: 5 min. Dar estructura formal a una buena pregunta. -->
+
+# Estructura mínima de una pregunta analítica
+
+Una formulación útil suele especificar:
+
+1. **Unidad de análisis:** ¿empresa, activo, cliente, transacción, periodo?
+2. **Variable o fenómeno:** ¿rentabilidad, riesgo, liquidez, incumplimiento?
+3. **Horizonte:** ¿día, mes, trimestre, año?
+4. **Comparación:** ¿contra qué benchmark o referencia?
+5. **Decisión asociada:** ¿qué acción podría cambiar como resultado del análisis?
+
+----
+
+### Ejemplo
+
+> Identificar trimestralmente las unidades de negocio con deterioro conjunto de rentabilidad y liquidez, frente a su propia historia y al resto del grupo, para priorizar revisión del comité financiero.
+
+---
+
+<!-- DOCENTE: 4 min. Mostrar traducción de solicitud ambigua. -->
+
+# De una solicitud gerencial a un problema analítico
+
+.pull-left[
+
+### Solicitud inicial
+
+> “Necesito un análisis de la salud financiera de las unidades.”
+
+Problemas:
+
+- “salud financiera” no está definida;
+- no hay horizonte;
+- no hay unidad de comparación;
+- no se sabe qué decisión se tomará.
+]
+
+.pull-right[
+
+### Formulación analítica
+
+> “Comparar trimestralmente rentabilidad, endeudamiento y liquidez de cada unidad; identificar deterioros persistentes y generar una lista priorizada de unidades para revisión.”
+
+Ahora aparecen:
+
+- métricas,
+- frecuencia,
+- unidad de análisis,
+- criterio de priorización,
+- producto esperado.
+]
+
+---
+
+<!-- DOCENTE: 5 min. Segunda fase. -->
+
+# 2. Data Understanding
+
+Esta fase busca comprender qué información existe y qué representa.
+
+Preguntas básicas:
+
+- ¿cuál es la **fuente**?
+- ¿qué representa **cada fila**?
+- ¿cuál es la **llave**?
+- ¿qué cobertura temporal existe?
+- ¿cuál es la frecuencia?
+- ¿qué unidades y monedas se utilizan?
+- ¿qué valores faltan?
+- ¿qué sesgos de cobertura pueden existir?
+
+----
+
+.center[
+.blue2[**Antes de calcular una métrica, debe estar definida la unidad de análisis.**]
+]
+
+---
+
+<!-- DOCENTE: 4 min. Estructuras de datos financieras. -->
+
+# Estructuras frecuentes en datos financieros
+
+.pull-left[
+
+### Serie de tiempo
+Una entidad observada repetidamente.
+
+- precio de un activo por día;
+- tasa de cambio por fecha;
+- flujo de caja mensual.
+
+### Corte transversal
+Muchas entidades en un mismo momento.
+
+- empresas en 2025;
+- clientes al cierre del mes.
+]
+
+.pull-right[
+
+### Panel
+Muchas entidades a través del tiempo.
+
+- empresa × trimestre;
+- activo × día;
+- país × mes.
+
+### Transaccional
+Eventos individuales.
+
+- pago;
+- compra;
+- operación;
+- movimiento de cuenta.
+]
+
+---
+
+<!-- DOCENTE: 4 min. Concepto de granularidad. -->
+
+# Granularidad, frecuencia y latencia
+
+Son conceptos diferentes.
+
+**Granularidad:** nivel al que está definida cada observación.
+
+**Frecuencia:** cada cuánto se genera una nueva observación.
+
+**Latencia:** cuánto tarda el dato en estar disponible desde que ocurre el hecho.
+
+.panelset[
+.panel[.panel-name[Ejemplo]
+
+Un estado financiero puede tener:
+
+- granularidad: **empresa-trimestre**;
+- frecuencia: **trimestral**;
+- latencia: **30 días después del cierre**.
+]
+.panel[.panel-name[Implicación]
+
+Dos fuentes con la misma fecha visible pueden no representar el mismo momento de información disponible para la decisión.
+]
+]
+
+---
+
+<!-- DOCENTE: 4 min. Tercera fase, sin enseñar todavía comandos. -->
+
+# 3. Data Preparation
+
+La preparación transforma datos disponibles en un **dataset analítico**.
+
+Incluye, entre otras tareas:
+
+- seleccionar registros y variables;
+- integrar fuentes;
+- resolver duplicados;
+- tratar faltantes;
+- armonizar fechas, unidades y monedas;
+- construir variables derivadas;
+- documentar reglas de transformación.
+
+----
+
+.center[
+.orange[**Preparar datos significa definir explícitamente cómo se pasa de la fuente original al objeto que alimenta el análisis.**]
+]
+
+---
+
+<!-- DOCENTE: 4 min. Cuarta fase. Aclarar que modelar no es solo ML. -->
+
+# 4. Modeling
+
+En CRISP-DM, modelar no implica necesariamente utilizar Machine Learning.
+
+En gestión financiera, un modelo puede ser:
+
+- una **métrica** o conjunto de indicadores;
+- una **regla de clasificación**;
+- una regresión;
+- un pronóstico;
+- un modelo de riesgo;
+- una simulación;
+- una optimización.
+
+----
+
+.center[
+.blue2[**La complejidad del método debe ser proporcional a la pregunta, los datos y el uso esperado.**]
+]
+
+---
+
+<!-- DOCENTE: 4 min. Diferenciar KPI, regla, modelo estadístico. -->
+
+# Tres niveles posibles de modelación
+
+.pull-left[
+
+### Métrica
+
+$$ROA = \frac{Utilidad\ neta}{Activos}$$
+
+Resume un aspecto de desempeño.
+
+### Regla
+
+> Alerta si deuda/activos > 0.65.
+
+Convierte una métrica en acción.
+]
+
+.pull-right[
+
+### Modelo estadístico
+
+$$Y = \beta_0 + \beta_1X_1 + \cdots + \beta_kX_k + \varepsilon$$
+
+Permite estimar asociaciones, efectos condicionales o predicciones.
+
+----
+
+**No todo proyecto necesita llegar al tercer nivel.**
+]
+
+---
+
+<!-- DOCENTE: 5 min. Quinta fase. -->
+
+# 5. Evaluation
+
+La evaluación debe responder al menos dos preguntas.
+
+.pull-left[
+
+### ¿El resultado es técnicamente válido?
+
+- consistencia del cálculo;
+- estabilidad;
+- error;
+- supuestos;
+- sensibilidad;
+- validación fuera de muestra, cuando aplique.
+]
+
+.pull-right[
+
+### ¿El resultado es útil para la decisión?
+
+- ¿responde la pregunta?
+- ¿es interpretable?
+- ¿llega a tiempo?
+- ¿cambia una acción?
+- ¿qué costo tiene equivocarse?
+]
+
+----
+
+.center[
+.orange[**Una métrica estadísticamente buena puede ser operacionalmente inútil.**]
+]
+
+---
+
+<!-- DOCENTE: 4 min. Sexta fase. Aquí se conectan dashboards y automatización. -->
+
+# 6. Deployment
+
+Deployment significa convertir el resultado en algo que pueda utilizarse de forma sistemática.
+
+Puede tomar la forma de:
+
+- reporte periódico;
+- dashboard;
+- aplicación analítica;
+- archivo exportado;
+- alerta;
+- proceso de actualización programada;
+- integración con otro sistema.
+
+----
+
+.center[
+.font120[
+**Fuente → Pipeline → Análisis → Producto → Usuario**
+]
+]
+
+---
+
+<!-- DOCENTE: 4 min. Iteración. -->
+
+# CRISP-DM es iterativo
+
+Ejemplos de retroalimentación entre fases:
+
+- El dato no permite medir la variable → volver a **Business Understanding**.
+- La integración produce duplicados → volver a **Data Understanding**.
+- El modelo es inestable → volver a **Data Preparation** o **Modeling**.
+- El usuario no interpreta el resultado → rediseñar **Deployment**.
+- El dashboard llega demasiado tarde → revisar fuente, frecuencia o automatización.
+
+----
+
+.center[
+.blue2[**El proceso termina cuando el resultado puede utilizarse con una lógica clara de actualización y validación.**]
+]
+
+---
+
+<!-- DOCENTE: 4 min. Vista de ingeniería. -->
+
+# El ciclo de vida visto como sistema
+
+.center[
+.font115[
+**Problema financiero**  
+↓  
+**Fuentes de datos**  
+↓  
+**Preparación y validación**  
+↓  
+**Métrica / modelo / escenario**  
+↓  
+**Reporte / dashboard / alerta**  
+↓  
+**Decisión**  
+↓  
+**Monitoreo y actualización**
+]
+]
+
+---
+
+<!-- DOCENTE: 5 min. Introducir tres propiedades del producto analítico. -->
+
+# Tres propiedades del trabajo analítico
+
+.pull-left[
+
+### Reproducibilidad
+Con los mismos datos y código se obtiene el mismo resultado.
+
+### Trazabilidad
+Puede explicarse de dónde salió cada resultado y qué transformaciones recibió.
+]
+
+.pull-right[
+
+### Automatización
+Las tareas repetitivas pueden ejecutarse sin rehacer manualmente el proceso.
+
+<br>
+
+----
+
+> Automatizar antes de validar solo permite producir errores con mayor velocidad.
+]
+
+---
+
+
+class: inverse, center, middle
+background-color: #122140
+
+# 3. ¿Qué es BIG DATA?... 🤔
+
+
+---
+
+
+
+# ¿Qué es BIG DATA?
+
+<br>
+
+### El .orange[BIG DATA] es el análisis masivo de datos. 
+
+
+<br>
+
+
+.right[
+.font140[
+Una cuantía de datos, tan sumamente grande, que las aplicaciones de software de procesamiento de datos que tradicionalmente se venían usando no son capaces de capturar, tratar y poner en valor en un tiempo razonable.
+]
+]
+
+<br>
+
+`r anicon::faa("angle-double-right", animate = "passing", size = 2)` Igualmente, el mismo término se refiere a las .orange[nuevas tecnologías] que hacen posible el **almacenamiento y procesamiento**, además de al uso que se hace de la información obtenida a través de dichas tecnologías.
+
+---
+
+
+
+# .orange[¿De dónde vienen los datos?]
+
+
+.pull-left[
+
+
+<br>
+<br>
+<br>
+<br>
+
+## Producidos por personas
+
+
+]
+
+
+.pull-right[
+
+.center[
+.font140[Mandar un email, escribir un comentario en Facebook, contestar a una encuesta telefónica, meter información en una hoja de cálculo, responder a un WhatsApp, coger los datos de contacto de un cliente, hacer clic en un enlace de Internet...
+]
+
+### Infinidad de acciones que realizamos en el día a día suponen una fuente de datos inmensa.
+
+]
+
+]
+
+
+---
+
+
+
+
+# .orange[¿De dónde vienen los datos?]
+
+
+.pull-left[
+
+
+<br>
+<br>
+<br>
+<br>
+
+## Entre máquinas
+
+
+]
+
+
+.pull-right[
+
+.center[
+.font140[Los termómetros, parquímetros y sistemas de riego automático de las ciudades, los GPS de vehículos y teléfonos móviles, las máquinas expendedoras de bebidas y alimentos en un hospital, o los contadores de electricidad de las viviendas, etc.. 
+]
+
+### Se comunican a través de dispositivos con otros aparatos, a los que transmiten los datos que van recogiendo...
+
+]
+
+]
+
+---
+
+
+
+
+
+# .orange[¿De dónde vienen los datos?]
+
+
+.pull-left[
+
+
+<br>
+<br>
+<br>
+<br>
+
+## Biométricas
+
+
+]
+
+
+.pull-right[
+
+.center[
+.font140[Los datos que tienen como origen artefactos como sensores de huellas dactilares, escáneres de retina, lectores de ADN, sensores de reconocimiento facial o reconocimiento de voz... 
+]
+
+### Su uso es muy extendido en materia de seguridad en todas sus variantes...
+
+]
+
+]
+
+---
+
+
+
+
+# .orange[¿De dónde vienen los datos?]
+
+
+.pull-left[
+
+
+<br>
+<br>
+<br>
+<br>
+
+## Marketing Web
+
+
+]
+
+
+.pull-right[
+
+.center[
+.font140[Nuestros movimientos en la Red están sujetos a todo tipo de mediciones que tienen como objeto estudios de marketing y análisis de comportamiento.... 
+]
+
+### Con esos datos se llega a conclusiones tales como qué partes de una página atraen más al usuario, dónde hace clic o en qué zona de esta pasa más tiempo...
+
+]
+
+]
+
+---
+
+
+
+# .orange[¿De dónde vienen los datos?]
+
+
+.pull-left[
+
+
+<br>
+<br>
+<br>
+<br>
+
+## Transacciones de datos
+
+
+]
+
+
+.pull-right[
+
+<br>
+<br>
+
+.center[
+.font140[El traspaso de dinero de una cuenta bancaria a otra, la reserva de un billete de avión o añadir un artículo a un carrito de compra virtual de un portal de comercio electrónico, serían algunos ejemplos... 
+]
+
+]
+
+]
+
+---
+
+
+class: middle, center
+
+
+
+# .purple[Para que te hagas una idea...]
+
+<br>
+
+## .orange[...y centrándonos únicamente en una pequeñísima porción de los datos producidos por las personas, en el año 2017, durante un solo minuto, de promedio y a nivel global]
+
+<br>
+
+.gray[Se enviaron 156 millones de correos electrónicos, se realizaron 3 millones y medio de búsquedas en Google, se mandaron 16 millones de SMS, se postearon 46.200 nuevos contenidos en Instagram, se generaron 452.000 tuits y se publicaron 1,8 millones de snaps en Snapchat.]
+
+
+---
+
+
+
+# Tipos de datos según su estructura
+
+
+## Datos estructurados
+
+
+.pull-left[
+
+]
+
+.pull-right[
+
+.center[
+### - Son los que tradicionalmente se han usado en el tratamiento de datos.
+
+### - Se pueden almacenar en tablas y tienen una clara defición de longitud y formato.
+
+### - Entre ellos, se encuentran los números, cadenas de caracteres y las fechas.
+]
+
+
+]
+
+
+---
+
+
+
+# Tipos de datos según su estructura
+
+
+## Datos no estructurados
+
+
+.pull-left[
+
+]
+
+.pull-right[
+
+.center[
+### - Son datos en su forma original, tal y como fueron recogidos.
+
+### - No poseen un formato específico que permita almacenarlos de forma tradicional.
+
+### - Entre ellos, se encuentran los emails, documentos de texto, audio, etc.
+]
+
+
+]
+
+---
+
+
+
+# Tipos de datos según su estructura
+
+
+## Datos semi estructurados
+
+
+.pull-left[
+
+]
+
+.pull-right[
+
+.center[
+### - Siguen una especie de estructura, pero esta no es lo suficientemente regular.
+
+### - Posee ciertos patrones comunes que los describen.
+
+### - Entre ellos, se encuentran el lenguaje HTML, lenguaje XML, formato JSON, etc.
+]
+
+
+]
+
+---
+
+
+.pull-left-narrow[
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+
+.center[
+# 7 V 
+# del BIG DATA
+]
+
+]
+
+.pull-right-wide[
+
+<br>
+
+.font110[.left[ 
+
+> - .purple[.font140[V]]ELOCIDAD
+
+<hr>
+
+> - .purple[.font140[V]]OLUMEN
+
+<hr>
+
+> - .purple[.font140[V]]ARIEDAD
+
+<hr>
+
+> - .purple[.font140[V]]ERACIDAD
+
+<hr>
+
+> - .purple[.font140[V]]ALOR
+
+<hr>
+
+> - .purple[.font140[V]]ISUALIZACIÓN
+
+<hr>
+
+> - .purple[.font140[V]]ARIABILIDAD
+
+]
+]
+]
+
+
+
+---
+
+
+# Velocidad
+
+
+.pull-left[
+
+<br>
+
+Nuestro concepto de inmediatez ha cambiado en los últimos tiempos y se busca información que llegue prácticamente al instante.
+
+<br>
+
+----
+
+`Así, la velocidad de análisis requerida por la sociedad actual es una de las características fundamentales que tienen los datos a gran escala, donde los datos en constante movimiento procesados a tiempo real cobran protagonismo, ejecutando algoritmos cada vez más complejos en menos tiempo.`
+
+----
+
+
+]
+
+
+.pull-right[
+
+<img src="https://media.giphy.com/media/xUOxeZUc8UFwMgH2MM/giphy.gif" width="90%"/>
+
+]
+
+
+
+---
+
+# Volumen
+
+
+.pull-left[
+
+<br>
+
+La cantidad de datos generados está aumentando.
+
+<br>
+
+----
+
+`Según crecen las bases de datos, también lo han de hacer las aplicaciones y arquitectura construida para soportar la recogida y almacenamiento de datos cada vez más variados.`
+
+`Además, se han reducido los costes de almacenamiento propiciando almacenar grandes cuantías de información a un precio mucho más reducido que antiguamente.`
+
+----
+
+
+]
+
+
+.pull-right[
+
+<img src="https://media.giphy.com/media/ftAyb0CG1FNAIZt4SO/giphy.gif" width="90%"/>
+
+]
+
+
+
+---
+
+
+# Variedad
+
+
+.pull-left[
+
+<br>
+
+Los datos sobre los que trabajan las técnicas de macrodatos son diversos pues, como hemos visto, proceden de numerosas fuentes y se encuentran en distintos formatos.
+
+<br>
+
+----
+
+`Además, continúa en aumento la cuantía de datos no estructurados en proporción a los tradicionales.`
+
+`Igual que pasaba con el volumen, esta entrada en escena con fuerza de los datos no estructurados requiere nuevos tratamientos de la información, necesitando de nuevas metodologías y tecnologías para poder ser analizadas.`
+
+----
+
+
+]
+
+
+.pull-right[
+
+<img src="https://media.giphy.com/media/3NeSk2IVEd2FYUQEcM/giphy.gif" width="90%"/>
+
+]
+
+
+
+---
+
+
+# Veracidad
+
+
+.pull-left[
+
+<br>
+
+Saber la fiabilidad de la información recogida es importante para obtener unos datos de calidad.
+
+<br>
+
+----
+
+`Incluso, dependiendo de las aplicaciones que se le vaya a dar a la información, la veracidad se convierte en fundamental. Es un factor que puede influir mucho en conseguir una ventaja competitiva en la explotación del Big Data.`
+
+----
+
+
+]
+
+
+.pull-right[
+
+<img src="https://media.giphy.com/media/dXFKDUolyLLi8gq6Cl/giphy.gif" width="90%"/>
+
+]
+
+---
+
+
+# Valor
+
+
+.pull-left[
+
+<br>
+
+Una gran cuantía de datos frecuentemente extrae pequeñas informaciones de valor.
+
+<br>
+
+----
+
+`Cómo conseguir dicha información de manera eficiente es uno de los retos que afronta día a día el área de la inteligencia de datos. El valor es sin duda una cualidad fundamental en el análisis.`
+
+----
+
+
+]
+
+
+.pull-right[
+
+<img src="https://media.giphy.com/media/zyYqgdql12FRC/giphy.gif" width="90%"/>
+
+]
+
+
+---
+
+# Visualización
+
+
+.pull-left[
+
+<br>
+
+Una imagen vale más que mil palabras.
+
+<br>
+
+----
+
+`Convertir cientos de hojas de información en un único gráfico que muestre claramente unas conclusiones predictivas es un ejemplo de cómo mostrar los resultados de forma clara y sencilla en un evidente ejercicio de sintetización.`
+
+----
+
+
+]
+
+
+.pull-right[
+
+<img src="https://media.giphy.com/media/d31vTpVi1LAcDvdm/giphy.gif" width="90%"/>
+
+]
+
+
+---
+
+
+# Variabilidad
+
+
+.pull-left[
+
+<br>
+
+en un entorno tan cambiante como el de los macrodatos, la información varía mucho.
+
+<br>
+
+----
+
+`Y también han de hacerlo los modelos o tratamientos que se aplican en torno a esta, pues no son fijos en el tiempo y requieren de un control periódico.`
+
+----
+
+
+]
+
+
+.pull-right[
+
+<br>
+<br>
+
+<img src="https://media.giphy.com/media/Rubq2zDiRjHSxv7CHX/giphy.gif" width="90%"/>
+
+]
+
+
+
+
+
+
+---
+
+class: center, middle
+
+
+
+# El ciclo de gestión de información en 4 fases
+
+# 👨‍💻
+--
+
+<br>
+
+### .orange[Conoces ya de dónde vienen los datos, los tipos de ellos que existen y sus características principales. Lo siguiente es cómo gestionarlos]
+
+
+
+---
+
+
+# 1️⃣ Captura de información
+
+
+<br>
+<br>
+<br>
+<br>
+
+.center[
+## ¿Dónde está la información que necesitamos y cómo podemos capturarla?
+
+## 🔍
+]
+
+
+
+
+---
+
+
+
+# 1️⃣ Captura de información
+
+
+<br>
+
+.center[
+.font140[Cómo hemos comentado... .brand-red[**HAY INFORMACIÓN POR TODAS PARTES.**]]
+]
+
+<br>
+
+### Para capturarla, existen varios métodos como:
+
+> - .orange[*Web Scraping:*] Una técnica que mediante programas de software extrae información de sitios web.
+
+> - .orange[*API's:*] La gestión de información a través de diversar API creadas, permite la comunicación entre diversos componentes de software.
+
+> - .orange[*Apache Flume:*] Específicamente diseñado para recopilar y agregar grandes volúmenes de datos.
+
+> - .orange[*...*]
+
+
+
+---
+
+
+# 2️⃣ Almacenamiento
+
+
+<br>
+<br>
+<br>
+<br>
+
+.center[
+## Capturados los datos necesitarás guardarlos!!!
+
+## 💾
+]
+
+
+
+
+---
+
+
+# 2️⃣ Almacenamiento
+
+
+<br>
+
+.center[
+.font140[Depende de su uso futuro... .brand-red[**Y EL TIPO DE INFORMACIÓN QUE SE TRATE.**]]
+]
+
+<br>
+
+### Se pueden guardar en:
+
+> - .orange[*Hojas de cálculo:*] Para el manejo de información estructurada tradicional.
+
+> - .orange[*NoSQL:*] Permite almacenamiento de información no estructurada de forma mucho más flexible y rápida.
+
+> - .orange[*Hadoop:*] Entornos de trabajo como Hadoop, ayudarán a ejecutar aplicaciones necesarias para trabajar con macrodatos.
+
+> - .orange[*...*]
+
+
+---
+
+
+# 3️⃣ Tratamiento
+
+
+<br>
+<br>
+<br>
+<br>
+
+.center[
+## Capturados y almacenados los datos, ¿ahora cómo los tratamos?
+
+## 🔨
+]
+
+
+
+
+---
+
+
+# 3️⃣ Tratamiento
+
+
+<br>
+
+
+### Se puede extraer conocimiento y buscar patrones repetitivos de esos datos a través de **la estadística** y **el machine learning** (desarrollo de tpecnicas que tienen como objetivo que las máquinas generalicen su comportamiento con base a datos de entrenamiento):
+
+> - .orange[*Apache Spark:*] Es un motor unificado de analíticas para procesar datos a gran escala que integra módulos para SQL, streaming, aprendizaje automático y procesamiento de grafos.
+
+> - .orange[*Python:*] Construir aplicaciones web, analizar datos, automatizar operaciones y crear aplicaciones empresariales.
+
+> - .orange[*R:*] es un entorno de software libre y lenguaje de programación interpretado, es decir, ejecuta las instrucciones directamente, sin una previa compilación del programa a instrucciones en lenguaje máquina.
+
+> - .orange[*...*]
+
+
+
+
+---
+
+# 4️⃣ Puesta en valor
+
+
+<br>
+<br>
+<br>
+<br>
+
+.center[
+## Capturados los datos necesitarás guardarlos!!!
+
+## 💰
+]
+
+
+
+
+---
+
+
+
+# 4️⃣ Puesta en valor
+
+
+<br>
+
+.center[
+.font140[Los datos en sí mismos... .brand-red[**NO GARANTIZAN CONOCIMIENTO.**]]
+]
+
+<br>
+
+### Sin un análisis y un tratamiento adecuado, los datos no sirven para nada. Así el valor estará, no en los propios datos, sino en la relación de estos entre sí.
+
+> - .orange[*Patrones o tendencias*]
+
+> - .orange[*Estimaciones, Correlaciones, Predicciones, ...*]
+
+> - .orange[*Tablas y visualizaciones*]
+
+> - .orange[*...*]
+
+
+
+
+---
+
+class: inverse, center, middle
+background-color: #122140
+
+
+# Casos prácticos de aplicación
+
+# y éxito empresarial
+
+
+---
+
+
+# Amazon
+
+.pull-left-narrow[
+
+<br>
+<br>
+
+<img src="https://media.giphy.com/media/zWyv9xtsEfXQQ/giphy.gif" width="90%"/>
+
+
+]
+
+
+.pull-right-wide[
+
+La compañía de referencia a nivel mundial, en lo que a comercio electrónico se refiere, basa buena parte de su éxito en conocer de antemano lo que necesitan sus clientes. Así, es muy probable que si entras en la página de esta empresa, te sugiera artículos que van a ser de gran interés para ti. 
+
+<br>
+
+¿Cómo? A través de la inteligencia de datos analizan muchos factores de carácter individual del usuario como sus hábitos de compra o intereses y otros más generales como tendencias del momento o pautas de conducta de otros usuarios que adquirieron productos similares.
+
+<br>
+
+Juntan todo en la coctelera del Big Data y ofrecen una serie de productos sugeridos o relacionados con compras que el cliente ya ha hecho o se ha planteado hacer.
+
+]
+
+
+---
+
+
+# Netflix
+
+.pull-left-narrow[
+
+<br>
+<br>
+
+<img src="https://media.giphy.com/media/JnvHE3lTHPr3WrSsrl/giphy.gif" width="90%"/>
+
+
+]
+
+
+.pull-right-wide[
+
+Uno de los grandes factores del éxito de la popular empresa estadounidense Netflix, es su magistral uso de los macrodatos para crear nuevos contenidos para sus usuarios, cuyos hábitos de consumo y preferencias son observados al detalle para descubrir qué es lo que van a querer ver a continuación con base a patrones predictivos. 
+
+<br>
+
+Así crearon, por ejemplo, la serie House of Cards: observaron que a muchos de sus usuarios les gustaban contenidos que incluyeran poder, política, drama y sensualidad entre sus características principales. Y también que les gustaba como actor Kevin Spacey. 
+
+<br>
+
+Así, dieron con la fórmula y mezclaron en la trama todos estos ingredientes poniendo a protagonizar a Spacey la misma. Igual proceso para Stranger Things y otros grandes éxitos de audiencia.
+
+
+]
+
+
+---
+
+
+
+# T-Mobile
+
+.pull-left-narrow[
+
+<br>
+<br>
+
+<img src="https://media.giphy.com/media/mGKIeZ9y4A2ZvMFFCQ/giphy.gif" width="90%"/>
+
+
+]
+
+
+.pull-right-wide[
+
+Esta empresa de telecomunicaciones alemana es un ejemplo de uso de los datos masivos como mejor arma de retención de clientes. 
+
+<br>
+
+Analizando a fondo las conversaciones, reclamaciones y descontentos que sus clientes dejaban en redes sociales, crearon soluciones específicas para cada uno de ellos y consiguieron reducir la fuga de clientes a otras empresas en un 50%, con lo que el retorno de la inversión realizada en Big Data fue compensado con creces.
+
+
+]
+
+
+---
+
+
+# Spotify
+
+.pull-left-narrow[
+
+<br>
+<br>
+
+<img src="https://media.giphy.com/media/l4FGB9Cs55wbvM75u/giphy.gif" width="90%"/>
+
+
+]
+
+
+.pull-right-wide[
+
+Bajar hasta los datos individualizados más llamativos para lanzar con ellos una campaña global masiva. Eso hizo en Reino Unido la compañía sueca Spotify, que ofrece reproducción de música vía streaming. Su plan consistió en buscar la complicidad del gran público. Y lo consiguieron mostrando curiosidades o rarezas del comportamiento de algunos de sus usuarios que habían detectado a través de los macrodatos. Así, en grandes carteles publicitarios, colocaron anuncios como estos:
+
+- `Querida persona que reprodujo “Sorry” 42 veces en el Día de San Valentín, ¿qué hiciste?`
+
+- `Queridas 3.749 personas que reprodujeron “It’s the end of the world as we know it” el día del Brexit, estamos con vosotros`
+
+- `Querida persona en el Theater District que escuchó la banda sonora de Hamilton 5.376 veces este año, ¿puedes conseguirnos tickets?`
+
+
+]
+
+
+---
+
+
+# Nike
+
+.pull-left-narrow[
+
+<br>
+<br>
+
+<img src="https://media.giphy.com/media/3o6Zt4F6t6Sm1cmcus/giphy.gif" width="90%"/>
+
+
+]
+
+
+.pull-right-wide[
+
+Los dispositivos electrónicos de su línea NikePlus (relojes inteligentes, pulsómetros, dispositivos con sensores que conectan sus zapatillas con un teléfono...) recogen cantidades masivas de información de millones de usuarios. 
+
+<br>
+
+Información que sirve a la empresa de ropa deportiva estadounidense para buscar la fidelización de los usuarios a través de retos y objetivos que apelan a la capacidad de superación de estos, creando un vínculo con la marca más allá de la simple venta de material deportivo. 
+
+
+]
+
+
+
+
+
+---
+
+class: inverse, center, middle
+background-color: #122140
+
+# 3. Entorno computacional
+## R, Python e Inteligencia Artificial
+
+---
+
+<!-- DOCENTE: 4 min. Explicar estrategia tecnológica del curso. -->
+
+# R y Python en el curso
+
+La lógica analítica será común.
+
+.pull-left[
+
+## R
+
+Especialmente útil para:
+
+- estadística y econometría;
+- análisis reproducible;
+- visualización;
+- reportes con Quarto/R Markdown;
+- aplicaciones con Shiny;
+- flujos de análisis financiero.
+]
+
+.pull-right[
+
+## Python
+
+Especialmente útil para:
+
+- manipulación general de datos;
+- integración con APIs;
+- automatización;
+- aplicaciones analíticas;
+- Machine Learning;
+- integración con sistemas.
+]
+
+----
+
+.center[
+.orange[**No se evaluará la memorización de sintaxis. Se evaluará la lógica del procedimiento y la validez del resultado.**]
+]
+
+---
+
+<!-- DOCENTE: 4 min. Ecosistema paralelo. -->
+
+# Ecosistema equivalente
+
+| Necesidad | R | Python |
+|---|---|---|
+| Datos tabulares | `dplyr`, `tidyr`, `data.table` | `pandas`, `polars` |
+| Visualización | `ggplot2`, `plotly` | `matplotlib`, `plotly` |
+| Reportes | R Markdown, Quarto | Jupyter, Quarto |
+| Aplicaciones | Shiny | Streamlit, Dash |
+| HTTP / APIs | `httr2` | `requests`, `httpx` |
+| Modelación | `stats`, `tidymodels` | `statsmodels`, `scikit-learn` |
+| Automatización | scripts, `targets`, scheduler | scripts, workflows, scheduler |
+
+----
+
+.center[
+.blue2[**La elección tecnológica es parte del diseño del producto, no el objetivo final del análisis.**]
+]
+
+---
+
+<!-- DOCENTE: 5 min. Primer ejemplo de código paralelo. -->
+
+# Misma operación: cargar e inspeccionar datos
+
+.pull-left[
+
+### R
+
+```r
+library(tidyverse)
+
+datos <- read_csv(
+  "datos/caso_salud_financiera.csv"
+)
+
+glimpse(datos)
+summary(datos)
+```
+
+]
+
+.pull-right[
+
+### Python
+
+```python
+import pandas as pd
+
+datos = pd.read_csv(
+    "datos/caso_salud_financiera.csv"
+)
+
+datos.info()
+datos.describe()
+```
+
+]
+
+----
+
+.center[
+**La operación analítica es la misma: cargar → reconocer estructura → revisar contenido.**
+]
+
+---
+
+<!-- DOCENTE: 5 min. Segundo ejemplo paralelo. -->
+
+# Misma operación: construir métricas
+
+.pull-left[
+
+### R
+
+```r
+metricas <- datos |>
+  mutate(
+    margen_ebitda = ebitda_mill / ingresos_mill,
+    roa = utilidad_neta_mill / activos_mill,
+    deuda_activos = deuda_mill / activos_mill
+  )
+```
+
+]
+
+.pull-right[
+
+### Python
+
+```python
+metricas = datos.assign(
+    margen_ebitda=
+        datos["ebitda_mill"] / datos["ingresos_mill"],
+    roa=
+        datos["utilidad_neta_mill"] / datos["activos_mill"],
+    deuda_activos=
+        datos["deuda_mill"] / datos["activos_mill"],
+)
+```
+
+]
+
+----
+
+.center[
+.orange[**El punto central no es la función utilizada: es la definición financiera de la métrica y la validez del denominador.**]
+]
+
+---
+
+<!-- DOCENTE: 4 min. Tercer ejemplo paralelo. -->
+
+# Misma operación: resumir por grupo
+
+.pull-left[
+
+### R
+
+```r
+resumen <- metricas |>
+  group_by(sector) |>
+  summarise(
+    roa_mediano = median(roa, na.rm = TRUE),
+    deuda_mediana = median(deuda_activos, na.rm = TRUE)
+  )
+```
+
+]
+
+.pull-right[
+
+### Python
+
+```python
+resumen = (
+    metricas
+    .groupby("sector")
+    .agg(
+        roa_mediano=("roa", "median"),
+        deuda_mediana=("deuda_activos", "median")
+    )
+)
+```
+
+]
+
+----
+
+> Agrupar tiene sentido solamente si el grupo es comparable y la métrica conserva interpretación.
+
+---
+
+<!-- DOCENTE: 5 min. IA: capacidad y responsabilidad. -->
+
+# IA como asistente de desarrollo
+
+La IA puede utilizarse para:
+
+- proponer código;
+- traducir R ↔ Python;
+- detectar errores de sintaxis;
+- documentar funciones;
+- generar una estructura inicial de dashboard;
+- construir pruebas o validaciones;
+- explicar código existente.
+
+Pero el usuario sigue siendo responsable de:
+
+- definición de la pregunta;
+- interpretación de las variables;
+- validez de las fórmulas;
+- supuestos;
+- consistencia de la muestra;
+- verificación del resultado.
+
+---
+
+<!-- DOCENTE: 3 min. Regla de curso. -->
+
+# Regla de trabajo con IA
+
+.panelset[
+.panel[.panel-name[Se permite]
+
+Usar IA para construir, completar, depurar o traducir código.
+]
+.panel[.panel-name[Se exige]
+
+Poder explicar qué hace el procedimiento y verificar que el resultado corresponde al problema.
+]
+.panel[.panel-name[No es suficiente]
+
+“Lo generó ChatGPT / Copilot / otra herramienta” no constituye validación metodológica.
+]
+]
+
+----
+
+.center[
+.blue2[**La unidad de evaluación es el análisis defendible, no la autoría manual de cada línea de código.**]
+]
+
+---
+
+class: inverse, center, middle
+background-color: #122140
+
+# 4. Mini-caso integrador
+## Salud financiera de unidades de negocio
+
+---
+
+<!-- DOCENTE: 4 min. Presentar el caso que luego usarán los grupos. -->
+
+# Contexto del caso
+
+Un grupo empresarial quiere implementar un seguimiento trimestral de sus unidades de negocio.
+
+El comité financiero solicita:
+
+> “Identificar oportunamente unidades con deterioro de rentabilidad, presión de endeudamiento o problemas de liquidez, para priorizar revisión y definir acciones.”
+
+Se dispone de información trimestral de:
+
+- ingresos;
+- EBITDA;
+- utilidad neta;
+- activos y patrimonio;
+- deuda y caja;
+- activos y pasivos corrientes.
+
+----
+
+**Los datos del ejercicio son sintéticos y fueron preparados con fines docentes.**
+
+---
+
+<!-- DOCENTE: 4 min. Traducir caso a Business Understanding. -->
+
+# Business Understanding del caso
+
+.panelset[
+.panel[.panel-name[Decisión]
+
+Priorizar unidades que requieren revisión del comité financiero.
+]
+.panel[.panel-name[Unidad de análisis]
+
+**Unidad de negocio × trimestre.**
+]
+.panel[.panel-name[Horizonte]
+
+Seguimiento trimestral con comparación histórica y transversal.
+]
+.panel[.panel-name[Producto esperado]
+
+Dashboard de seguimiento + lista de alertas + actualización periódica.
+]
+]
+
+---
+
+<!-- DOCENTE: 4 min. Mostrar diccionario resumido. -->
+
+# Variables disponibles
+
+| Dimensión | Variables principales |
+|---|---|
+| Identificación | `unidad`, `sector`, `periodo`, `moneda` |
+| Operación | `ingresos_mill`, `ebitda_mill`, `utilidad_neta_mill` |
+| Estructura financiera | `activos_mill`, `patrimonio_mill`, `deuda_mill`, `caja_mill` |
+| Liquidez | `activo_corriente_mill`, `pasivo_corriente_mill` |
+
+----
+
+.center[
+.orange[**Antes de comparar niveles monetarios debe verificarse la moneda. Los ratios pueden conservar comparabilidad bajo ciertas condiciones, pero también requieren validar denominadores.**]
+]
+
+---
+
+<!-- DOCENTE: 3 min. Tabla real del archivo. -->
+
+# Vista del dataset
+
+```{r vista-dataset, echo=FALSE}
+datos_caso <- readr::read_csv("datos/caso_salud_financiera.csv", show_col_types = FALSE)
+knitr::kable(
+  datos_caso |>
+    select(unidad, sector, periodo, moneda, ingresos_mill, ebitda_mill, utilidad_neta_mill, deuda_mill) |>
+    slice_head(n = 7),
+  digits = 1,
+  align = "llllrrrr"
+)
+```
+
+----
+
+**Primera pregunta técnica:** ¿qué debería ser único en esta base?
+
+---
+
+<!-- DOCENTE: 5 min. Mostrar código paralelo de diagnóstico mínimo. -->
+
+# Diagnóstico inicial de la estructura
+
+.pull-left[
+
+### R
+
+```r
+datos |>
+  summarise(
+    filas = n(),
+    unidades = n_distinct(unidad),
+    periodos = n_distinct(periodo)
+  )
+
+datos |>
+  count(unidad, periodo) |>
+  filter(n > 1)
+```
+
+]
+
+.pull-right[
+
+### Python
+
+```python
+print({
+    "filas": len(datos),
+    "unidades": datos["unidad"].nunique(),
+    "periodos": datos["periodo"].nunique()
+})
+
+(datos.groupby(["unidad", "periodo"])
+      .size()
+      .reset_index(name="n")
+      .query("n > 1"))
+```
+
+]
+
+---
+
+<!-- DOCENTE: 4 min. Definición de KPIs. -->
+
+# Métricas iniciales
+
+Podríamos comenzar con:
+
+$$Margen\ EBITDA = \frac{EBITDA}{Ingresos}$$
+
+$$ROA = \frac{Utilidad\ neta}{Activos}$$
+
+$$Deuda/Activos = \frac{Deuda}{Activos}$$
+
+$$Razón\ corriente = \frac{Activo\ corriente}{Pasivo\ corriente}$$
+
+----
+
+.center[
+.blue2[**Estas fórmulas son sencillas; la dificultad analítica está en comprobar que numerador y denominador son comparables, válidos y corresponden al periodo correcto.**]
+]
+
+---
+
+<!-- DOCENTE: 5 min. Mostrar resultado descriptivo precomputado en R para que vean el producto del flujo. -->
+
+# Una primera salida analítica
+
+```{r mini-plot, echo=FALSE, fig.width=10, fig.height=5.2, out.width="90%", fig.align="center"}
+metricas_demo <- datos_caso |>
+  distinct(unidad, periodo, .keep_all = TRUE) |>
+  mutate(
+    margen_ebitda = ebitda_mill / ingresos_mill,
+    roa = utilidad_neta_mill / activos_mill,
+    deuda_activos = deuda_mill / activos_mill,
+    razon_corriente = activo_corriente_mill / pasivo_corriente_mill
+  ) |>
+  filter(unidad %in% c("U03", "U06", "U08"))
+
+ggplot(metricas_demo, aes(x = periodo, y = deuda_activos, group = unidad, linetype = unidad)) +
+  geom_line(linewidth = 0.9) +
+  geom_point(size = 1.8) +
+  labs(
+    x = "Periodo",
+    y = "Deuda / Activos",
+    title = "Evolución del endeudamiento en tres unidades"
+  ) +
+  scale_y_continuous(labels = percent_format(accuracy = 1)) +
+  theme_minimal(base_size = 14) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position = "bottom")
+```
+
+---
+
+<!-- DOCENTE: 3 min. Conectar el análisis a producto y automatización. -->
+
+# Del análisis al producto
+
+El resultado anterior todavía no es un producto completo.
+
+Un sistema operativo podría requerir:
+
+1. **actualizar** los datos cuando cierre un trimestre;
+2. **validar** llaves, faltantes y unidades;
+3. **recalcular** métricas;
+4. **actualizar** el dashboard;
+5. **evaluar** reglas de alerta;
+6. **emitir** un reporte o notificación;
+7. **guardar** evidencia de la ejecución.
+
+----
+
+.center[
+.font120[
+**Actualizar → Validar → Calcular → Visualizar → Alertar → Documentar**
+]
+]
+
+---
+
+<!-- DOCENTE: 3 min. Cerrar la parte teórica mostrando las seis fases en el caso. -->
+
+# ¿Dónde estuvo CRISP-DM en el mini-caso?
+
+| Fase | En el caso |
+|---|---|
+| Business Understanding | priorizar unidades para revisión |
+| Data Understanding | panel unidad-trimestre, moneda, cobertura |
+| Data Preparation | validar llave, NA, comparabilidad y construir ratios |
+| Modeling | KPIs + reglas de alerta |
+| Evaluation | comprobar estabilidad, consistencia y utilidad de las alertas |
+| Deployment | dashboard + actualización + alerta + registro |
+
+----
+
+.center[
+.orange[**CRISP-DM no reemplaza la técnica. Organiza cuándo y para qué se utiliza cada técnica.**]
+]
+
+---
+
+class: inverse, center, middle
+background-color: #122140
+
+# Práctica de clase
+## Diseño de un flujo analítico financiero
+
+---
+
+<!-- DOCENTE: Explicación 5 min. Luego abrir salas. -->
+
+# Organización de la práctica
+
+**Duración total:** 90 minutos.
+
+**Organización sugerida:** 10 grupos de 5 estudiantes.
+
+Cada grupo puede distribuir cinco funciones:
+
+- coordinación del caso;
+- revisión de datos;
+- implementación/código;
+- auditoría de resultados;
+- relatoría.
+
+----
+
+### Archivos disponibles
+
+- `datos/caso_salud_financiera.csv`
+- `datos/diccionario_caso.csv`
+- `codigo/inicio_R.R`
+- `codigo/inicio_python.py`
+- `taller/plantilla_entrega.md`
+
+---
+
+# Caso de trabajo
+
+El comité financiero quiere un producto que permita:
+
+1. comparar el desempeño de las unidades;
+2. identificar deterioros;
+3. priorizar revisión;
+4. actualizar el análisis cada trimestre;
+5. producir una salida que pueda consultar la gerencia.
+
+----
+
+### Restricción
+
+No se les pide construir hoy el dashboard completo ni automatizarlo.
+
+Se les pide **diseñar correctamente el flujo y producir evidencia analítica inicial**.
+
+---
+
+<!-- DOCENTE: 15 min. -->
+
+# Etapa 1 — Business Understanding
+## 15 minutos
+
+El grupo debe definir:
+
+1. **Decisión:** ¿qué debe poder decidir el comité?
+2. **Pregunta analítica:** una sola pregunta principal.
+3. **Unidad de análisis:** qué representa una observación.
+4. **Horizonte:** cómo se usará el seguimiento trimestral.
+5. **Criterio de éxito:** qué debería permitir hacer el producto final.
+
+----
+
+### Entrega parcial
+
+Un párrafo de máximo **100 palabras** con los cinco elementos.
+
+---
+
+<!-- DOCENTE: 15 min. -->
+
+# Etapa 2 — Data Understanding
+## 15 minutos
+
+Utilicen R, Python y/o IA para revisar la base.
+
+Deben reportar:
+
+- número de filas;
+- número de unidades;
+- número de periodos;
+- llave propuesta;
+- monedas presentes;
+- faltantes por variable;
+- llaves duplicadas;
+- al menos **tres riesgos de interpretación o calidad**.
+
+----
+
+.center[
+.orange[**En esta etapa no es necesario corregir todo. Primero deben reconocer qué decisiones de preparación serán necesarias.**]
+]
+
+---
+
+<!-- DOCENTE: 25 min. -->
+
+# Etapa 3 — Evidencia analítica inicial
+## 25 minutos
+
+Construyan al menos cuatro métricas:
+
+- margen EBITDA;
+- ROA;
+- deuda / activos;
+- razón corriente.
+
+Después produzcan:
+
+1. **una tabla** que permita comparar unidades;
+2. **una visualización** que muestre un patrón relevante;
+3. **dos hallazgos verificables**.
+
+----
+
+### Condición
+
+No basta con generar la salida. El grupo debe explicar por qué la comparación es válida o qué limitación impide interpretarla directamente.
+
+---
+
+<!-- DOCENTE: 20 min. -->
+
+# Etapa 4 — Diseño del producto y automatización
+## 20 minutos
+
+Diseñen el producto final que debería existir al terminar un proyecto real.
+
+Definan:
+
+- **4 KPIs** que aparecerían en la vista principal;
+- **2 filtros o controles**;
+- **2 visualizaciones**;
+- **1 regla de alerta**;
+- frecuencia de actualización;
+- pasos del flujo que deberían automatizarse.
+
+----
+
+### No programen todavía el dashboard
+
+El objetivo es especificar **qué debe hacer** antes de decidir **cómo programarlo**.
+
+---
+
+<!-- DOCENTE: 10 min. -->
+
+# Etapa 5 — Validación del trabajo con IA
+## 10 minutos
+
+Si utilizaron IA para generar código o resultados, documenten al menos tres verificaciones.
+
+Ejemplos:
+
+- comprobar que la llave utilizada es la correcta;
+- reproducir manualmente una métrica para una fila;
+- comparar el número de observaciones antes y después de una transformación;
+- revisar tratamiento de `NA`;
+- verificar denominadores;
+- comprobar que una agregación no mezcla monedas.
+
+----
+
+.center[
+.blue2[**Validar significa buscar evidencia independiente de que el procedimiento hace lo que se afirma que hace.**]
+]
+
+---
+
+<!-- DOCENTE: 5 min para preparar y luego retornar. -->
+
+# Entrega del grupo
+
+Completen `taller/plantilla_entrega.md` o utilicen una diapositiva equivalente.
+
+La entrega debe contener:
+
+1. pregunta analítica;
+2. unidad de análisis y llave;
+3. tres riesgos identificados en los datos;
+4. tabla + visualización;
+5. dos hallazgos;
+6. especificación del producto final;
+7. regla de alerta;
+8. pasos a automatizar;
+9. tres verificaciones sobre el uso de IA/código;
+10. una limitación.
+
+---
+
+# Código inicial — R
+
+```r
+library(tidyverse)
+
+datos <- read_csv(
+  "datos/caso_salud_financiera.csv",
+  show_col_types = FALSE
+)
+
+glimpse(datos)
+
+datos |>
+  count(unidad, periodo) |>
+  filter(n > 1)
+```
+
+----
+
+El archivo completo está en `codigo/inicio_R.R`.
+
+---
+
+# Código inicial — Python
+
+```python
+import pandas as pd
+
+datos = pd.read_csv(
+    "datos/caso_salud_financiera.csv"
+)
+
+datos.info()
+
+(datos.groupby(["unidad", "periodo"])
+      .size()
+      .reset_index(name="n")
+      .query("n > 1"))
+```
+
+----
+
+El archivo completo está en `codigo/inicio_python.py`.
+
+---
+
+<!-- DOCENTE: discusión 10-15 min al regresar. -->
+
+# Discusión al regresar de las salas
+
+Tres grupos presentarán una síntesis de **3 minutos**.
+
+La discusión se concentrará en:
+
+- diferencias en la formulación de la pregunta;
+- decisiones de comparabilidad;
+- problemas encontrados en los datos;
+- selección de KPIs;
+- lógica de la regla de alerta;
+- diseño del producto final;
+- validaciones aplicadas al código generado con IA.
+
+---
+
+class: inverse, center, middle
+background-color: #122140
+
+# Cierre
+## Conceptos que deben quedar de esta sesión
+
+---
+
+# Conceptos de la clase 1
+
+1. **Analítica descriptiva, diagnóstica, predictiva y prescriptiva.**
+2. **Problema de decisión y pregunta analítica.**
+3. **Unidad de análisis, granularidad, frecuencia y latencia.**
+4. **CRISP-DM:** Business Understanding, Data Understanding, Data Preparation, Modeling, Evaluation y Deployment.
+5. **Análisis vs producto analítico.**
+6. **Reproducibilidad, trazabilidad y automatización.**
+7. **R y Python como implementaciones equivalentes de una misma lógica.**
+8. **IA como asistente de desarrollo sujeto a validación.**
+
+---
+
+# Lecturas guía
+
+.font85[
+
+- **Provost, F. & Fawcett, T. (2013).** *Data Science for Business*. O'Reilly Media.  
+  Especialmente: pensamiento analítico basado en datos y formulación de problemas.
+
+- **Shearer, C. (2000).** *The CRISP-DM Model: The New Blueprint for Data Mining*. Journal of Data Warehousing, 5(4), 13–22.  
+  Referencia para el ciclo CRISP-DM.
+
+- **Scheuch, C., Voigt, S. & Weiss, P. (2023).** *Tidy Finance with R*. Chapman & Hall/CRC.  
+  Referencia aplicada para trabajo reproducible con datos financieros en R.
+
+- **Scheuch, C., Voigt, S., Weiss, P. & Frey, C. (2024).** *Tidy Finance with Python*. Chapman & Hall/CRC.  
+  Implementaciones equivalentes en Python.
+
+- **Wickham, H., Çetinkaya-Rundel, M. & Grolemund, G. (2023).** *R for Data Science, 2e*. O'Reilly Media.  
+  Referencia técnica de manipulación, visualización y flujo reproducible en R.
+
+- **McKinney, W. (2022).** *Python for Data Analysis, 3e*. O'Reilly Media.  
+  Referencia técnica para análisis de datos con Python/pandas.
+
+]
+
+---
+
+# Próxima sesión
+
+## Adquisición, integración y calidad de datos financieros
+
+Trabajaremos formalmente con:
+
+- fuentes y formatos;
+- llaves;
+- joins;
+- duplicados;
+- missing data;
+- fechas;
+- monedas y unidades;
+- validaciones;
+- trazabilidad;
+- construcción del dataset analítico.
+
+----
+
+.center[
+.orange[**La clase 2 comienza donde termina la práctica de hoy: qué hacer cuando el dato disponible todavía no está listo para analizarse.**]
+]
+
+---
+
+class: inverse, center, middle
+background-color: #122140
+
+.center[
+<br><br>
+
+# Gracias!!!
+
+<br><br><br><br><br>
+
+### Preguntas?
+]
+

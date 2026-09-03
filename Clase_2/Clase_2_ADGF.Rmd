@@ -1,0 +1,1527 @@
+---
+title: "Analítica de Datos para la Gestión Financiera"
+subtitle: "<br/> Adquisición, integración y calidad de datos financieros"
+author: "Orlando Joaqui-Barandica, PhD."
+institute: "Universidad del Valle"
+date: " "
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    css:
+      - default
+      - rladies
+      - rladies-fonts
+      - fonts_mtheme.css
+      - cols.css
+    seal: false
+    nature:
+      beforeInit: "cols_macro.js"
+      ratio: 16:9
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+```{r setup, include=FALSE}
+library(knitr)
+library(tidyverse)
+library(readxl)
+library(lubridate)
+library(scales)
+
+knitr::opts_chunk$set(
+  echo = FALSE,
+  dpi = 300,
+  warning = FALSE,
+  message = FALSE,
+  error = FALSE
+)
+
+options(htmltools.dir.version = FALSE)
+
+xaringanExtra::use_share_again()
+xaringanExtra::use_clipboard()
+xaringanExtra::use_panelset()
+```
+
+class: inverse, left, bottom
+background-image: url("img/fondo.jpg")
+background-size: cover
+
+# **`r rmarkdown::metadata$title`**
+----
+
+## **`r rmarkdown::metadata$subtitle`**
+
+### `r rmarkdown::metadata$author`
+### `r rmarkdown::metadata$date`
+
+```{r xaringanExtra, echo=FALSE}
+xaringanExtra::use_xaringan_extra("tile_view")
+```
+
+---
+
+class: center, middle
+
+```{r, echo=FALSE, fig.align="center", out.width="20%"}
+knitr::include_graphics("img/univalle.jpg")
+```
+
+---
+
+class: center, middle
+
+.center[
+
+<br>
+
+<a href="https://www.joaquibarandica.com" target="_blank">
+  <img src="img/avatar.png"
+       style="border-radius: 80%; width: 220px; max-width: 30%; height: auto;"
+       alt="Avatar"/>
+</a>
+
+## Orlando Joaqui-Barandica
+
+Doctor en Ingeniería, Enf. Ingeniería Industrial **|** Magíster en Economía Aplicada **|** Estadístico.
+
+orlando.joaqui@correounivalle.edu.co
+]
+
+.center[
+### [www.joaquibarandica.com](https://www.joaquibarandica.com)
+]
+
+---
+
+<!-- DOCENTE: 3 min. Conectar con CRISP-DM y con el caso del café. -->
+
+# ¿Dónde estamos en el ciclo analítico?
+
+En la sesión anterior partimos de una **decisión financiera** y formulamos una pregunta analítica.
+
+Ahora debemos comprobar si los datos necesarios:
+
+- existen y pueden obtenerse;
+- representan correctamente el problema;
+- pueden combinarse sin cambiar su significado;
+- tienen la calidad necesaria para sostener una conclusión.
+
+<br>
+
+----
+
+.center[
+.orange[**Antes de analizar, debemos construir una base de datos confiable.**]
+]
+
+---
+
+# Contenido de la sesión
+
+<br>
+
+.pull-left[
+
+### 1. Fuentes de información financiera
+
+### 2. Lectura e inspección inicial
+
+### 3. Llaves, granularidad y frecuencia
+
+]
+
+.pull-right[
+
+### 4. Integración de datos
+
+### 5. Calidad y tratamiento
+
+### 6. Trazabilidad y flujo reproducible
+
+]
+
+---
+
+<!-- DOCENTE: 3 min. Presentar los objetivos sin entrar todavía al código. -->
+
+# Objetivos de la sesión
+
+Al finalizar la clase, el estudiante debe poder:
+
+1. Reconocer fuentes y formatos frecuentes de datos financieros.
+2. Identificar la **unidad de análisis**, la **granularidad** y las **llaves** de una tabla.
+3. Integrar fuentes mediante joins sin perder el control sobre las observaciones.
+4. Detectar y tratar problemas de fechas, monedas, faltantes y duplicados.
+5. Construir un flujo de preparación documentado, validable y reproducible.
+
+---
+
+class: inverse, center, middle
+background-color: #122140
+
+# 1. Fuentes de Información Financiera
+## ¿De dónde vienen los datos que usamos para decidir?
+
+---
+
+<!-- DOCENTE: 4 min. Mostrar que una decisión normalmente requiere varias fuentes. -->
+
+# Una pregunta rara vez se responde con una sola tabla
+
+La empresa exportadora de café quiere evaluar:
+
+> ¿En qué operaciones el margen estuvo más expuesto a movimientos de la TRM y del precio internacional del café?
+
+Para responder necesita combinar, por ejemplo:
+
+- **facturas o ventas** de la empresa;
+- **TRM** observada en la fecha relevante;
+- **precio internacional del café**;
+- costos, cantidades, monedas y condiciones comerciales.
+
+----
+
+.center[
+.blue2[**El dato útil no siempre está listo: debe localizarse, interpretarse e integrarse.**]
+]
+
+---
+
+<!-- DOCENTE: 5 min. Relacionar origen con ventajas y riesgos. -->
+
+# Fuentes frecuentes en finanzas
+
+.pull-left[
+
+### Internas
+
+- ERP y sistemas contables
+- facturación y cartera
+- tesorería y presupuestos
+- clientes, contratos y productos
+
+### Institucionales
+
+- Banco de la República
+- DANE y Superfinanciera
+- bolsas y reguladores
+- organismos multilaterales
+]
+
+.pull-right[
+
+### Proveedores especializados
+
+- LSEG Workspace
+- Bloomberg
+- S&P Capital IQ
+- bases sectoriales
+
+### Fuentes abiertas y APIs
+
+- portales de datos abiertos
+- servicios web
+- archivos descargables
+- repositorios públicos
+]
+
+---
+
+<!-- DOCENTE: 4 min. Aclarar que el formato no garantiza calidad. -->
+
+# Formatos de adquisición
+
+| Formato | Ejemplo | Ventaja | Riesgo frecuente |
+|:--|:--|:--|:--|
+| Excel | Reporte contable | Familiar | celdas combinadas, fórmulas, varias hojas |
+| CSV | Precios históricos | Liviano | separadores, decimales, codificación |
+| Base de datos | ERP | Consulta estructurada | permisos y conocimiento del esquema |
+| API | TRM o mercado | Actualización automática | límites, autenticación y cambios |
+| PDF | Estado financiero | Fácil de distribuir | difícil de convertir en tabla confiable |
+
+<br>
+
+> Un archivo puede abrir correctamente y, aun así, representar mal el fenómeno financiero.
+
+---
+
+<!-- DOCENTE: 3 min. Diferenciar acceso puntual de flujo repetible. -->
+
+# Descarga manual vs. conexión automatizada
+
+.pull-left[
+
+### Descarga manual
+
+- apropiada para ejercicios puntuales;
+- permite revisar visualmente la fuente;
+- depende de una persona;
+- puede producir versiones diferentes.
+]
+
+.pull-right[
+
+### Conexión automatizada
+
+- facilita actualizaciones periódicas;
+- deja instrucciones repetibles;
+- exige controlar cambios y errores;
+- requiere credenciales o permisos en algunos casos.
+]
+
+----
+
+.center[
+**La elección depende de la frecuencia de actualización, el volumen y el uso esperado.**
+]
+
+---
+
+<!-- DOCENTE: 4 min. Señalar que la fuente también debe evaluarse. -->
+
+# Antes de descargar: ficha mínima de la fuente
+
+Para cada fuente conviene registrar:
+
+1. **Proveedor:** ¿quién publica o administra el dato?
+2. **Variable:** ¿qué mide exactamente?
+3. **Cobertura:** ¿qué periodos, empresas o mercados incluye?
+4. **Frecuencia:** ¿diaria, mensual, trimestral o transaccional?
+5. **Unidad:** ¿COP, USD, porcentaje, toneladas, índice?
+6. **Actualización:** ¿cuándo y cómo cambia?
+7. **Condiciones:** ¿requiere licencia, atribución o credenciales?
+
+---
+
+<!-- DOCENTE: 5 min. Ejercicio oral rápido, no requiere computadores. -->
+
+# Pausa de criterio
+
+La TRM aparece en diferentes portales y archivos.
+
+### ¿Qué revisarían antes de usarla?
+
+- ¿La fecha corresponde a observación, publicación o vigencia?
+- ¿La tasa expresa COP por USD?
+- ¿Qué ocurre en fines de semana y festivos?
+- ¿Se corrigieron observaciones históricas?
+- ¿La fuente es oficial o replica otra fuente?
+
+<br>
+
+.center[
+.orange[**El nombre de la variable no reemplaza su definición.**]
+]
+
+---
+
+class: inverse, center, middle
+background-color: #122140
+
+# 2. Lectura e Inspección Inicial
+## Importar no significa comprender
+
+---
+
+<!-- DOCENTE: 4 min. Conectar con funciones vistas en Código 1. -->
+
+# La primera revisión después de importar
+
+Una vez cargado el archivo, todavía no debemos calcular indicadores.
+
+Primero preguntamos:
+
+- ¿Cuántas filas y columnas llegaron?
+- ¿Los nombres de variables son comprensibles?
+- ¿R reconoció correctamente números y fechas?
+- ¿Qué representa una fila?
+- ¿Existen valores inesperados o columnas vacías?
+
+```{r inspeccion-codigo, echo=TRUE, eval=FALSE}
+dim(datos)
+names(datos)
+glimpse(datos)
+head(datos)
+summary(datos)
+```
+
+---
+
+<!-- DOCENTE: 5 min. Mostrar funciones según formato. -->
+
+# Importar archivos en R
+
+.pull-left[
+
+### Excel
+
+```{r importar-excel, echo=TRUE, eval=FALSE}
+library(readxl)
+
+ventas <- read_excel(
+  "Datos/ventas_cafe.xlsx",
+  sheet = "Facturas"
+)
+```
+
+### CSV
+
+```{r importar-csv, echo=TRUE, eval=FALSE}
+library(readr)
+
+trm <- read_csv(
+  "Datos/trm_historica.csv"
+)
+```
+]
+
+.pull-right[
+
+### Varias hojas
+
+```{r hojas-excel, echo=TRUE, eval=FALSE}
+excel_sheets(
+  "Datos/ventas_cafe.xlsx"
+)
+```
+
+### Revisar existencia
+
+```{r validar-ruta, echo=TRUE, eval=FALSE}
+ruta <- "Datos/ventas_cafe.xlsx"
+
+file.exists(ruta)
+```
+]
+
+---
+
+<!-- DOCENTE: 4 min. Aclarar rutas relativas. -->
+
+# Rutas reproducibles
+
+.pull-left[
+
+### Ruta absoluta
+
+```{r ruta-absoluta, echo=TRUE, eval=FALSE}
+"C:/Users/Orlando/Desktop/ventas.xlsx"
+```
+
+- depende del computador;
+- suele romperse al compartir;
+- dificulta reproducir el análisis.
+]
+
+.pull-right[
+
+### Ruta relativa
+
+```{r ruta-relativa, echo=TRUE, eval=FALSE}
+"Datos/ventas.xlsx"
+```
+
+- parte de la carpeta del proyecto;
+- funciona al mover todo el proyecto;
+- conserva una estructura común.
+]
+
+----
+
+.center[
+**Proyecto → datos originales → código → resultados**
+]
+
+---
+
+<!-- DOCENTE: 4 min. Mostrar estructura simple de proyecto. -->
+
+# Una estructura mínima de trabajo
+
+```text
+ADGF_Cafe/
+├── ADGF_Cafe.Rproj
+├── Datos/
+│   ├── Originales/
+│   └── Procesados/
+├── Codigo/
+├── Resultados/
+└── README.md
+```
+
+### Regla práctica
+
+- Los datos **originales** no se sobrescriben.
+- Las transformaciones quedan en código.
+- Los datos procesados pueden reconstruirse.
+- Los resultados se separan de los insumos.
+
+---
+
+<!-- DOCENTE: 5 min. Insistir en tipos porque producen errores silenciosos. -->
+
+# Tipos de variables
+
+| Tipo en R | Ejemplo financiero | Riesgo común |
+|:--|:--|:--|
+| `chr` | cliente, moneda, factura | espacios, tildes, etiquetas diferentes |
+| `dbl` | precio, tasa, monto | símbolos o separadores convertidos en texto |
+| `int` | unidades, número de pagos | confundir código con cantidad |
+| `Date` | fecha de factura | formatos día/mes y mes/día |
+| `lgl` | vencida, cubierta | valores inconsistentes: Sí, SI, 1, TRUE |
+
+```{r tipos-codigo, echo=TRUE, eval=FALSE}
+glimpse(ventas)
+```
+
+---
+
+<!-- DOCENTE: 5 min. Caso típico en Colombia. -->
+
+# Cuando un número llega como texto
+
+```{r parsear-numeros, echo=TRUE, eval=FALSE}
+montos <- tibble(
+  valor_original = c("$1.250.000", "$975.500", "$2.100.000")
+)
+
+montos <- montos |>
+  mutate(
+    valor_cop = parse_number(
+      valor_original,
+      locale = locale(
+        grouping_mark = ".",
+        decimal_mark = ","
+      )
+    )
+  )
+```
+
+<br>
+
+> Convertir no es borrar símbolos: es declarar cómo está escrito el número.
+
+---
+
+<!-- DOCENTE: 5 min. Contrastar formatos ambiguos. -->
+
+# Fechas: una fuente frecuente de errores
+
+```{r fechas, echo=TRUE, eval=FALSE}
+fechas <- tibble(
+  fecha_original = c("31/08/2026", "01/09/2026")
+)
+
+fechas <- fechas |>
+  mutate(
+    fecha = dmy(fecha_original)
+  )
+```
+
+### Pregunta importante
+
+¿`01/09/2026` significa 1 de septiembre o 9 de enero?
+
+----
+
+.center[
+.orange[**Nunca suponga el formato: confírmelo con la fuente.**]
+]
+
+---
+
+class: inverse, center, middle
+background-color: #122140
+
+# 3. Llaves, Granularidad y Frecuencia
+## ¿Qué representa realmente cada fila?
+
+---
+
+<!-- DOCENTE: 4 min. Definición central para integración. -->
+
+# Unidad de análisis
+
+La **unidad de análisis** indica qué representa cada fila de la tabla.
+
+| Tabla | Una fila representa... |
+|:--|:--|
+| Facturas | una factura emitida a un cliente |
+| Detalle de factura | un producto dentro de una factura |
+| TRM | una tasa vigente en una fecha |
+| Café internacional | un precio en una fecha de mercado |
+| Estados financieros | una empresa en un periodo contable |
+
+<br>
+
+> Dos tablas pueden tener una columna llamada `fecha`, pero representar unidades diferentes.
+
+---
+
+<!-- DOCENTE: 5 min. Conectar unidad con nivel de detalle. -->
+
+# Granularidad
+
+La **granularidad** es el nivel de detalle de los datos.
+
+.pull-left[
+
+### Mayor detalle
+
+- transacción
+- factura-producto
+- precio intradía
+- cliente-mes
+]
+
+.pull-right[
+
+### Menor detalle
+
+- venta mensual
+- ingreso anual
+- precio promedio semanal
+- cartera por segmento
+]
+
+----
+
+.center[
+**Integrar tablas con granularidades diferentes puede duplicar montos o perder información.**
+]
+
+---
+
+<!-- DOCENTE: 4 min. Dar ejemplo numérico muy simple. -->
+
+# El peligro de mezclar granularidades
+
+Una factura por $10 millones tiene dos productos:
+
+| factura | producto | valor_factura |
+|:--|:--|--:|
+| F001 | Café verde | $10.000.000 |
+| F001 | Café tostado | $10.000.000 |
+
+Si sumamos `valor_factura`, obtenemos **$20 millones**.
+
+### ¿Qué ocurrió?
+
+El valor estaba a nivel de **factura**, pero la tabla final quedó a nivel de **factura-producto**.
+
+<br>
+
+.center[
+.orange[**Antes de sumar, pregunte qué representa la fila.**]
+]
+
+---
+
+<!-- DOCENTE: 5 min. Diferenciar frecuencia de granularidad. -->
+
+# Frecuencia no es lo mismo que granularidad
+
+.pull-left[
+
+### Frecuencia
+
+Cada cuánto se observa o actualiza una variable:
+
+- diaria;
+- mensual;
+- trimestral;
+- anual.
+]
+
+.pull-right[
+
+### Granularidad
+
+Qué nivel de detalle representa cada fila:
+
+- fecha;
+- empresa-fecha;
+- cliente-factura;
+- factura-producto.
+]
+
+### Ejemplo
+
+Una base puede actualizarse diariamente, pero contener una fila por **empresa-mes**.
+
+---
+
+<!-- DOCENTE: 5 min. Introducir llave primaria y compuesta. -->
+
+# Llaves
+
+Una **llave** identifica una observación y permite conectar tablas.
+
+.pull-left[
+
+### Llave simple
+
+```text
+factura_id
+```
+
+Una sola variable identifica cada fila.
+]
+
+.pull-right[
+
+### Llave compuesta
+
+```text
+empresa + fecha
+factura + producto
+cliente + mes
+```
+
+Se necesitan varias variables.
+]
+
+```{r revisar-llave, echo=TRUE, eval=FALSE}
+ventas |>
+  count(factura_id) |>
+  filter(n > 1)
+```
+
+---
+
+<!-- DOCENTE: 4 min. Ejemplo de llave falsa. -->
+
+# Una columna no es llave solo porque se llame ID
+
+Para ser llave en una tabla, debe cumplir:
+
+- no tener valores faltantes;
+- identificar inequívocamente una fila;
+- mantener una definición estable;
+- usar el mismo formato al cruzarse con otra fuente.
+
+```{r validar-unicidad, echo=TRUE, eval=FALSE}
+ventas |>
+  summarise(
+    filas = n(),
+    ids_unicos = n_distinct(factura_id),
+    ids_faltantes = sum(is.na(factura_id))
+  )
+```
+
+---
+
+<!-- DOCENTE: 5 min. Problema financiero real: fines de semana. -->
+
+# ¿Qué fecha debemos usar?
+
+Una exportación puede tener:
+
+- fecha de negociación;
+- fecha de factura;
+- fecha de despacho;
+- fecha de pago;
+- fecha de conversión de moneda.
+
+### Para asignar la TRM...
+
+La fecha correcta depende de la pregunta y de la regla contable o financiera.
+
+----
+
+.center[
+.blue2[**La llave temporal debe tener una justificación, no solo el mismo formato.**]
+]
+
+---
+
+class: inverse, center, middle
+background-color: #122140
+
+# 4. Integración de Datos
+## Combinar tablas sin perder su significado
+
+---
+
+<!-- DOCENTE: 5 min. Presentar tablas pequeñas en pizarra. -->
+
+# Caso conductor: tres fuentes
+
+```{r datos-caso, include=FALSE}
+ventas_demo <- tibble(
+  factura_id = c("F001", "F002", "F003", "F004", "F005"),
+  fecha = as.Date(c("2026-08-24", "2026-08-25", "2026-08-25", "2026-08-26", "2026-08-27")),
+  cliente = c("A", "B", "C", "A", "D"),
+  moneda = c("USD", "USD", "COP", "USD", "USD"),
+  valor = c(12000, 18500, 42000000, 9000, 15750),
+  toneladas = c(3.0, 4.5, 2.8, 2.2, 3.7)
+)
+
+trm_demo <- tibble(
+  fecha = as.Date(c("2026-08-24", "2026-08-25", "2026-08-26", "2026-08-27")),
+  trm = c(4050, 4075, 4060, 4090)
+)
+
+cafe_demo <- tibble(
+  fecha = as.Date(c("2026-08-24", "2026-08-25", "2026-08-26", "2026-08-27")),
+  precio_cafe_usd = c(3650, 3690, 3675, 3710)
+)
+```
+
+.pull-left[
+
+### Ventas
+
+```{r tabla-ventas, echo=FALSE}
+kable(head(ventas_demo, 4), format.args = list(big.mark = "."))
+```
+]
+
+.pull-right[
+
+### TRM
+
+```{r tabla-trm, echo=FALSE}
+kable(trm_demo)
+```
+]
+
+---
+
+<!-- DOCENTE: 4 min. Usar la metáfora de la tabla principal. -->
+
+# ¿Qué hace un join?
+
+Un **join** combina columnas de dos tablas utilizando una o varias llaves.
+
+```text
+VENTAS + TRM, conectadas por FECHA
+```
+
+La elección del join depende de una pregunta:
+
+> ¿Qué filas queremos conservar si una observación no encuentra correspondencia?
+
+----
+
+.center[
+.orange[**Un join no solo une columnas: también decide qué observaciones sobreviven.**]
+]
+
+---
+
+<!-- DOCENTE: 5 min. Enfatizar left_join como opción común, no universal. -->
+
+# `left_join()`: conservar la tabla principal
+
+```{r left-join, echo=TRUE}
+ventas_trm <- ventas_demo |>
+  left_join(
+    trm_demo,
+    by = "fecha"
+  )
+```
+
+```{r left-join-tabla, echo=FALSE}
+kable(ventas_trm, format.args = list(big.mark = "."))
+```
+
+### Lectura
+
+Se conservan todas las ventas y se agrega la TRM cuando existe coincidencia.
+
+---
+
+<!-- DOCENTE: 5 min. Comparar joins sin sobrecargar. -->
+
+# Tipos de join
+
+| Función | Conserva... | Uso típico |
+|:--|:--|:--|
+| `left_join(x, y)` | todas las filas de `x` | enriquecer la tabla principal |
+| `inner_join(x, y)` | solo coincidencias | construir muestra común |
+| `full_join(x, y)` | todas las filas de ambas | auditar cobertura total |
+| `semi_join(x, y)` | filas de `x` con coincidencia | filtrar sin agregar columnas |
+| `anti_join(x, y)` | filas de `x` sin coincidencia | encontrar problemas de cruce |
+
+<br>
+
+> No existe un join correcto para todos los problemas.
+
+---
+
+<!-- DOCENTE: 5 min. anti_join como herramienta de auditoría. -->
+
+# Antes del join: ¿qué no coincide?
+
+```{r anti-join, echo=TRUE}
+ventas_sin_trm <- ventas_demo |>
+  anti_join(
+    trm_demo,
+    by = "fecha"
+  )
+```
+
+```{r anti-join-tabla, echo=FALSE}
+if (nrow(ventas_sin_trm) == 0) {
+  cat("Todas las fechas de venta encontraron una TRM.\n")
+} else {
+  kable(ventas_sin_trm)
+}
+```
+
+### Uso financiero
+
+Detectar ventas que quedaron sin tasa de conversión antes de calcular montos en COP.
+
+---
+
+<!-- DOCENTE: 5 min. Advertir many-to-many con ejemplo conceptual. -->
+
+# El join que multiplica filas
+
+Si una fecha aparece:
+
+- 5 veces en ventas, y
+- 2 veces en la tabla de TRM,
+
+el cruce puede producir **10 combinaciones** para esa fecha.
+
+```{r duplicados-llave-derecha, echo=TRUE, eval=FALSE}
+trm |>
+  count(fecha) |>
+  filter(n > 1)
+```
+
+----
+
+.center[
+.orange[**Antes de integrar, valide si la llave debe ser única en alguna de las tablas.**]
+]
+
+---
+
+<!-- DOCENTE: 4 min. Validación mínima pre/post. -->
+
+# Control antes y después del join
+
+```{r control-join, echo=TRUE}
+control_integracion <- tibble(
+  etapa = c("Antes", "Después"),
+  filas = c(nrow(ventas_demo), nrow(ventas_trm)),
+  facturas = c(
+    n_distinct(ventas_demo$factura_id),
+    n_distinct(ventas_trm$factura_id)
+  ),
+  trm_faltante = c(
+    NA_integer_,
+    sum(is.na(ventas_trm$trm))
+  )
+)
+```
+
+```{r control-join-tabla, echo=FALSE}
+kable(control_integracion)
+```
+
+---
+
+<!-- DOCENTE: 5 min. Integrar tercera fuente. -->
+
+# Integración de varias fuentes
+
+```{r integrar-tres, echo=TRUE}
+base_integrada <- ventas_demo |>
+  left_join(trm_demo, by = "fecha") |>
+  left_join(cafe_demo, by = "fecha")
+```
+
+```{r integrar-tres-tabla, echo=FALSE}
+kable(base_integrada, format.args = list(big.mark = "."))
+```
+
+### La tabla ya está unida, pero todavía no está preparada
+
+Falta estandarizar moneda, revisar faltantes y validar reglas.
+
+---
+
+class: inverse, center, middle
+background-color: #122140
+
+# 5. Calidad y Tratamiento
+## La calidad depende del uso que tendrá el dato
+
+---
+
+<!-- DOCENTE: 4 min. Definir calidad en función de la decisión. -->
+
+# ¿Qué significa que un dato tenga calidad?
+
+Un dato es adecuado cuando cumple suficientemente con dimensiones como:
+
+- **completitud:** están los valores necesarios;
+- **unicidad:** no hay registros repetidos indebidamente;
+- **validez:** respeta formatos, rangos y reglas;
+- **consistencia:** no se contradice entre variables o fuentes;
+- **oportunidad:** está disponible cuando se necesita;
+- **trazabilidad:** se conoce su origen y transformación.
+
+<br>
+
+.center[
+.blue2[**Calidad no significa perfección; significa aptitud para el propósito.**]
+]
+
+---
+
+<!-- DOCENTE: 5 min. Construir un pequeño dataset problemático. -->
+
+# Una base con problemas deliberados
+
+```{r base-problemas, include=FALSE}
+ventas_sucias <- tibble(
+  factura_id = c("F001", "F002", "F002", "F003", "F004", NA),
+  fecha = c("24/08/2026", "25/08/2026", "25/08/2026", "31/08/2026", "fecha pendiente", "27/08/2026"),
+  moneda = c("USD", "usd ", "usd ", "COP", "US$", "USD"),
+  valor = c(12000, 18500, 18500, 42000000, -9000, NA),
+  toneladas = c(3, 4.5, 4.5, 2.8, 0, 3.7)
+)
+```
+
+```{r base-problemas-tabla, echo=FALSE}
+kable(ventas_sucias, format.args = list(big.mark = "."))
+```
+
+### ¿Qué problemas identifican?
+
+No todos se resuelven eliminando filas.
+
+---
+
+<!-- DOCENTE: 5 min. Diferenciar fila repetida de operación repetida. -->
+
+# Duplicados
+
+```{r duplicados, echo=TRUE}
+ventas_sucias |>
+  count(factura_id, fecha, moneda, valor, toneladas) |>
+  filter(n > 1)
+```
+
+### Dos posibilidades
+
+1. La misma fila fue cargada dos veces.
+2. Las filas se parecen, pero representan operaciones diferentes.
+
+----
+
+> Eliminar duplicados exige conocer la llave y la unidad de análisis.
+
+---
+
+<!-- DOCENTE: 5 min. Faltante no es cero. -->
+
+# Valores faltantes
+
+```{r faltantes, echo=TRUE}
+ventas_sucias |>
+  summarise(
+    across(
+      everything(),
+      ~ sum(is.na(.x))
+    )
+  )
+```
+
+### Un `NA` puede significar
+
+- dato no reportado;
+- dato no disponible todavía;
+- dato no aplicable;
+- error de integración;
+- pérdida durante una conversión.
+
+<br>
+
+.orange[**`NA` no equivale a cero.**]
+
+---
+
+<!-- DOCENTE: 5 min. Política de faltantes, sin entrar a imputación estadística avanzada. -->
+
+# ¿Qué hacer con un faltante?
+
+| Acción | Cuándo podría ser razonable |
+|:--|:--|
+| Corregir desde la fuente | existe un error verificable |
+| Recuperar de otra fuente | hay una fuente compatible y confiable |
+| Mantener como `NA` | se desconoce el valor y debe quedar explícito |
+| Excluir del cálculo | el indicador no admite el faltante |
+| Imputar | existe un método justificable y se documenta |
+
+### Nunca hacer automáticamente
+
+Reemplazar todos los faltantes por cero o eliminar todas las filas incompletas.
+
+---
+
+<!-- DOCENTE: 5 min. Normalizar etiquetas antes de cruzar. -->
+
+# Estandarizar textos y categorías
+
+```{r limpiar-textos, echo=TRUE, eval=FALSE}
+ventas_limpias <- ventas_sucias |>
+  mutate(
+    moneda = str_to_upper(str_trim(moneda)),
+    moneda = case_when(
+      moneda %in% c("USD", "US$") ~ "USD",
+      moneda == "COP" ~ "COP",
+      TRUE ~ NA_character_
+    )
+  )
+```
+
+### Objetivo
+
+Que `USD`, `usd ` y `US$` representen una sola categoría documentada.
+
+---
+
+<!-- DOCENTE: 5 min. Validación de reglas de negocio. -->
+
+# Reglas de validez
+
+Algunas reglas dependen del negocio:
+
+```{r reglas-negocio, echo=TRUE, eval=FALSE}
+ventas_limpias <- ventas_limpias |>
+  mutate(
+    error_valor = is.na(valor) | valor <= 0,
+    error_cantidad = is.na(toneladas) | toneladas <= 0,
+    error_id = is.na(factura_id),
+    registro_valido = !(
+      error_valor | error_cantidad | error_id
+    )
+  )
+```
+
+### Ventaja de usar banderas
+
+El problema queda visible y auditable antes de decidir si se corrige o excluye.
+
+---
+
+<!-- DOCENTE: 5 min. Ejemplo de consistencia entre variables. -->
+
+# Consistencia financiera
+
+Una observación puede tener valores válidos por separado y ser inconsistente en conjunto.
+
+### Ejemplos
+
+- fecha de pago anterior a la fecha de factura;
+- cartera vencida con días de mora negativos;
+- tasa expresada como `12` en unas filas y `0.12` en otras;
+- monto en COP etiquetado como USD;
+- costo total menor que cero;
+- cantidad igual a cero con una venta positiva.
+
+```{r consistencia, echo=TRUE, eval=FALSE}
+datos |>
+  filter(fecha_pago < fecha_factura)
+```
+
+---
+
+<!-- DOCENTE: 5 min. Conversión de moneda con regla explícita. -->
+
+# Homologar monedas
+
+```{r moneda, echo=TRUE}
+base_preparada <- base_integrada |>
+  mutate(
+    valor_cop = case_when(
+      moneda == "USD" ~ valor * trm,
+      moneda == "COP" ~ valor,
+      TRUE ~ NA_real_
+    )
+  )
+```
+
+```{r moneda-tabla, echo=FALSE}
+base_preparada |>
+  select(factura_id, fecha, moneda, valor, trm, valor_cop) |>
+  kable(format.args = list(big.mark = ".", decimal.mark = ","))
+```
+
+---
+
+<!-- DOCENTE: 4 min. Distinguir unidad monetaria y escala. -->
+
+# Moneda, unidad y escala
+
+No basta con escribir “valor”. Debemos conocer:
+
+- moneda: COP, USD, EUR;
+- unidad: pesos, miles o millones;
+- base temporal de la tasa: mensual, anual;
+- forma: porcentaje o proporción;
+- precio: por libra, kilogramo o tonelada.
+
+### Ejemplos peligrosos
+
+```text
+Tasa = 12        ¿12% o 12 veces?
+Ingresos = 350   ¿pesos, miles o millones?
+Precio café = 3  ¿USD/libra o USD/kg?
+```
+
+---
+
+<!-- DOCENTE: 5 min. Mostrar reporte de calidad, no EDA. -->
+
+# Reporte mínimo de calidad
+
+```{r reporte-calidad, echo=TRUE}
+reporte_calidad <- base_preparada |>
+  summarise(
+    filas = n(),
+    facturas_unicas = n_distinct(factura_id),
+    ids_faltantes = sum(is.na(factura_id)),
+    trm_faltante = sum(is.na(trm)),
+    valores_cop_faltantes = sum(is.na(valor_cop)),
+    valores_no_positivos = sum(valor <= 0, na.rm = TRUE)
+  )
+```
+
+```{r reporte-calidad-tabla, echo=FALSE}
+kable(reporte_calidad)
+```
+
+### Esto todavía no es EDA financiero
+
+Es una auditoría del insumo que utilizaremos después.
+
+---
+
+class: inverse, center, middle
+background-color: #122140
+
+# 6. Trazabilidad y Flujo Reproducible
+## Poder explicar de dónde salió cada resultado
+
+---
+
+<!-- DOCENTE: 4 min. Relacionar trazabilidad con confianza. -->
+
+# Trazabilidad
+
+La trazabilidad permite responder:
+
+- ¿de qué fuente salió cada variable?;
+- ¿cuándo fue descargada?;
+- ¿qué versión se utilizó?;
+- ¿qué transformaciones se aplicaron?;
+- ¿qué registros fueron corregidos o excluidos?;
+- ¿qué supuestos se adoptaron?
+
+<br>
+
+.center[
+.orange[**Si el resultado cambia, debemos poder localizar por qué cambió.**]
+]
+
+---
+
+<!-- DOCENTE: 5 min. Presentar diccionario sencillo. -->
+
+# Diccionario de datos
+
+| Variable | Definición | Tipo | Unidad | Fuente |
+|:--|:--|:--|:--|:--|
+| `factura_id` | identificador de factura | texto | no aplica | ERP |
+| `fecha` | fecha de facturación | fecha | día | ERP |
+| `valor` | valor original de la venta | numérico | según `moneda` | ERP |
+| `trm` | pesos colombianos por dólar | numérico | COP/USD | fuente oficial |
+| `valor_cop` | venta homologada a COP | numérico | COP | cálculo propio |
+
+### El diccionario evita que el significado quede solo en la memoria del analista.
+
+---
+
+<!-- DOCENTE: 5 min. Distinguir originales y derivados. -->
+
+# Variables originales y derivadas
+
+.pull-left[
+
+### Originales
+
+Provienen directamente de una fuente:
+
+- `valor`
+- `moneda`
+- `fecha`
+- `trm`
+]
+
+.pull-right[
+
+### Derivadas
+
+Se construyen mediante una regla:
+
+- `valor_cop`
+- `precio_unitario`
+- `dias_mora`
+- `bandera_error`
+]
+
+----
+
+> Toda variable derivada debe tener una fórmula y un supuesto documentados.
+
+---
+
+<!-- DOCENTE: 5 min. Mostrar secuencia completa en código. -->
+
+# Un pipeline reproducible
+
+```{r pipeline, echo=TRUE, eval=FALSE}
+base_final <- read_excel(
+  "Datos/Originales/ventas_cafe.xlsx"
+) |>
+  clean_names() |>
+  mutate(
+    fecha = dmy(fecha),
+    moneda = str_to_upper(str_trim(moneda))
+  ) |>
+  left_join(trm, by = "fecha") |>
+  left_join(precio_cafe, by = "fecha") |>
+  mutate(
+    valor_cop = if_else(
+      moneda == "USD", valor * trm, valor
+    )
+  )
+```
+
+### Cada transformación puede leerse, revisarse y repetirse.
+
+---
+
+<!-- DOCENTE: 4 min. janitor no cargado para evitar dependencia al tejer; se menciona. -->
+
+# Nombres consistentes
+
+```{r nombres, echo=TRUE, eval=FALSE}
+# install.packages("janitor")
+library(janitor)
+
+datos <- datos |>
+  clean_names()
+```
+
+### Ejemplo
+
+```text
+"Valor Factura ($)"  →  valor_factura
+"Fecha de Pago"      →  fecha_de_pago
+"TRM Vigente"        →  trm_vigente
+```
+
+Esto facilita escribir código y disminuye errores de digitación.
+
+---
+
+<!-- DOCENTE: 5 min. Validaciones explícitas antes de guardar. -->
+
+# Controles automáticos
+
+```{r controles, echo=TRUE, eval=FALSE}
+stopifnot(nrow(base_final) > 0)
+stopifnot(!anyNA(base_final$factura_id))
+stopifnot(all(base_final$valor > 0, na.rm = TRUE))
+stopifnot(all(base_final$trm > 0, na.rm = TRUE))
+```
+
+### ¿Qué hacen?
+
+Detienen el flujo si no se cumplen condiciones esenciales.
+
+----
+
+.center[
+**Un pipeline reproducible también debe saber cuándo no continuar.**
+]
+
+---
+
+<!-- DOCENTE: 4 min. Exportar solo después de validar. -->
+
+# Guardar el resultado procesado
+
+```{r guardar, echo=TRUE, eval=FALSE}
+write_csv(
+  base_final,
+  "Datos/Procesados/base_cafe_final.csv"
+)
+```
+
+Conviene acompañar el archivo con:
+
+- fecha y versión de actualización;
+- diccionario de variables;
+- reporte de calidad;
+- código que permite reconstruirlo;
+- observaciones sobre limitaciones.
+
+---
+
+<!-- DOCENTE: 5 min. Resumen del flujo completo. -->
+
+# Flujo de preparación de datos
+
+```text
+1. Definir la necesidad de información
+2. Identificar y documentar fuentes
+3. Importar sin modificar los originales
+4. Inspeccionar estructura y tipos
+5. Definir unidad, granularidad y llaves
+6. Estandarizar fechas, monedas y categorías
+7. Integrar y auditar coincidencias
+8. Validar calidad y reglas del negocio
+9. Guardar datos procesados y documentación
+```
+
+<br>
+
+.center[
+.blue2[**El resultado de esta etapa es un insumo confiable para el análisis.**]
+]
+
+---
+
+class: inverse, center, middle
+background-color: #122140
+
+# Actividad Aplicada
+## Auditoría e integración de datos de la empresa exportadora de café
+
+---
+
+<!-- DOCENTE: 5 min. Organizar grupos y explicar que la prioridad es la lógica. -->
+
+# Situación
+
+La gerencia quiere construir una base por operación para estudiar posteriormente el desempeño de las exportaciones.
+
+Dispone de tres fuentes:
+
+1. ventas o facturas de exportación;
+2. TRM histórica;
+3. precio internacional del café.
+
+### Problema
+
+Las fuentes fueron producidas por sistemas diferentes y no utilizan necesariamente las mismas fechas, nombres, unidades ni nivel de detalle.
+
+---
+
+<!-- DOCENTE: 3 min. Trabajo de 30 a 40 minutos. -->
+
+# Trabajo en grupos
+
+### 1. Comprensión de los datos
+
+- Definan qué representa una fila en cada tabla.
+- Identifiquen frecuencia, granularidad y posible llave.
+- Especifiquen la unidad de cada variable monetaria o física.
+
+### 2. Auditoría inicial
+
+- Revisen tipos de variables, faltantes y duplicados.
+- Identifiquen categorías, fechas o unidades inconsistentes.
+- Registren al menos tres riesgos de calidad.
+
+---
+
+# Trabajo en grupos
+
+### 3. Integración
+
+- Definan cuál será la tabla principal.
+- Justifiquen las llaves y el tipo de join.
+- Verifiquen cuántas filas existen antes y después.
+- Identifiquen observaciones sin correspondencia.
+
+### 4. Preparación
+
+- Estandaricen fechas, textos, monedas y unidades necesarias.
+- Construyan las variables derivadas requeridas.
+- Generen un pequeño reporte de calidad.
+
+---
+
+# Producto esperado
+
+Cada grupo debe presentar:
+
+1. La unidad de análisis de la base final.
+2. Un esquema breve de las fuentes y las llaves utilizadas.
+3. Los principales problemas de calidad encontrados.
+4. Las decisiones de tratamiento adoptadas y su justificación.
+5. Una tabla final integrada y un reporte de control.
+
+### Importante
+
+No se evalúa quién utiliza más funciones. Se evalúa que la integración conserve el significado financiero de los datos y que las decisiones sean trazables.
+
+---
+
+<!-- DOCENTE: 5 min. Cierre conceptual. -->
+
+# Cierre de la sesión
+
+### Cinco ideas para conservar
+
+1. La fuente debe evaluarse, no solo descargarse.
+2. Cada fila tiene una unidad de análisis y una granularidad.
+3. Un join puede perder o multiplicar observaciones.
+4. Los faltantes y duplicados requieren interpretación, no recetas automáticas.
+5. Una base confiable debe poder reconstruirse y auditarse.
+
+---
+
+# Próxima sesión
+
+Con una base ya integrada y validada podremos avanzar hacia:
+
+- descripción de variables;
+- distribuciones y comparaciones;
+- identificación de valores atípicos;
+- correlación, covarianza y dependencia;
+- métricas financieras de mercado y corporativas.
+
+<br>
+
+.center[
+.orange[**Primero aseguramos la calidad del insumo; después interpretamos su comportamiento.**]
+]
+
+---
+
+class: inverse, center, middle
+background-color: #122140
+
+.center[
+<br><br>
+
+# Gracias!!!
+
+<br><br><br><br><br>
+
+### Preguntas?
+]
