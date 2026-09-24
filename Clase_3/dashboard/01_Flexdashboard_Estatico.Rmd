@@ -1,0 +1,165 @@
+---
+title: "Dashboard financiero — versión estática"
+output:
+  flexdashboard::flex_dashboard:
+    orientation: rows
+    vertical_layout: scroll
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library(tidyverse)
+library(scales)
+
+ruta <- if (file.exists("../datos/Clase_3/retornos_activos.csv")) {
+  "../datos/Clase_3/retornos_activos.csv"
+} else {
+  "datos/Clase_3/retornos_activos.csv"
+}
+
+retornos <- read_csv(ruta, show_col_types = FALSE) |>
+  mutate(fecha = as.Date(fecha)) |>
+  pivot_longer(
+    -fecha,
+    names_to = "activo",
+    values_to = "retorno"
+  ) |>
+  group_by(activo) |>
+  arrange(fecha, .by_group = TRUE) |>
+  mutate(
+    indice = 100 * cumprod(1 + retorno),
+    pico = cummax(indice),
+    drawdown = indice / pico - 1
+  ) |>
+  ungroup()
+
+metricas <- retornos |>
+  group_by(activo) |>
+  summarise(
+    n = n(),
+    retorno_anual = prod(1 + retorno)^(12 / n) - 1,
+    volatilidad_anual = sd(retorno) * sqrt(12),
+    sharpe_aprox = retorno_anual / volatilidad_anual,
+    max_drawdown = min(drawdown),
+    var95_hist = -quantile(retorno, 0.05),
+    .groups = "drop"
+  )
+
+# Para la versión estática seleccionamos un activo de referencia.
+activo_ref <- "ANDINA_BANCO"
+d_ref <- retornos |> filter(activo == activo_ref)
+k_ref <- metricas |> filter(activo == activo_ref)
+```
+
+Row {data-height=160}
+-------------------------------------
+
+### Retorno anualizado
+
+```{r}
+valueBox(
+  value = percent(k_ref$retorno_anual, accuracy = 0.1),
+  caption = activo_ref,
+  icon = "fa-chart-line"
+)
+```
+
+### Volatilidad anual
+
+```{r}
+valueBox(
+  value = percent(k_ref$volatilidad_anual, accuracy = 0.1),
+  caption = "Volatilidad",
+  icon = "fa-wave-square"
+)
+```
+
+### Sharpe aproximado
+
+```{r}
+valueBox(
+  value = round(k_ref$sharpe_aprox, 2),
+  caption = "Sharpe (rf = 0)",
+  icon = "fa-balance-scale"
+)
+```
+
+### Maximum drawdown
+
+```{r}
+valueBox(
+  value = percent(k_ref$max_drawdown, accuracy = 0.1),
+  caption = "Peor caída",
+  icon = "fa-arrow-down"
+)
+```
+
+Row {data-height=420}
+-------------------------------------
+
+### Evolución del índice
+
+```{r}
+ggplot(d_ref, aes(fecha, indice)) +
+  geom_line(linewidth = 0.8) +
+  labs(
+    title = paste("Índice acumulado —", activo_ref),
+    subtitle = "Base 100 al inicio del periodo",
+    x = NULL,
+    y = "Índice"
+  ) +
+  theme_minimal()
+```
+
+### Distribución de retornos
+
+```{r}
+ggplot(d_ref, aes(retorno)) +
+  geom_histogram(bins = 24) +
+  geom_vline(
+    xintercept = quantile(d_ref$retorno, 0.05),
+    linetype = 2
+  ) +
+  scale_x_continuous(labels = percent_format(accuracy = 1)) +
+  labs(
+    title = "Retornos mensuales",
+    subtitle = "Línea: percentil 5%",
+    x = "Retorno",
+    y = "Frecuencia"
+  ) +
+  theme_minimal()
+```
+
+Row {data-height=380}
+-------------------------------------
+
+### Comparación de activos
+
+```{r}
+metricas |>
+  ggplot(aes(x = reorder(activo, retorno_anual), y = retorno_anual)) +
+  geom_col() +
+  coord_flip() +
+  scale_y_continuous(labels = percent_format(accuracy = 1)) +
+  labs(
+    x = NULL,
+    y = "Retorno anualizado",
+    title = "Retorno anualizado por activo"
+  ) +
+  theme_minimal()
+```
+
+### Tabla de métricas
+
+```{r}
+metricas |>
+  transmute(
+    Activo = activo,
+    `Retorno anual` = percent(retorno_anual, accuracy = 0.1),
+    `Vol. anual` = percent(volatilidad_anual, accuracy = 0.1),
+    Sharpe = round(sharpe_aprox, 2),
+    `Max. drawdown` = percent(max_drawdown, accuracy = 0.1),
+    `VaR hist. 95%` = percent(var95_hist, accuracy = 0.1)
+  ) |>
+  knitr::kable()
+```

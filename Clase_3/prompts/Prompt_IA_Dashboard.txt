@@ -1,0 +1,29 @@
+PROMPT BASE — ESCALAR UN FLEXDASHBOARD A SHINY
+
+Tengo un Flexdashboard en R que utiliza una base de datos con las variables:
+- fecha: fecha de la observación;
+- activo: nombre del activo;
+- retorno: retorno mensual en formato decimal.
+
+Quiero convertir el tablero en un dashboard interactivo utilizando Shiny dentro de Flexdashboard.
+
+Necesito que:
+1. agregues un selector de activo;
+2. agregues un rango de fechas;
+3. filtres la base con un único reactive() principal;
+4. recalcules con los filtros los siguientes KPIs:
+   - retorno anualizado;
+   - volatilidad anualizada;
+   - Sharpe aproximado;
+   - maximum drawdown;
+5. actualices un gráfico del índice acumulado base 100;
+6. actualices un histograma de retornos;
+7. muestres una tabla con las observaciones filtradas;
+8. utilices req() cuando sea necesario para evitar errores si faltan datos;
+9. conserves, en lo posible, la estructura actual de filas y columnas del Flexdashboard;
+10. expliques brevemente qué hace cada bloque nuevo de código.
+
+Antes de escribir el código, indícame qué supuestos estás utilizando para anualizar las métricas y qué paquetes adicionales serían necesarios.
+
+IMPORTANTE:
+No inventes nombres de variables diferentes a fecha, activo y retorno. Si necesitas otra variable, constrúyela explícitamente y explica cómo se calcula.

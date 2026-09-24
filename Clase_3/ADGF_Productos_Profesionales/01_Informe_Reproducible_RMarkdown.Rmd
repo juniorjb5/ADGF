@@ -1,0 +1,580 @@
+---
+title: "Informe ejecutivo de desempeño y riesgo"
+author: "Analítica de Datos para la Gestión Financiera"
+date: "`r format(Sys.Date(), '%d de %B de %Y')`"
+output:
+  html_document:
+    theme: flatly
+    highlight: tango
+    toc: true
+    toc_float:
+      collapsed: false
+      smooth_scroll: true
+    toc_depth: 3
+    code_folding: hide
+    self_contained: true
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = TRUE,
+  warning = FALSE,
+  message = FALSE,
+  fig.align = "center",
+  fig.width = 9,
+  fig.height = 4.8,
+  out.width = "100%"
+)
+
+library(tidyverse)
+library(plotly)
+library(DT)
+library(scales)
+library(knitr)
+
+options(scipen = 999)
+
+# ---------- Datos ----------
+retornos_wide <- readr::read_csv("data/retornos_activos.csv", show_col_types = FALSE)
+corporativo <- readr::read_csv("data/indicadores_empresas.csv", show_col_types = FALSE)
+
+retornos_long <- retornos_wide |>
+  mutate(fecha = as.Date(fecha)) |>
+  pivot_longer(-fecha, names_to = "activo", values_to = "retorno") |>
+  group_by(activo) |>
+  arrange(fecha, .by_group = TRUE) |>
+  mutate(
+    indice = 100 * cumprod(1 + retorno),
+    max_previo = cummax(indice),
+    drawdown = indice / max_previo - 1
+  ) |>
+  ungroup()
+
+# Portafolio equiponderado: promedio mensual de los cuatro activos.
+portafolio <- retornos_long |>
+  group_by(fecha) |>
+  summarise(retorno = mean(retorno), .groups = "drop") |>
+  mutate(
+    activo = "PORTAFOLIO_EW",
+    indice = 100 * cumprod(1 + retorno),
+    max_previo = cummax(indice),
+    drawdown = indice / max_previo - 1
+  )
+
+panel_mercado <- bind_rows(retornos_long, portafolio)
+
+metricas <- panel_mercado |>
+  group_by(activo) |>
+  summarise(
+    n = n(),
+    retorno_anual = prod(1 + retorno)^(12 / n) - 1,
+    volatilidad_anual = sd(retorno) * sqrt(12),
+    sharpe = retorno_anual / volatilidad_anual,
+    max_drawdown = min(drawdown),
+    var95 = -quantile(retorno, 0.05),
+    cvar95 = -mean(retorno[retorno <= quantile(retorno, 0.05)]),
+    .groups = "drop"
+  )
+
+kpi_port <- metricas |>
+  filter(activo == "PORTAFOLIO_EW")
+
+# Serie móvil de volatilidad anualizada (12 meses)
+rolling_vol <- panel_mercado |>
+  group_by(activo) |>
+  arrange(fecha, .by_group = TRUE) |>
+  mutate(
+    vol_12m = slider::slide_dbl(
+      retorno,
+      sd,
+      .before = 11,
+      .complete = TRUE
+    ) * sqrt(12)
+  ) |>
+  ungroup()
+
+# Matriz de correlación entre los activos originales.
+mat_cor <- retornos_wide |>
+  select(-fecha) |>
+  cor(use = "pairwise.complete.obs")
+
+# Tabla ejecutiva corporativa.
+corporativo_tbl <- corporativo |>
+  transmute(
+    Empresa = empresa,
+    Ingresos = ingresos,
+    `Utilidad neta` = utilidad_neta,
+    `Margen neto` = margen_neto,
+    ROA = roa,
+    Endeudamiento = endeudamiento,
+    `Razón corriente` = razon_corriente
+  )
+```
+
+<style>
+:root {
+  --navy: #15324b;
+  --blue: #245b85;
+  --teal: #1d7a7a;
+  --gold: #b9852b;
+  --ink: #1f2933;
+  --muted: #66788a;
+  --line: #dce4ea;
+  --soft: #f5f8fa;
+}
+
+body {
+  color: var(--ink);
+  font-size: 16px;
+  line-height: 1.65;
+}
+
+h1, h2, h3 {
+  color: var(--navy);
+  font-weight: 700;
+}
+
+h1 {
+  border-bottom: 2px solid var(--line);
+  padding-bottom: 8px;
+}
+
+.tocify {
+  border: 0 !important;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(20, 50, 75, 0.08);
+}
+
+.hero {
+  background: linear-gradient(120deg, #15324b 0%, #245b85 60%, #1d7a7a 100%);
+  color: white;
+  padding: 28px 34px;
+  border-radius: 16px;
+  margin: 6px 0 24px 0;
+  box-shadow: 0 12px 30px rgba(21, 50, 75, 0.18);
+}
+
+.hero h2 {
+  color: white;
+  margin-top: 0;
+  font-size: 29px;
+}
+
+.hero p {
+  margin-bottom: 0;
+  font-size: 17px;
+}
+
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  margin: 18px 0 26px 0;
+}
+
+.kpi {
+  background: white;
+  border: 1px solid var(--line);
+  border-top: 4px solid var(--blue);
+  border-radius: 12px;
+  padding: 16px 18px;
+  box-shadow: 0 8px 20px rgba(21, 50, 75, 0.07);
+}
+
+.kpi .label {
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.kpi .value {
+  color: var(--navy);
+  font-size: 28px;
+  font-weight: 700;
+  margin-top: 4px;
+}
+
+.kpi .note {
+  color: var(--muted);
+  font-size: 12px;
+  margin-top: 3px;
+}
+
+.callout-prof {
+  background: var(--soft);
+  border-left: 5px solid var(--teal);
+  padding: 14px 18px;
+  border-radius: 8px;
+  margin: 18px 0;
+}
+
+.small-note {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.figure-note {
+  color: var(--muted);
+  font-size: 13px;
+  margin-top: -8px;
+  margin-bottom: 18px;
+}
+
+.dataTables_wrapper {
+  font-size: 13px;
+}
+
+img.report-logo {
+  max-width: 130px;
+  float: right;
+  margin-left: 18px;
+  margin-bottom: 6px;
+}
+
+@media (max-width: 900px) {
+  .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+}
+</style>
+
+<div class="hero">
+<h2>Portafolio Andina | Informe ejecutivo</h2>
+<p><strong>Objetivo:</strong> resumir desempeño, riesgo, dependencia y posición financiera mediante un flujo completamente reproducible.</p>
+</div>
+
+```{r logo, echo=FALSE, out.width='115px', fig.align='center'}
+knitr::include_graphics("assets/univalle.jpg")
+```
+
+Este documento combina **narrativa**, *énfasis tipográfico*, código, tablas, imágenes y visualizaciones interactivas. La idea es que un mismo archivo pueda funcionar como **informe ejecutivo**, evidencia del análisis y registro reproducible de cómo se obtuvieron los resultados.
+
+<div class="callout-prof">
+<strong>Nota pedagógica.</strong> Los datos utilizados son sintéticos y fueron construidos exclusivamente para fines de clase. El objetivo no es recomendar una inversión, sino mostrar cómo documentar un análisis financiero reproducible.
+</div>
+
+# 1. Resumen ejecutivo
+
+```{r kpis-html, echo=FALSE, results='asis'}
+cat(sprintf(
+'<div class="kpi-grid">
+<div class="kpi">
+<div class="label">Retorno anualizado</div>
+<div class="value">%s</div>
+<div class="note">Portafolio equiponderado</div>
+</div>
+<div class="kpi">
+<div class="label">Volatilidad anual</div>
+<div class="value">%s</div>
+<div class="note">Desviación estándar anualizada</div>
+</div>
+<div class="kpi">
+<div class="label">Sharpe aproximado</div>
+<div class="value">%.2f</div>
+<div class="note">Tasa libre de riesgo = 0</div>
+</div>
+<div class="kpi">
+<div class="label">Maximum drawdown</div>
+<div class="value">%s</div>
+<div class="note">Peor caída desde un máximo</div>
+</div>
+</div>',
+percent(kpi_port$retorno_anual, accuracy = 0.1),
+percent(kpi_port$volatilidad_anual, accuracy = 0.1),
+kpi_port$sharpe,
+percent(kpi_port$max_drawdown, accuracy = 0.1)
+))
+```
+
+**Lectura ejecutiva.** El portafolio resume cuatro activos con ponderaciones iguales. Las métricas anteriores permiten leer simultáneamente **crecimiento**, **variabilidad**, *desempeño ajustado por riesgo* y profundidad de las caídas observadas.
+
+```{r resumen-ejecutivo, echo=FALSE}
+metricas |>
+  filter(activo != "PORTAFOLIO_EW") |>
+  mutate(
+    Activo = str_replace_all(activo, "ANDINA_", ""),
+    `Retorno anual` = percent(retorno_anual, accuracy = 0.1),
+    `Vol. anual` = percent(volatilidad_anual, accuracy = 0.1),
+    Sharpe = round(sharpe, 2),
+    `Max. drawdown` = percent(max_drawdown, accuracy = 0.1),
+    `VaR 95%` = percent(var95, accuracy = 0.1)
+  ) |>
+  select(Activo, `Retorno anual`, `Vol. anual`, Sharpe, `Max. drawdown`, `VaR 95%`) |>
+  knitr::kable(
+    align = c("l", "r", "r", "r", "r", "r"),
+    caption = "Resumen de métricas por activo"
+  )
+```
+
+# 2. Datos y metodología
+
+El análisis utiliza retornos **mensuales** entre `r format(min(retornos_long$fecha), '%Y-%m')` y `r format(max(retornos_long$fecha), '%Y-%m')`. Para cada activo se construye un índice base 100 y se calculan métricas consistentes con la frecuencia mensual.
+
+| Concepto | Cálculo utilizado | Interpretación |
+|:--|:--|:--|
+| Retorno anualizado | crecimiento compuesto | rendimiento equivalente por año |
+| Volatilidad anual | $SD(R_t)\sqrt{12}$ | dispersión anual equivalente |
+| Sharpe | retorno anual / volatilidad anual | retorno por unidad de volatilidad |
+| Drawdown | valor / máximo previo − 1 | caída desde un máximo |
+| VaR histórico 95% | percentil 5% de retornos | umbral histórico de pérdida |
+
+<div class="small-note">
+<strong>Reproducibilidad:</strong> si se reemplaza el archivo de datos conservando la misma estructura, las tablas, métricas y figuras vuelven a calcularse al generar el informe.
+</div>
+
+# 3. Desempeño del mercado
+
+## Evolución acumulada
+
+```{r indice-interactivo, echo=FALSE}
+p_indice <- panel_mercado |>
+  mutate(
+    activo_label = str_replace_all(activo, "_", " ")
+  ) |>
+  ggplot(aes(fecha, indice, color = activo_label)) +
+  geom_line(linewidth = 0.85, alpha = 0.9) +
+  labs(
+    title = "Evolución de una inversión base 100",
+    subtitle = "Comparación de activos y portafolio equiponderado",
+    x = NULL,
+    y = "Índice acumulado",
+    color = NULL
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(
+    legend.position = "bottom",
+    panel.grid.minor = element_blank(),
+    plot.title = element_text(face = "bold")
+  )
+
+ggplotly(p_indice) |>
+  layout(legend = list(orientation = "h", y = -0.2))
+```
+
+<div class="figure-note">La figura es interactiva: pase el cursor sobre una serie, active/desactive activos desde la leyenda y utilice las herramientas de zoom.</div>
+
+## Retorno y riesgo {.tabset}
+
+### Mapa riesgo-retorno
+
+```{r riesgo-retorno, echo=FALSE}
+p_rr <- metricas |>
+  filter(activo != "PORTAFOLIO_EW") |>
+  ggplot(aes(volatilidad_anual, retorno_anual, label = activo)) +
+  geom_point(size = 4, alpha = 0.8) +
+  geom_text(nudge_y = 0.012, size = 3.4) +
+  scale_x_continuous(labels = percent_format(accuracy = 1)) +
+  scale_y_continuous(labels = percent_format(accuracy = 1)) +
+  labs(
+    title = "Posicionamiento de los activos",
+    subtitle = "Mayor retorno no necesariamente implica mejor desempeño ajustado por riesgo",
+    x = "Volatilidad anual",
+    y = "Retorno anualizado"
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(plot.title = element_text(face = "bold"))
+
+ggplotly(p_rr)
+```
+
+### Retornos mensuales
+
+```{r boxplot-retornos, echo=FALSE}
+p_box <- retornos_long |>
+  mutate(activo = str_replace_all(activo, "ANDINA_", "")) |>
+  ggplot(aes(activo, retorno, fill = activo)) +
+  geom_boxplot(alpha = 0.8, outlier.alpha = 0.5) +
+  scale_y_continuous(labels = percent_format(accuracy = 1)) +
+  labs(
+    title = "Distribución mensual por activo",
+    x = NULL,
+    y = "Retorno mensual"
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(legend.position = "none", plot.title = element_text(face = "bold"))
+
+ggplotly(p_box)
+```
+
+# 4. Riesgo
+
+## Drawdown del portafolio
+
+```{r drawdown-plotly, echo=FALSE}
+dd <- portafolio
+
+plot_ly(
+  data = dd,
+  x = ~fecha,
+  y = ~drawdown,
+  type = "scatter",
+  mode = "lines",
+  fill = "tozeroy",
+  hovertemplate = paste(
+    "Fecha: %{x}<br>",
+    "Drawdown: %{y:.2%}<extra></extra>"
+  )
+) |>
+  layout(
+    title = list(text = "Caída desde el máximo previo"),
+    xaxis = list(title = ""),
+    yaxis = list(title = "Drawdown", tickformat = ".0%"),
+    hovermode = "x unified"
+  )
+```
+
+**Interpretación.** Un drawdown de −10% significa que el valor del portafolio se encuentra 10% por debajo del máximo alcanzado previamente. El *maximum drawdown* resume la peor caída observada en todo el periodo.
+
+## Volatilidad móvil de 12 meses
+
+```{r rolling-vol, echo=FALSE}
+p_roll <- rolling_vol |>
+  filter(activo %in% c("PORTAFOLIO_EW", "ANDINA_BANCO", "ANDINA_TECNOLOGIA")) |>
+  mutate(activo = str_replace_all(activo, "_", " ")) |>
+  ggplot(aes(fecha, vol_12m, color = activo)) +
+  geom_line(linewidth = 0.9, na.rm = TRUE) +
+  scale_y_continuous(labels = percent_format(accuracy = 1)) +
+  labs(
+    title = "Volatilidad móvil anualizada",
+    subtitle = "Ventana de 12 meses",
+    x = NULL,
+    y = "Volatilidad",
+    color = NULL
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(legend.position = "bottom", plot.title = element_text(face = "bold"))
+
+ggplotly(p_roll)
+```
+
+# 5. Dependencia entre activos
+
+La correlación resume la intensidad de la relación lineal entre retornos. No implica causalidad, pero es útil para estudiar **co-movimientos** y posibles beneficios de diversificación.
+
+```{r heatmap-cor, echo=FALSE}
+plot_ly(
+  x = colnames(mat_cor),
+  y = rownames(mat_cor),
+  z = mat_cor,
+  type = "heatmap",
+  zmin = -1,
+  zmax = 1,
+  colorscale = list(
+    c(0, "#9c2f2f"),
+    c(0.5, "#f4f5f6"),
+    c(1, "#245b85")
+  ),
+  hovertemplate = "%{y} vs %{x}<br>Correlación: %{z:.2f}<extra></extra>"
+) |>
+  layout(
+    title = list(text = "Matriz de correlaciones de retornos"),
+    xaxis = list(title = ""),
+    yaxis = list(title = "")
+  )
+```
+
+# 6. Indicadores corporativos
+
+La misma lógica de reporte puede aplicarse a información corporativa. A continuación se combinan **rentabilidad**, *apalancamiento* y tamaño para construir una lectura comparativa.
+
+```{r corporate-scatter, echo=FALSE}
+plot_ly(
+  data = corporativo,
+  x = ~endeudamiento,
+  y = ~roa,
+  size = ~ingresos,
+  text = ~paste0(
+    "<b>", empresa, "</b>",
+    "<br>Ingresos: ", ingresos,
+    "<br>ROA: ", percent(roa, accuracy = 0.1),
+    "<br>Endeudamiento: ", percent(endeudamiento, accuracy = 0.1)
+  ),
+  hoverinfo = "text",
+  type = "scatter",
+  mode = "markers"
+) |>
+  layout(
+    title = list(text = "Rentabilidad y endeudamiento"),
+    xaxis = list(title = "Endeudamiento", tickformat = ".0%"),
+    yaxis = list(title = "ROA", tickformat = ".1%")
+  )
+```
+
+## Tabla comparativa
+
+```{r tabla-corporativa, echo=FALSE}
+DT::datatable(
+  corporativo_tbl |>
+    mutate(
+      `Margen neto` = percent(`Margen neto`, accuracy = 0.1),
+      ROA = percent(ROA, accuracy = 0.1),
+      Endeudamiento = percent(Endeudamiento, accuracy = 0.1),
+      `Razón corriente` = round(`Razón corriente`, 2)
+    ),
+  rownames = FALSE,
+  filter = "top",
+  options = list(
+    pageLength = 4,
+    dom = "tip",
+    autoWidth = TRUE
+  ),
+  caption = htmltools::tags$caption(
+    style = "caption-side: top; text-align: left; font-weight: 700; color: #15324b;",
+    "Tabla 1. Indicadores corporativos"
+  )
+)
+```
+
+# 7. Explorador de datos {.tabset}
+
+## Retornos
+
+```{r tabla-retornos, echo=FALSE}
+DT::datatable(
+  retornos_long |>
+    transmute(
+      Fecha = fecha,
+      Activo = str_replace_all(activo, "ANDINA_", ""),
+      Retorno = percent(retorno, accuracy = 0.01),
+      `Índice base 100` = round(indice, 2),
+      Drawdown = percent(drawdown, accuracy = 0.01)
+    ),
+  rownames = FALSE,
+  filter = "top",
+  options = list(pageLength = 8, scrollX = TRUE)
+)
+```
+
+## Indicadores corporativos
+
+```{r tabla-corporativa-2, echo=FALSE}
+DT::datatable(
+  corporativo,
+  rownames = FALSE,
+  filter = "top",
+  options = list(pageLength = 4, scrollX = TRUE)
+)
+```
+
+# 8. Conclusiones
+
+1. **El rendimiento debe leerse junto con el riesgo.** Un activo con mayor retorno puede presentar una dispersión y un drawdown considerablemente mayores.
+2. **La frecuencia importa.** La volatilidad utilizada en el informe se calcula con retornos mensuales y se expresa en términos anuales mediante $\sqrt{12}$.
+3. **La dependencia condiciona la diversificación.** La matriz de correlaciones permite identificar qué activos tienden a moverse de manera similar.
+4. **El documento es reproducible.** Datos, cálculos, tablas y figuras se encuentran conectados al mismo flujo de código.
+
+<div class="callout-prof">
+<strong>Idea central:</strong> un reporte reproducible no es simplemente “código con resultados”. Es un producto de comunicación que integra <strong>datos</strong>, <em>método</em>, visualización e interpretación en una estructura que puede actualizarse de manera consistente.
+</div>
+
+# 9. Código y trazabilidad
+
+El botón **Code** de cada bloque permite mostrar u ocultar el código utilizado para producir los resultados. Esto facilita dos niveles de lectura:
+
+- una lectura **ejecutiva**, centrada en resultados e interpretación;
+- una lectura **técnica**, centrada en la reproducibilidad del análisis.
+
+```{r session-info, echo=FALSE}
+cat("Documento generado en R. Fecha de ejecución:", format(Sys.time(), "%Y-%m-%d %H:%M"))
+```

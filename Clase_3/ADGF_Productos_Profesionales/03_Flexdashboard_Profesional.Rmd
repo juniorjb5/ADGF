@@ -1,0 +1,518 @@
+---
+title: "Financial Analytics | Portafolio Andina"
+output:
+  flexdashboard::flex_dashboard:
+    orientation: rows
+    vertical_layout: scroll
+    theme: cosmo
+    source_code: embed
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library(tidyverse)
+library(plotly)
+library(DT)
+library(scales)
+
+options(scipen = 999)
+
+retornos_wide <- readr::read_csv("data/retornos_activos.csv", show_col_types = FALSE)
+corporativo <- readr::read_csv("data/indicadores_empresas.csv", show_col_types = FALSE)
+
+retornos_long <- retornos_wide |>
+  mutate(fecha = as.Date(fecha)) |>
+  pivot_longer(-fecha, names_to = "activo", values_to = "retorno") |>
+  group_by(activo) |>
+  arrange(fecha, .by_group = TRUE) |>
+  mutate(
+    indice = 100 * cumprod(1 + retorno),
+    max_previo = cummax(indice),
+    drawdown = indice / max_previo - 1
+  ) |>
+  ungroup()
+
+portafolio <- retornos_long |>
+  group_by(fecha) |>
+  summarise(retorno = mean(retorno), .groups = "drop") |>
+  mutate(
+    activo = "PORTAFOLIO_EW",
+    indice = 100 * cumprod(1 + retorno),
+    max_previo = cummax(indice),
+    drawdown = indice / max_previo - 1
+  )
+
+panel_mercado <- bind_rows(retornos_long, portafolio)
+
+metricas <- panel_mercado |>
+  group_by(activo) |>
+  summarise(
+    n = n(),
+    retorno_anual = prod(1 + retorno)^(12 / n) - 1,
+    volatilidad_anual = sd(retorno) * sqrt(12),
+    sharpe = retorno_anual / volatilidad_anual,
+    max_drawdown = min(drawdown),
+    var95 = -quantile(retorno, .05),
+    cvar95 = -mean(retorno[retorno <= quantile(retorno, .05)]),
+    .groups = "drop"
+  )
+
+kpi_port <- metricas |>
+  filter(activo == "PORTAFOLIO_EW")
+
+rolling <- panel_mercado |>
+  group_by(activo) |>
+  arrange(fecha, .by_group = TRUE) |>
+  mutate(
+    vol_12m = slider::slide_dbl(retorno, sd, .before = 11, .complete = TRUE) * sqrt(12),
+    ret_12m = slider::slide_dbl(
+      retorno,
+      ~ prod(1 + .x) - 1,
+      .before = 11,
+      .complete = TRUE
+    )
+  ) |>
+  ungroup()
+
+mat_cor <- retornos_wide |>
+  select(-fecha) |>
+  cor(use = "pairwise.complete.obs")
+```
+
+<style>
+.navbar-inverse {
+  background: #102d44 !important;
+  border-color: #102d44 !important;
+}
+
+.navbar-inverse .navbar-brand,
+.navbar-inverse .navbar-nav > li > a {
+  color: #ffffff !important;
+}
+
+body {
+  background: #f3f6f9;
+  color: #243746;
+}
+
+.chart-wrapper {
+  border: 0;
+  border-radius: 10px;
+  box-shadow: 0 3px 14px rgba(16, 45, 68, .08);
+  overflow: hidden;
+}
+
+.chart-title {
+  color: #102d44;
+  font-weight: 700;
+}
+
+.value-box {
+  border-radius: 10px;
+  box-shadow: 0 3px 14px rgba(16, 45, 68, .08);
+}
+
+.value-box .value {
+  font-weight: 700;
+}
+
+.sidebar {
+  background: #eef3f7;
+}
+
+.dataTables_wrapper {
+  font-size: 12px;
+}
+
+.section.level1 > .chart-wrapper {
+  background: white;
+}
+</style>
+
+Resumen ejecutivo {data-icon="fa-chart-line"}
+=====================================
+
+Row {data-height=165}
+-------------------------------------
+
+### Retorno anualizado
+
+```{r, echo=FALSE}
+valueBox(
+  value = percent(kpi_port$retorno_anual, accuracy = .1),
+  caption = "Portafolio equiponderado",
+  icon = "fa-line-chart",
+  color = "primary"
+)
+```
+
+### Volatilidad anual
+
+```{r, echo=FALSE}
+valueBox(
+  value = percent(kpi_port$volatilidad_anual, accuracy = .1),
+  caption = "Riesgo anual equivalente",
+  icon = "fa-area-chart",
+  color = "info"
+)
+```
+
+### Sharpe aproximado
+
+```{r, echo=FALSE}
+valueBox(
+  value = round(kpi_port$sharpe, 2),
+  caption = "Retorno / volatilidad",
+  icon = "fa-balance-scale",
+  color = "success"
+)
+```
+
+### Maximum drawdown
+
+```{r, echo=FALSE}
+valueBox(
+  value = percent(kpi_port$max_drawdown, accuracy = .1),
+  caption = "Peor caída observada",
+  icon = "fa-arrow-down",
+  color = "warning"
+)
+```
+
+Row {data-height=430}
+-------------------------------------
+
+### Evolución acumulada {data-width=62}
+
+```{r, echo=FALSE}
+p_indice <- panel_mercado |>
+  mutate(activo = str_replace_all(activo, "_", " ")) |>
+  ggplot(aes(fecha, indice, color = activo)) +
+  geom_line(linewidth = .85) +
+  labs(
+    title = "Índice acumulado",
+    subtitle = "Base 100 | pase el cursor para explorar",
+    x = NULL,
+    y = "Índice",
+    color = NULL
+  ) +
+  theme_minimal(base_size = 11) +
+  theme(
+    legend.position = "bottom",
+    panel.grid.minor = element_blank(),
+    plot.title = element_text(face = "bold")
+  )
+
+ggplotly(p_indice) |>
+  layout(legend = list(orientation = "h", y = -0.2))
+```
+
+### Riesgo-retorno {data-width=38}
+
+```{r, echo=FALSE}
+p_rr <- metricas |>
+  filter(activo != "PORTAFOLIO_EW") |>
+  mutate(activo = str_replace_all(activo, "ANDINA_", "")) |>
+  ggplot(aes(volatilidad_anual, retorno_anual, label = activo)) +
+  geom_point(size = 4, alpha = .85) +
+  geom_text(nudge_y = .012, size = 3.2) +
+  scale_x_continuous(labels = percent_format(accuracy = 1)) +
+  scale_y_continuous(labels = percent_format(accuracy = 1)) +
+  labs(
+    title = "Mapa riesgo-retorno",
+    x = "Volatilidad anual",
+    y = "Retorno anualizado"
+  ) +
+  theme_minimal(base_size = 11) +
+  theme(plot.title = element_text(face = "bold"))
+
+ggplotly(p_rr)
+```
+
+Row {data-height=330}
+-------------------------------------
+
+### Retorno anualizado por activo
+
+```{r, echo=FALSE}
+p_rank <- metricas |>
+  filter(activo != "PORTAFOLIO_EW") |>
+  mutate(activo = str_replace_all(activo, "ANDINA_", "")) |>
+  ggplot(aes(reorder(activo, retorno_anual), retorno_anual)) +
+  geom_col(width = .65) +
+  coord_flip() +
+  scale_y_continuous(labels = percent_format(accuracy = 1)) +
+  labs(x = NULL, y = "Retorno", title = "Comparación de desempeño") +
+  theme_minimal(base_size = 11) +
+  theme(plot.title = element_text(face = "bold"))
+
+ggplotly(p_rank)
+```
+
+### Resumen de métricas
+
+```{r, echo=FALSE}
+metricas |>
+  filter(activo != "PORTAFOLIO_EW") |>
+  transmute(
+    Activo = str_replace_all(activo, "ANDINA_", ""),
+    Retorno = percent(retorno_anual, accuracy = .1),
+    Volatilidad = percent(volatilidad_anual, accuracy = .1),
+    Sharpe = round(sharpe, 2),
+    `Max. DD` = percent(max_drawdown, accuracy = .1),
+    `VaR 95%` = percent(var95, accuracy = .1)
+  ) |>
+  DT::datatable(
+    rownames = FALSE,
+    options = list(
+      dom = "t",
+      pageLength = 4,
+      autoWidth = TRUE
+    )
+  )
+```
+
+Riesgo y dependencia {data-icon="fa-shield"}
+=====================================
+
+Row {data-height=410}
+-------------------------------------
+
+### Drawdown del portafolio
+
+```{r, echo=FALSE}
+plot_ly(
+  data = portafolio,
+  x = ~fecha,
+  y = ~drawdown,
+  type = "scatter",
+  mode = "lines",
+  fill = "tozeroy",
+  hovertemplate = "Fecha: %{x}<br>Drawdown: %{y:.2%}<extra></extra>"
+) |>
+  layout(
+    xaxis = list(title = ""),
+    yaxis = list(title = "Caída", tickformat = ".0%"),
+    hovermode = "x unified"
+  )
+```
+
+### Volatilidad móvil
+
+```{r, echo=FALSE}
+p_vol <- rolling |>
+  filter(activo %in% c("PORTAFOLIO_EW", "ANDINA_BANCO", "ANDINA_TECNOLOGIA")) |>
+  mutate(activo = str_replace_all(activo, "_", " ")) |>
+  ggplot(aes(fecha, vol_12m, color = activo)) +
+  geom_line(linewidth = .9, na.rm = TRUE) +
+  scale_y_continuous(labels = percent_format(accuracy = 1)) +
+  labs(
+    title = "Volatilidad anualizada",
+    subtitle = "Ventana móvil de 12 meses",
+    x = NULL,
+    y = "Volatilidad",
+    color = NULL
+  ) +
+  theme_minimal(base_size = 11) +
+  theme(legend.position = "bottom", plot.title = element_text(face = "bold"))
+
+ggplotly(p_vol)
+```
+
+Row {data-height=410}
+-------------------------------------
+
+### Correlación entre activos {data-width=55}
+
+```{r, echo=FALSE}
+plot_ly(
+  x = colnames(mat_cor),
+  y = rownames(mat_cor),
+  z = mat_cor,
+  type = "heatmap",
+  zmin = -1,
+  zmax = 1,
+  colorscale = list(
+    c(0, "#9b3131"),
+    c(.5, "#f4f5f6"),
+    c(1, "#235d88")
+  ),
+  hovertemplate = "%{y} vs %{x}<br>Correlación: %{z:.2f}<extra></extra>"
+) |>
+  layout(xaxis = list(title = ""), yaxis = list(title = ""))
+```
+
+### Distribución del portafolio {data-width=45}
+
+```{r, echo=FALSE}
+q05 <- quantile(portafolio$retorno, .05)
+
+p_hist <- ggplot(portafolio, aes(retorno)) +
+  geom_histogram(bins = 24, alpha = .85) +
+  geom_vline(xintercept = q05, linetype = 2, linewidth = .9) +
+  scale_x_continuous(labels = percent_format(accuracy = 1)) +
+  labs(
+    title = "Retornos mensuales",
+    subtitle = "Línea discontinua: percentil 5%",
+    x = "Retorno",
+    y = "Frecuencia"
+  ) +
+  theme_minimal(base_size = 11) +
+  theme(plot.title = element_text(face = "bold"))
+
+ggplotly(p_hist)
+```
+
+Análisis corporativo {data-icon="fa-building"}
+=====================================
+
+Row {data-height=170}
+-------------------------------------
+
+### Mayor margen neto
+
+```{r, echo=FALSE}
+mejor_margen <- corporativo |>
+  slice_max(margen_neto, n = 1, with_ties = FALSE)
+valueBox(
+  value = percent(mejor_margen$margen_neto, accuracy = .1),
+  caption = mejor_margen$empresa,
+  icon = "fa-percent",
+  color = "success"
+)
+```
+
+### Mayor ROA
+
+```{r, echo=FALSE}
+mejor_roa <- corporativo |>
+  slice_max(roa, n = 1, with_ties = FALSE)
+valueBox(
+  value = percent(mejor_roa$roa, accuracy = .1),
+  caption = mejor_roa$empresa,
+  icon = "fa-line-chart",
+  color = "primary"
+)
+```
+
+### Menor endeudamiento
+
+```{r, echo=FALSE}
+menor_deuda <- corporativo |>
+  slice_min(endeudamiento, n = 1, with_ties = FALSE)
+valueBox(
+  value = percent(menor_deuda$endeudamiento, accuracy = .1),
+  caption = menor_deuda$empresa,
+  icon = "fa-bank",
+  color = "info"
+)
+```
+
+### Mayor razón corriente
+
+```{r, echo=FALSE}
+mejor_liq <- corporativo |>
+  slice_max(razon_corriente, n = 1, with_ties = FALSE)
+valueBox(
+  value = round(mejor_liq$razon_corriente, 2),
+  caption = mejor_liq$empresa,
+  icon = "fa-tint",
+  color = "warning"
+)
+```
+
+Row {data-height=420}
+-------------------------------------
+
+### Rentabilidad y endeudamiento {data-width=55}
+
+```{r, echo=FALSE}
+plot_ly(
+  data = corporativo,
+  x = ~endeudamiento,
+  y = ~roa,
+  size = ~ingresos,
+  text = ~paste0(
+    "<b>", empresa, "</b>",
+    "<br>Ingresos: ", ingresos,
+    "<br>ROA: ", percent(roa, accuracy = .1),
+    "<br>Endeudamiento: ", percent(endeudamiento, accuracy = .1)
+  ),
+  hoverinfo = "text",
+  type = "scatter",
+  mode = "markers"
+) |>
+  layout(
+    xaxis = list(title = "Endeudamiento", tickformat = ".0%"),
+    yaxis = list(title = "ROA", tickformat = ".1%")
+  )
+```
+
+### Indicadores corporativos {data-width=45}
+
+```{r, echo=FALSE}
+corporativo |>
+  transmute(
+    Empresa = empresa,
+    Ingresos = ingresos,
+    `Margen neto` = percent(margen_neto, accuracy = .1),
+    ROA = percent(roa, accuracy = .1),
+    Endeudamiento = percent(endeudamiento, accuracy = .1),
+    `Razón corriente` = round(razon_corriente, 2)
+  ) |>
+  DT::datatable(
+    rownames = FALSE,
+    options = list(dom = "t", pageLength = 4, autoWidth = TRUE)
+  )
+```
+
+Datos y metodología {data-icon="fa-database"}
+=====================================
+
+Row {data-height=130}
+-------------------------------------
+
+### Alcance
+
+**Mercado:** 4 activos sintéticos, retornos mensuales y portafolio equiponderado.  
+**Corporativo:** 4 empresas con indicadores básicos de liquidez, rentabilidad y apalancamiento.  
+**Objetivo:** demostrar cómo un tablero integra métricas, visualización e interactividad en un producto reproducible.
+
+Row {data-height=430}
+-------------------------------------
+
+### Explorador de retornos
+
+```{r, echo=FALSE}
+retornos_long |>
+  transmute(
+    Fecha = fecha,
+    Activo = str_replace_all(activo, "ANDINA_", ""),
+    Retorno = percent(retorno, accuracy = .01),
+    `Índice base 100` = round(indice, 2),
+    Drawdown = percent(drawdown, accuracy = .01)
+  ) |>
+  DT::datatable(
+    rownames = FALSE,
+    filter = "top",
+    width = "100%",
+    options = list(
+      pageLength = 8,
+      scrollX = TRUE,
+      autoWidth = TRUE
+    )
+  )
+```
+
+Row {data-height=250}
+-------------------------------------
+
+### Definiciones utilizadas
+
+- **Retorno anualizado:** crecimiento compuesto equivalente por año.
+- **Volatilidad anual:** desviación estándar mensual multiplicada por $\sqrt{12}$.
+- **Sharpe:** retorno anualizado dividido por volatilidad anual; en este ejemplo se toma $r_f=0$.
+- **Drawdown:** caída porcentual desde el máximo previo.
+- **VaR histórico 95%:** magnitud del percentil 5% de los retornos históricos.
+
+> Este tablero es deliberadamente estático en sus datos, pero interactivo en sus figuras. El siguiente nivel consiste en incorporar entradas del usuario y reactividad mediante Shiny.

@@ -1,6 +1,6 @@
 ---
 title: "Analítica de Datos para la Gestión Financiera"
-subtitle: "<br/> Análisis exploratorio e inferencia aplicada a datos financieros"
+subtitle: "<br/> Análisis estadístico, visualización y tableros para la gestión financiera"
 author: "Orlando Joaqui-Barandica, PhD."
 institute: "Universidad del Valle"
 date: " "
@@ -22,7 +22,6 @@ output:
       countIncrementalSlides: false
 ---
 
-
 ```{r setup, include=FALSE}
 library(knitr)
 library(tidyverse)
@@ -35,7 +34,9 @@ knitr::opts_chunk$set(
   warning = FALSE,
   message = FALSE,
   error = FALSE,
-  fig.align = "center"
+  fig.align = "center",
+  fig.width = 8.5,
+  fig.height = 4.4
 )
 
 options(htmltools.dir.version = FALSE)
@@ -45,63 +46,72 @@ xaringanExtra::use_clipboard()
 xaringanExtra::use_panelset()
 ```
 
+```{r preparar-datos, include=FALSE}
+retornos_wide <- read_csv(
+  "Datos/Clase_3/retornos_activos.csv",
+  show_col_types = FALSE
+) |>
+  mutate(fecha = as.Date(fecha))
 
-```{r crear-datos-clase-3, include=FALSE}
-# Datos reproducibles para ejemplos y actividad.
-set.seed(2026)
-
-fechas <- seq.Date(
-  from = as.Date("2018-01-01"),
-  by = "month",
-  length.out = 96
-)
-
-factor_mercado <- rnorm(96, mean = 0.006, sd = 0.035)
-
-retornos_activos <- tibble(
-  fecha = fechas,
-  ANDINA_BANCO = 0.002 + 1.05 * factor_mercado + rnorm(96, 0, 0.025),
-  ANDINA_ENERGIA = 0.004 + 0.75 * factor_mercado + rnorm(96, 0, 0.030),
-  ANDINA_ALIMENTOS = 0.005 + 0.45 * factor_mercado + rnorm(96, 0, 0.018),
-  ANDINA_TECNOLOGIA = 0.008 + 1.25 * factor_mercado + rnorm(96, 0, 0.050)
-)
-
-# Se incorporan meses extremos para que la discusión de colas sea visible.
-retornos_activos[28, 2:5] <- retornos_activos[28, 2:5] + c(-0.16, -0.11, -0.07, -0.22)
-retornos_activos[61, 2:5] <- retornos_activos[61, 2:5] + c(-0.12, -0.18, -0.05, -0.20)
-retornos_activos[75, 2:5] <- retornos_activos[75, 2:5] + c(0.09, 0.13, 0.06, 0.17)
-
-retornos_long <- retornos_activos |>
+retornos_long <- retornos_wide |>
   pivot_longer(
     -fecha,
     names_to = "activo",
     values_to = "retorno"
-  )
-
-ejemplo_dos_activos <- retornos_long |>
-  filter(activo %in% c("ANDINA_BANCO", "ANDINA_ALIMENTOS"))
-
-empresas_corporativas <- tibble(
-  empresa = c("Andina Banco", "Andina Energía", "Andina Alimentos", "Andina Tecnología"),
-  ingresos = c(1850, 2420, 1680, 920),
-  utilidad_neta = c(185, 145, 151, 92),
-  activos = c(8200, 6100, 3200, 2400),
-  pasivos = c(6100, 3900, 1450, 1050),
-  activos_corrientes = c(2100, 1750, 1280, 980),
-  pasivos_corrientes = c(1850, 1420, 760, 610)
-) |>
+  ) |>
+  group_by(activo) |>
+  arrange(fecha, .by_group = TRUE) |>
   mutate(
-    margen_neto = utilidad_neta / ingresos,
-    roa = utilidad_neta / activos,
-    endeudamiento = pasivos / activos,
-    razon_corriente = activos_corrientes / pasivos_corrientes
+    indice = 100 * cumprod(1 + retorno),
+    max_indice = cummax(indice),
+    drawdown = indice / max_indice - 1
+  ) |>
+  ungroup()
+
+empresas <- read_csv(
+  "Datos/Clase_3/indicadores_empresas.csv",
+  show_col_types = FALSE
+)
+
+resumen_activos <- retornos_long |>
+  group_by(activo) |>
+  summarise(
+    media = mean(retorno, na.rm = TRUE),
+    mediana = median(retorno, na.rm = TRUE),
+    volatilidad = sd(retorno, na.rm = TRUE),
+    p05 = quantile(retorno, 0.05, na.rm = TRUE),
+    minimo = min(retorno, na.rm = TRUE),
+    maximo = max(retorno, na.rm = TRUE),
+    .groups = "drop"
   )
 
-dir.create("Datos/Clase_3", recursive = TRUE, showWarnings = FALSE)
-write_csv(retornos_activos, "Datos/Clase_3/retornos_activos.csv")
-write_csv(empresas_corporativas, "Datos/Clase_3/indicadores_empresas.csv")
-```
+retornos_cor <- retornos_wide |>
+  select(-fecha) |>
+  cor(use = "pairwise.complete.obs")
 
+ret_banco <- retornos_long |>
+  filter(activo == "ANDINA_BANCO") |>
+  pull(retorno)
+
+set.seed(2026)
+boot_medias <- replicate(
+  2000,
+  mean(sample(ret_banco, size = length(ret_banco), replace = TRUE))
+)
+ic_boot_banco <- quantile(boot_medias, c(0.025, 0.975))
+
+metricas_mercado <- retornos_long |>
+  group_by(activo) |>
+  summarise(
+    n = n(),
+    retorno_anual = prod(1 + retorno, na.rm = TRUE)^(12 / n) - 1,
+    volatilidad_anual = sd(retorno, na.rm = TRUE) * sqrt(12),
+    sharpe_aprox = retorno_anual / volatilidad_anual,
+    max_drawdown = min(drawdown, na.rm = TRUE),
+    var95_hist = -quantile(retorno, 0.05, na.rm = TRUE),
+    .groups = "drop"
+  )
+```
 
 class: inverse, left, bottom
 background-image: url("img/fondo.jpg")
@@ -114,7 +124,6 @@ background-size: cover
 
 ### `r rmarkdown::metadata$author`
 ### `r rmarkdown::metadata$date`
-
 
 ```{r xaringanExtra, echo=FALSE}
 xaringanExtra::use_xaringan_extra("tile_view")
@@ -155,1099 +164,739 @@ orlando.joaqui@correounivalle.edu.co
 
 ---
 
-<!-- DOCENTE: 3 min. Conectar explícitamente con la clase anterior. -->
+<!-- DOCENTE: 4 min. Conectar con las clases anteriores. -->
 
-# ¿Dónde estamos en el proceso analítico?
+# Ubicación y propósito de la sesión
 
-En la Clase 2 construimos una base que debía ser:
+En las sesiones anteriores trabajamos sobre la comprensión del problema, la integración de fuentes y la calidad del dato.
 
-- integrada;
-- consistente;
-- trazable;
-- adecuada para la pregunta financiera.
+Esta sesión utiliza una misma base para avanzar por cuatro niveles:
 
-Ahora podemos comenzar a buscar **patrones, diferencias, relaciones y señales**.
-
-<br>
-
-----
+1. **describir** qué ocurre en los datos;
+2. **cuantificar** relaciones e incertidumbre;
+3. **comunicar** mediante gráficos y reportes reproducibles;
+4. **organizar** los resultados en un dashboard.
 
 .center[
-.orange[**Preparar los datos permite confiar en el insumo; explorar permite comprender qué información contiene.**]
+.orange[**El objetivo no es aprender herramientas aisladas, sino conectarlas dentro de un flujo analítico.**]
 ]
 
 ---
 
 # Contenido de la sesión
 
-<br>
-
 .pull-left[
 
-### 1. Propósito del análisis exploratorio
+### 1. Estadística descriptiva y distribuciones
 
-### 2. Estadística descriptiva y distribuciones
+### 2. Dependencia e inferencia estadística
 
-### 3. Comparaciones y valores extremos
+### 3. Métricas financieras básicas
 
 ]
 
 .pull-right[
 
-### 4. Correlación, covarianza y dependencia
+### 4. Visualización y reportes reproducibles
 
-### 5. Incertidumbre, percentiles y bootstrap
+### 5. Tableros con Flexdashboard
 
-### 6. Métricas financieras y actividad aplicada
+### 6. Interactividad con Shiny e inteligencia artificial
 
 ]
 
 ---
-
-<!-- DOCENTE: 3 min. Objetivos de aprendizaje. -->
 
 # Objetivos de la sesión
 
 Al finalizar la clase, el estudiante debe poder:
 
-1. Describir una variable financiera mediante medidas y gráficos coherentes.
-2. Comparar grupos sin limitarse únicamente al promedio.
-3. Identificar valores extremos y discutir si representan errores o eventos reales.
-4. Interpretar correlación, covarianza y sus limitaciones.
-5. Construir intervalos de confianza mediante bootstrap.
-6. Calcular e interpretar métricas financieras básicas de mercado y corporativas.
+1. resumir e interpretar variables financieras mediante medidas y distribuciones;
+2. analizar asociación e incertidumbre mediante correlación e inferencia básica;
+3. calcular e interpretar algunas métricas financieras;
+4. seleccionar visualizaciones coherentes con una pregunta analítica;
+5. reconocer la estructura de un reporte reproducible y de un dashboard;
+6. construir un Flexdashboard básico y comprender cómo Shiny agrega interactividad.
 
 ---
 
 class: inverse, center, middle
 background-color: #122140
 
-# 1. Análisis Exploratorio de Datos
-## Convertir una tabla en preguntas y evidencia
+# 1. Estadística descriptiva y distribuciones
+## Resumir el comportamiento de variables financieras
 
 ---
 
-<!-- DOCENTE: 4 min. Definición sin reducir EDA a gráficos. -->
-
-# ¿Qué es el análisis exploratorio?
-
-El análisis exploratorio de datos —EDA— es el proceso de:
-
-- reconocer la estructura de las variables;
-- resumir comportamientos;
-- comparar grupos o periodos;
-- identificar observaciones inusuales;
-- examinar relaciones;
-- descubrir problemas que no eran visibles durante la preparación.
-
-----
-
-> El EDA no busca decorar la base: busca comprender qué evidencia puede sostener.
-
----
-
-<!-- DOCENTE: 4 min. Conectar cada pregunta con una herramienta. -->
-
-# Preguntas típicas del EDA financiero
+# Estadística descriptiva: preguntas básicas
 
 | Pregunta | Herramienta inicial |
 |---|---|
-| ¿Cuál es el comportamiento habitual? | media, mediana, percentiles |
-| ¿Qué tanto varían los resultados? | rango, desviación, IQR |
-| ¿Existen pérdidas extremas? | mínimos, percentiles, boxplot |
-| ¿Qué activo presenta mayor riesgo? | comparación de distribuciones |
-| ¿Se mueven juntos dos activos? | dispersión, covarianza, correlación |
-| ¿Es estable el promedio observado? | intervalo de confianza, bootstrap |
-
----
-
-<!-- DOCENTE: 4 min. Explicar que el EDA sigue una pregunta. -->
-
-# Explorar no significa calcular todo
-
-Suponga que un comité debe elegir entre dos activos.
-
-Una exploración útil debería ayudar a responder:
-
-- ¿cuál tuvo mayor retorno típico?;
-- ¿cuál fue más variable?;
-- ¿cuál presentó peores pérdidas?;
-- ¿qué tan inciertas son esas diferencias?;
-- ¿aporta diversificación combinarlos?
-
-<br>
+| ¿Cuál es el comportamiento habitual? | media, mediana |
+| ¿Qué tanto varían los datos? | desviación estándar, IQR |
+| ¿Dónde están los valores bajos o altos? | percentiles |
+| ¿Cómo se distribuyen las observaciones? | histograma, densidad, boxplot |
+| ¿Existen eventos extremos? | mínimos, colas, outliers |
 
 .center[
-.blue2[**La pregunta financiera determina qué resúmenes y gráficos son relevantes.**]
+.blue2[**La medida correcta depende de la pregunta y de la forma de los datos.**]
 ]
 
 ---
 
-<!-- DOCENTE: 4 min. Diferenciar tipos de variables. -->
-
-# Antes de resumir: reconocer la variable
+# Centro y dispersión
 
 .pull-left[
 
-### Numérica
+### Centro
 
-- precio
-- retorno
-- margen
-- endeudamiento
-- días de mora
+**Media:** utiliza todas las observaciones y es sensible a extremos.
 
-Se resume con medidas y distribuciones.
-]
+$$\bar{x}=\frac{1}{n}\sum_{i=1}^{n}x_i$$
 
-.pull-right[
-
-### Categórica
-
-- sector
-- moneda
-- calificación
-- estado de cartera
-- tipo de cliente
-
-Se resume con frecuencias y proporciones.
-]
-
-----
-
-> El tipo de variable condiciona el análisis que tiene sentido realizar.
-
----
-
-<!-- DOCENTE: 4 min. Unidad de análisis sigue siendo central. -->
-
-# La unidad de análisis no desaparece
-
-Una media puede referirse a:
-
-- retorno diario por activo;
-- margen trimestral por empresa;
-- saldo mensual por cliente;
-- valor por factura;
-- tasa por operación.
-
-### Antes de interpretar
-
-¿Qué representa una observación y qué periodo cubre?
-
-----
-
-.center[
-.orange[**El mismo número cambia de significado cuando cambia la unidad de análisis.**]
-]
-
----
-
-class: inverse, center, middle
-background-color: #122140
-
-# 2. Estadística Descriptiva y Distribuciones
-## Centro, dispersión y forma
-
----
-
-<!-- DOCENTE: 5 min. Medidas de centro. -->
-
-# Media y mediana
-
-.pull-left[
-
-### Media
-
-Suma los valores y divide entre el número de observaciones.
-
-\[
-\bar{x}=\frac{1}{n}\sum_{i=1}^{n}x_i
-\]
-
-Utiliza toda la información, pero es sensible a extremos.
-]
-
-.pull-right[
-
-### Mediana
-
-Es el valor central después de ordenar las observaciones.
-
-- 50% queda por debajo;
-- 50% queda por encima;
-- resiste mejor los extremos.
-]
-
----
-
-<!-- DOCENTE: 5 min. Ejemplo intuitivo. -->
-
-# Un extremo cambia la historia
-
-Considere cinco retornos mensuales:
-
-```text
-1%, 2%, 2%, 3%, -18%
+```r
+mean(retornos)
 ```
 
-| Medida | Resultado aproximado |
-|---|---:|
-| Media | -2,0% |
-| Mediana | 2,0% |
 
-### ¿Cuál describe mejor un mes “típico”?
+**Mediana:** deja 50% de las observaciones a cada lado y es más resistente a extremos.
 
-La mediana representa mejor el centro habitual; la media incorpora el efecto económico de la pérdida extrema.
+```r
+median(retornos)
+```
 
-----
 
-.center[
-**No compiten: responden preguntas diferentes.**
+]
+
+.pull-right[
+
+### Dispersión
+
+- rango;
+- varianza;
+- desviación estándar;
+- rango intercuartílico —IQR—.
+
+En retornos, la desviación estándar suele utilizarse como una aproximación de **volatilidad**.
+
+```r
+var(retornos)
+```
+
+```r
+sd(retornos)
+```
+
+
 ]
 
 ---
 
-<!-- DOCENTE: 5 min. Dispersión. -->
+# Percentiles y distribución
 
-# Medidas de dispersión
+El percentil `p` es un valor por debajo del cual se encuentra aproximadamente una proporción `p` de las observaciones.
 
-| Medida | Qué representa | Sensibilidad a extremos |
-|---|---|---|
-| Rango | distancia entre mínimo y máximo | muy alta |
-| Varianza | dispersión cuadrática respecto a la media | alta |
-| Desviación estándar | dispersión en la unidad de la variable | alta |
-| IQR | distancia entre percentiles 25 y 75 | menor |
-| MAD | desviación mediana absoluta | menor |
-
-<br>
-
-> Dos activos pueden tener la misma media y riesgos completamente distintos.
-
----
-
-<!-- DOCENTE: 4 min. Varianza vs sd. -->
-
-# Varianza y desviación estándar
-
-La varianza muestral se calcula como:
-
-\[
-s^2=\frac{1}{n-1}\sum_{i=1}^{n}(x_i-\bar{x})^2
-\]
-
-La desviación estándar es:
-
-\[
-s=\sqrt{s^2}
-\]
-
-### En retornos
-
-La desviación estándar suele interpretarse como una aproximación a la **volatilidad**.
-
-----
-
-.orange[**Volatilidad mide variabilidad; no distingue automáticamente movimientos favorables y desfavorables.**]
-
----
-
-<!-- DOCENTE: 5 min. Percentiles. -->
-
-# Percentiles
-
-El percentil `p` es un valor que deja aproximadamente `p%` de las observaciones por debajo.
-
-### Ejemplos
-
-- P50: mediana.
-- P25 y P75: delimitan la mitad central.
-- P05 de retornos: umbral de meses muy desfavorables.
-- P95 de cartera: clientes con saldos particularmente altos.
+- `P50`: mediana;
+- `P25` y `P75`: cuartiles;
+- `P05`: zona baja de la distribución.
 
 ```r
 quantile(retornos, probs = c(0.05, 0.25, 0.50, 0.75, 0.95))
 ```
 
----
-
-<!-- DOCENTE: 5 min. Tabla resumen en R. -->
-
-# Resumen descriptivo en R
-
-```r
-resumen <- datos |>
-  group_by(activo) |>
-  summarise(
-    observaciones = n(),
-    media = mean(retorno, na.rm = TRUE),
-    mediana = median(retorno, na.rm = TRUE),
-    volatilidad = sd(retorno, na.rm = TRUE),
-    p05 = quantile(retorno, 0.05, na.rm = TRUE),
-    minimo = min(retorno, na.rm = TRUE)
-  )
-```
-
-### Lectura
-
-Cada fila resume la distribución de un activo, no una observación individual.
+Una **distribución** describe cómo se reparten los valores: centro, dispersión, simetría, concentración y colas.
 
 ---
 
-<!-- DOCENTE: 4 min. Distribución. -->
+# Distribuciones de referencia y datos financieros
 
-# ¿Qué es una distribución?
+| Distribución | Uso introductorio |
+|---|---|
+| Normal | referencia simétrica para comparar la forma de los datos |
+| t de Student | inferencia sobre medias con variabilidad poblacional desconocida |
+| Empírica | distribución realmente observada en la muestra |
 
-Una distribución describe:
-
-- qué valores aparecen;
-- con qué frecuencia;
-- dónde se concentra la mayoría;
-- qué tan dispersos están;
-- si existe asimetría;
-- si aparecen colas o eventos extremos.
-
-<br>
+Los retornos financieros pueden presentar asimetría, extremos, colas pesadas y cambios de volatilidad.
 
 .center[
-.blue2[**Una media es un punto; una distribución muestra la historia completa alrededor de ese punto.**]
+.orange[**La normal es una referencia útil; no debe asumirse automáticamente.**]
 ]
 
 ---
 
-<!-- DOCENTE: 5 min. Histograma. -->
+# Histograma: forma de la distribución
 
-# Histograma
-
-Agrupa una variable numérica en intervalos y cuenta observaciones.
-
-```r
-ggplot(datos, aes(x = retorno)) +
-  geom_histogram(
-    bins = 20,
-    fill = "#2C7FB8",
-    color = "white"
-  ) +
-  theme_minimal()
-```
-
-### Permite observar
-
-Concentración, dispersión, asimetría, posibles grupos y valores extremos.
-
----
-
-<!-- DOCENTE: 5 min. Ejemplo visual ejecutado. -->
-
-# Distribución de dos activos
-
-```{r histograma-dos-activos, fig.width=10, fig.height=4.6, out.width="90%"}
-ggplot(ejemplo_dos_activos, aes(x = retorno, fill = activo)) +
-  geom_histogram(bins = 18, color = "white", alpha = 0.80) +
-  facet_wrap(~ activo, ncol = 2) +
+```{r histograma-retornos, echo=FALSE, out.width="80%", fig.align="center"}
+retornos_long |>
+  filter(activo %in% c("ANDINA_ALIMENTOS", "ANDINA_TECNOLOGIA")) |>
+  ggplot(aes(x = retorno, fill = activo)) +
+  geom_histogram(bins = 22, alpha = 0.45, position = "identity") +
+  facet_wrap(~activo, ncol = 1, scales = "free_y") +
   scale_x_continuous(labels = percent_format(accuracy = 1)) +
-  scale_fill_manual(values = c("#1F78B4", "#E66101")) +
-  labs(x = "Retorno mensual", y = "Número de meses") +
-  theme_minimal(base_size = 12) +
+  labs(x = "Retorno mensual", y = "Frecuencia", fill = NULL) +
+  theme_minimal() +
   theme(legend.position = "none")
 ```
 
 ---
 
-<!-- DOCENTE: 5 min. Boxplot explicado. -->
+# Boxplot y valores extremos
 
-# Boxplot: comparación compacta
-
-El boxplot muestra:
-
-- la mediana;
-- el 50% central de los datos;
-- dispersión;
-- observaciones alejadas del comportamiento central.
-
-```r
-ggplot(datos, aes(x = activo, y = retorno)) +
-  geom_boxplot()
-```
-
-----
-
-> Un punto fuera de los bigotes es una señal para revisar, no una orden automática de eliminar.
-
----
-
-# Boxplot de los cuatro activos
-
-```{r boxplot-activos, fig.width=10, fig.height=4.7, out.width="90%"}
-ggplot(retornos_long, aes(x = reorder(activo, retorno, median), y = retorno, fill = activo)) +
-  geom_boxplot(alpha = 0.85, show.legend = FALSE) +
+```{r boxplot-retornos, echo=FALSE, out.width="80%", fig.align="center"}
+retornos_long |>
+  ggplot(aes(x = reorder(activo, retorno, median), y = retorno)) +
+  geom_boxplot() +
   scale_y_continuous(labels = percent_format(accuracy = 1)) +
-  scale_fill_brewer(palette = "Set2") +
   labs(x = NULL, y = "Retorno mensual") +
-  theme_minimal(base_size = 11) +
-  theme(axis.text.x = element_text(angle = 15, hjust = 1))
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 18, hjust = 1))
 ```
 
----
-
-<!-- DOCENTE: 4 min. Forma y normalidad sin prueba todavía. -->
-
-# Forma de una distribución
-
-.pull-left[
-
-### Simétrica
-
-- centro aproximadamente equilibrado;
-- media y mediana cercanas;
-- colas similares.
-
-### Asimétrica
-
-- una cola se extiende más;
-- media y mediana pueden separarse;
-- frecuente en variables corporativas.
-]
-
-.pull-right[
-
-### Colas pesadas
-
-- eventos extremos más frecuentes;
-- común en retornos financieros;
-- una distribución normal puede subestimar el riesgo.
-
-### Multimodal
-
-- varios grupos o regímenes;
-- puede sugerir heterogeneidad.
-]
+Un extremo puede ser un error de registro o un evento real. **Detectar no significa eliminar.**
 
 ---
 
-<!-- DOCENTE: 5 min. QQ plot como diagnóstico visual. -->
+# Resumen descriptivo en R
 
-# Q-Q plot: ¿los datos se parecen a una normal?
-
-```r
-ggplot(datos, aes(sample = retorno)) +
-  stat_qq() +
-  stat_qq_line() +
-  facet_wrap(~ activo)
-```
-
-### Lectura sencilla
-
-- puntos cerca de la línea: comportamiento aproximadamente normal;
-- separación en los extremos: colas diferentes a la normal;
-- curvatura sistemática: asimetría u otra forma.
-
-----
-
-.orange[**No es una prueba de “datos buenos o malos”; es un diagnóstico de forma.**]
-
----
-
-class: inverse, center, middle
-background-color: #122140
-
-# 3. Comparaciones y Valores Extremos
-## Encontrar diferencias que importen para la decisión
-
----
-
-<!-- DOCENTE: 4 min. Comparar de manera coherente. -->
-
-# Comparar exige una referencia común
-
-Antes de comparar, revise que los grupos utilicen:
-
-- la misma variable;
-- la misma unidad;
-- el mismo periodo;
-- una frecuencia compatible;
-- una definición común;
-- una muestra suficientemente comparable.
-
-### Ejemplo
-
-No es coherente comparar retorno mensual de un activo con retorno anual de otro sin homologar la frecuencia.
-
----
-
-<!-- DOCENTE: 5 min. No ranking por media. -->
-
-# El mayor promedio no siempre implica la mejor alternativa
-
-| Activo | Retorno medio | Volatilidad | P05 |
-|---|---:|---:|---:|
-| A | 1,1% | 3,0% | -4,0% |
-| B | 1,4% | 8,0% | -12,0% |
-
-### Lectura
-
-El activo B ofrece mayor promedio, pero también mayor variabilidad y una cola izquierda más desfavorable.
-
-----
-
-.center[
-.blue2[**Comparar implica reconocer trade-offs, no producir un ranking automático.**]
-]
-
----
-
-<!-- DOCENTE: 5 min. Outlier definition. -->
-
-# ¿Qué es un valor atípico?
-
-Es una observación alejada del patrón central de los datos.
-
-Puede representar:
-
-1. un error de captura;
-2. una unidad incorrecta;
-3. una operación excepcional;
-4. una crisis o evento real;
-5. una población distinta;
-6. la señal que justamente interesa estudiar.
-
-----
-
-.orange[**Atípico no significa necesariamente incorrecto.**]
-
----
-
-<!-- DOCENTE: 5 min. IQR rule. -->
-
-# Regla del rango intercuartílico
-
-\[
-IQR = Q_{75}-Q_{25}
-\]
-
-Una regla exploratoria frecuente marca observaciones fuera de:
-
-\[
-[Q_{25}-1.5IQR,\;Q_{75}+1.5IQR]
-\]
-
-```r
-datos |>
+```{r tabla-resumen, echo=TRUE}
+resumen_activos <- retornos_long |>
   group_by(activo) |>
-  mutate(
-    q25 = quantile(retorno, 0.25),
-    q75 = quantile(retorno, 0.75),
-    iqr = IQR(retorno),
-    atipico = retorno < q25 - 1.5 * iqr |
-              retorno > q75 + 1.5 * iqr
+  summarise(
+    media = mean(retorno),
+    mediana = median(retorno),
+    volatilidad = sd(retorno),
+    p05 = quantile(retorno, 0.05)
   )
 ```
 
----
-
-<!-- DOCENTE: 4 min. Response workflow. -->
-
-# ¿Qué hacer cuando aparece un extremo?
-
-```text
-1. Verificar la fuente
-2. Revisar unidad y fecha
-3. Buscar contexto financiero
-4. Comparar con otras variables
-5. Documentar la decisión
-6. Conservar, corregir o excluir justificadamente
+```{r tabla-resumen-output, echo=FALSE}
+resumen_activos |>
+  mutate(across(where(is.numeric), ~percent(.x, accuracy = 0.1))) |>
+  kable(align = c("l", "r", "r", "r", "r"))
 ```
-
-### Mala práctica
-
-Eliminar todos los extremos porque “dañan” la media o el gráfico.
-
----
-
-<!-- DOCENTE: 5 min. Worst observations. -->
-
-# Las peores observaciones también cuentan una historia
-
-```r
-peores_meses <- datos |>
-  group_by(activo) |>
-  slice_min(
-    order_by = retorno,
-    n = 5,
-    with_ties = FALSE
-  ) |>
-  arrange(activo, retorno)
-```
-
-### Interpretación
-
-`slice_min()` selecciona los valores más pequeños: aquí, los meses con mayores pérdidas.
 
 ---
 
 class: inverse, center, middle
 background-color: #122140
 
-# 4. Correlación, Covarianza y Dependencia
-## Comprender cómo se mueven conjuntamente las variables
+# 2. Dependencia e inferencia estadística
+## Relación entre variables e incertidumbre de las estimaciones
 
 ---
 
-<!-- DOCENTE: 5 min. Covariance intuition. -->
+# Covarianza y correlación
 
-# Covarianza
+### Covarianza
+Indica si dos variables tienden a moverse en la misma dirección o en direcciones opuestas.
 
-Mide si dos variables tienden a alejarse de sus medias en la misma dirección.
+### Correlación
+Estandariza la relación en una escala entre `-1` y `1`.
 
-\[
-Cov(X,Y)=\frac{1}{n-1}\sum_{i=1}^{n}(x_i-\bar{x})(y_i-\bar{y})
-\]
+$$\rho_{XY}=\frac{Cov(X,Y)}{\sigma_X\sigma_Y}$$
 
-- positiva: tienden a moverse en la misma dirección;
-- negativa: tienden a moverse en direcciones opuestas;
-- cercana a cero: poca relación lineal conjunta.
-
-### Limitación
-
-Su magnitud depende de las unidades de las variables.
+- cercana a `1`: asociación lineal positiva;
+- cercana a `-1`: asociación lineal negativa;
+- cercana a `0`: poca asociación lineal.
 
 ---
 
-<!-- DOCENTE: 5 min. Correlation. -->
+# Antes del coeficiente: observar la relación
 
-# Correlación
-
-Estandariza la covarianza:
-
-\[
-\rho_{XY}=\frac{Cov(X,Y)}{\sigma_X\sigma_Y}
-\]
-
-Toma valores entre `-1` y `1`.
-
-| Valor aproximado | Lectura inicial |
-|---|---|
-| cercano a 1 | relación lineal positiva fuerte |
-| cercano a 0 | relación lineal débil |
-| cercano a -1 | relación lineal negativa fuerte |
-
----
-
-<!-- DOCENTE: 5 min. Scatterplot. -->
-
-# Antes del coeficiente: mirar la relación
-
-```r
-ggplot(datos_wide, aes(x = ACTIVO_A, y = ACTIVO_B)) +
+```{r dispersion-dos-activos, echo=FALSE, out.width="80%", fig.align="center"}
+retornos_wide |>
+  ggplot(aes(x = ANDINA_BANCO, y = ANDINA_ENERGIA)) +
   geom_point(alpha = 0.65) +
   geom_smooth(method = "lm", se = FALSE) +
+  scale_x_continuous(labels = percent_format(accuracy = 1)) +
+  scale_y_continuous(labels = percent_format(accuracy = 1)) +
+  labs(
+    x = "Retorno mensual — Banco",
+    y = "Retorno mensual — Energía"
+  ) +
   theme_minimal()
 ```
 
-Un gráfico de dispersión permite observar:
-
-- dirección;
-- forma;
-- fuerza aproximada;
-- grupos;
-- observaciones influyentes.
+.center[
+.blue2[**El coeficiente resume una relación; el gráfico permite examinar su forma.**]
+]
 
 ---
 
-<!-- DOCENTE: 5 min. Correlation matrix in R. -->
-
-# Matriz de correlación en R
-
-```r
-retornos_wide <- datos |>
-  select(fecha, activo, retorno) |>
-  pivot_wider(
-    names_from = activo,
-    values_from = retorno
-  )
-
-matriz_cor <- retornos_wide |>
-  select(-fecha) |>
-  cor(use = "pairwise.complete.obs")
-```
-
-### `pivot_wider()`
-
-Pasa los activos de filas a columnas para poder calcular relaciones entre ellos.
-
----
-
-# Correlaciones entre los activos
-
-```{r heatmap-correlacion, fig.width=8.8, fig.height=5.2, out.width="78%"}
-matriz_cor_plot <- retornos_activos |>
-  select(-fecha) |>
-  cor() |>
-  as.data.frame() |>
-  rownames_to_column("activo_1") |>
-  pivot_longer(-activo_1, names_to = "activo_2", values_to = "correlacion")
-
-ggplot(matriz_cor_plot, aes(activo_1, activo_2, fill = correlacion)) +
-  geom_tile(color = "white") +
-  geom_text(aes(label = round(correlacion, 2)), size = 4) +
-  scale_fill_gradient2(low = "#B2182B", mid = "white", high = "#2166AC", midpoint = 0, limits = c(-1, 1)) +
-  labs(x = NULL, y = NULL, fill = "Correlación") +
-  theme_minimal(base_size = 11) +
-  theme(axis.text.x = element_text(angle = 20, hjust = 1))
-```
-
----
-
-<!-- DOCENTE: 5 min. Diversification interpretation. -->
-
-# Correlación y diversificación
-
-Si dos activos tienen correlación baja, sus movimientos lineales suelen ser menos parecidos.
-
-Esto puede ayudar a reducir la variabilidad conjunta de un portafolio.
-
-### Pero cuidado
-
-- la correlación puede cambiar en el tiempo;
-- puede aumentar durante una crisis;
-- resume principalmente dependencia lineal;
-- no garantiza que los activos no caigan juntos.
-
-----
-
-.orange[**Baja correlación no significa independencia.**]
-
----
-
-<!-- DOCENTE: 5 min. Correlation does not imply causality. -->
-
-# Correlación no implica causalidad
-
-Una correlación alta puede aparecer porque:
-
-- una variable afecta a la otra;
-- ambas responden a un factor común;
-- comparten tendencia;
-- existe una coincidencia muestral;
-- una tercera variable no observada las conecta.
-
-### Ejemplo financiero
-
-Dos acciones pueden moverse juntas porque ambas responden a tasas de interés, sin que una cause el movimiento de la otra.
-
----
-
-<!-- DOCENTE: 5 min. Pearson and Spearman. -->
-
-# Pearson y Spearman
+# Pearson, Spearman y precauciones
 
 .pull-left[
 
 ### Pearson
 
-- mide relación lineal;
-- utiliza los valores originales;
+- asociación lineal;
+- utiliza directamente los valores;
 - puede ser sensible a extremos.
 
 ```r
 cor(x, y, method = "pearson")
 ```
+
 ]
 
 .pull-right[
 
 ### Spearman
 
-- utiliza rangos;
-- reconoce relaciones monótonas;
+- trabaja con rangos;
+- capta relaciones monótonas;
 - suele ser menos sensible a extremos.
 
 ```r
 cor(x, y, method = "spearman")
 ```
+
 ]
+
+**Correlación no implica causalidad** y puede cambiar entre periodos.
+
+---
+
+# Matriz de correlación
+
+```{r matriz-cor, echo=TRUE}
+retornos_wide |>
+  select(-fecha) |>
+  cor(use = "pairwise.complete.obs") |>
+  round(2)
+```
+
+```{r matriz-cor-output, echo=FALSE}
+round(retornos_cor, 2) |>
+  kable()
+```
+
+---
+
+# Población, muestra y estimación
+
+### Población
+Conjunto completo sobre el cual queremos aprender.
+
+### Muestra
+Observaciones disponibles para realizar el análisis.
+
+### Estimación
+Valor calculado con la muestra para aproximar una característica de la población.
+
+.center[
+.orange[**La inferencia reconoce que una estimación muestral tiene incertidumbre.**]
+]
+
+---
+
+# Estimación puntual e intervalo de confianza
+
+Una estimación puntual produce un único valor:
+
+```r
+mean(retornos)
+```
+
+Un intervalo agrega información sobre su precisión:
+
+$$IC = [Límite\ inferior,\ Límite\ superior]$$
+
+En el enfoque frecuentista, un procedimiento de IC del 95% está diseñado para que, al repetirse muchas veces, aproximadamente 95% de los intervalos construidos contengan el parámetro verdadero.
+
+---
+
+# Pruebas de hipótesis
+
+Una prueba contrasta una afirmación de referencia utilizando información muestral.
+
+$$H_0:\mu_R=0 \qquad H_1:\mu_R\neq 0$$
+
+- `H0`: hipótesis nula;
+- `H1`: hipótesis alternativa;
+- `α`: nivel de significancia definido antes del resultado;
+- `p-value`: compatibilidad de los datos con `H0`, bajo el modelo.
+
+Regla introductoria: si `p-value < α`, se rechaza `H0`.
+
+**No rechazar `H0` no equivale a demostrar que `H0` es verdadera.**
+
+---
+
+# Ejemplo: retorno promedio de ANDINA_BANCO
+
+```{r prueba-t-banco, echo=TRUE}
+t.test(
+  ret_banco,
+  mu = 0,
+  conf.level = 0.95
+)
+```
+
+La prueba pregunta si el retorno mensual promedio observado es estadísticamente distinto de cero.
+
+.center[
+.blue2[**La decisión estadística debe acompañarse de una lectura económica: magnitud, periodo, riesgo y contexto.**]
+]
+
+---
+
+# Bootstrap
+
+El bootstrap aproxima la incertidumbre de una estimación mediante remuestreo con reemplazo.
+
+```{r bootstrap-codigo, echo=TRUE}
+set.seed(2026)
+boot_medias <- replicate(
+  2000,
+  mean(sample(ret_banco,
+              size = length(ret_banco),
+              replace = TRUE))
+)
+
+quantile(boot_medias, c(0.025, 0.975))
+```
+
+No crea información nueva: utiliza la muestra observada para estudiar la variabilidad del estimador.
+
+---
+
+# Distribución bootstrap de la media
+
+```{r bootstrap-grafico, echo=FALSE, out.width="80%", fig.align="center"}
+tibble(media_boot = boot_medias) |>
+  ggplot(aes(media_boot)) +
+  geom_histogram(bins = 35) +
+  geom_vline(xintercept = ic_boot_banco, linetype = 2) +
+  scale_x_continuous(labels = percent_format(accuracy = 0.1)) +
+  labs(
+    x = "Media remuestreada",
+    y = "Frecuencia",
+    subtitle = "Líneas punteadas: percentiles 2.5% y 97.5%"
+  ) +
+  theme_minimal()
+```
+
+---
+
+# Precaución en series financieras
+
+El bootstrap simple es una primera aproximación didáctica.
+
+En series financieras pueden existir:
+
+- dependencia temporal;
+- volatilidad agrupada;
+- crisis y cambios de régimen;
+- observaciones extremas relacionadas entre sí.
+
+En aplicaciones avanzadas pueden utilizarse remuestreos por bloques u otros métodos que reconozcan la estructura temporal.
 
 ---
 
 class: inverse, center, middle
 background-color: #122140
 
-# 5. Incertidumbre e Inferencia Aplicada
-## Un resultado muestral no es una certeza
+# 3. Métricas financieras básicas
+## Interpretación estadística en contexto financiero
 
 ---
 
-<!-- DOCENTE: 5 min. Population/sample. -->
+# Estadística y métricas financieras
 
-# Población, muestra y estimación
+| Concepto estadístico | Aplicación financiera |
+|---|---|
+| Media | retorno promedio |
+| Desviación estándar | volatilidad |
+| Percentil bajo | umbral de pérdida |
+| Correlación | dependencia entre activos |
+| Intervalo de confianza | incertidumbre de una estimación |
+| Bootstrap | incertidumbre empírica de un KPI |
+
+La estadística proporciona herramientas; la interpretación financiera define su utilidad.
+
+---
+
+
+# Retorno y volatilidad
 
 .pull-left[
 
-### Población
+### Retorno simple
 
-Conjunto de resultados que nos interesa comprender.
+$$R_t=\frac{P_t-P_{t-1}}{P_{t-1}}=\frac{P_t}{P_{t-1}}-1$$
 
-Ejemplo: comportamiento futuro del retorno de un activo.
+Mide el **cambio porcentual** del valor entre dos periodos.
+
+**Ejemplo**
+
+Si un activo pasa de 100 a 105:
+
+$$
+R_t=\frac{105-100}{100}=0.05=5\%
+$$
+
+**Lectura:** el activo aumentó su valor en 5%.
+
 ]
 
 .pull-right[
 
-### Muestra
+### Volatilidad
 
-Observaciones disponibles.
+$$
+\sigma_R=SD(R_t)
+$$
 
-Ejemplo: 96 retornos mensuales históricos.
+Mide la **dispersión de los retornos** alrededor de su promedio.
+
+**Ejemplo**
+
+Si la desviación estándar de los retornos mensuales es:
+
+$$
+\sigma_{mensual}=4\%
+$$
+
+la volatilidad mensual es 4%.
+
+**Importante:** mide variabilidad, no dirección.
+
 ]
 
-### Estimación
+---
 
-Usamos la muestra para aproximarnos a una característica desconocida de la población.
+# Frecuencia y volatilidad
+
+La volatilidad conserva la **frecuencia de los retornos** utilizados para calcularla.
+
+- Retornos diarios → volatilidad diaria.
+- Retornos mensuales → volatilidad mensual.
+- Retornos anuales → volatilidad anual.
+
+Si queremos expresar una volatilidad de mayor frecuencia en términos anuales:
+
+.pull-left[
+
+### Desde datos diarios
+
+$$\sigma_{anual}=\sigma_{diaria}\sqrt{252}$$
+
+]
+
+.pull-right[
+
+### Desde datos mensuales
+
+$$\sigma_{anual}=\sigma_{mensual}\sqrt{12}$$
+
+]
 
 ---
 
-<!-- DOCENTE: 5 min. Point vs interval. -->
+# Frecuencia y volatilidad
 
-# Estimación puntual vs. intervalo
+**Ejemplo**
 
-Una media muestral de `0,8%` es una **estimación puntual**.
+Si:
 
-Un intervalo de confianza añade información sobre su precisión:
+$$
+\sigma_{mensual}=4\%
+$$
 
-```text
-Media estimada: 0,8% mensual
-IC 95%: [0,1%; 1,5%]
-```
+entonces:
 
-### Lectura
-
-La muestra es compatible con distintos valores plausibles; no conocemos el parámetro con exactitud.
-
-----
-
-.blue2[**El intervalo no elimina la incertidumbre: la hace visible.**]
-
----
-
-<!-- DOCENTE: 5 min. CI interpretation carefully. -->
-
-# ¿Qué significa 95% de confianza?
-
-Interpretación frecuentista:
-
-> Si repitiéramos muchas veces el procedimiento de muestreo y construcción, aproximadamente 95% de los intervalos obtenidos contendrían el verdadero parámetro.
-
-### No significa exactamente
-
-“Hay 95% de probabilidad de que este parámetro fijo esté dentro del intervalo ya calculado”.
-
----
-
-<!-- DOCENTE: 5 min. Bootstrap intuition. -->
-
-# Bootstrap
-
-El bootstrap aproxima la incertidumbre repitiendo este proceso:
-
-```text
-1. Tomar una muestra con reemplazo
-2. Calcular el indicador
-3. Repetir muchas veces
-4. Observar la distribución de resultados
-5. Extraer percentiles para el intervalo
-```
-
-### Con reemplazo
-
-Una observación puede aparecer varias veces en una remuestra y otra puede no aparecer.
-
----
-
-<!-- DOCENTE: 5 min. Bootstrap code simple. -->
-
-# Bootstrap de la media en R
-
-```r
-set.seed(123)
-
-medias_boot <- replicate(
-  2000,
-  mean(
-    sample(retornos, replace = TRUE),
-    na.rm = TRUE
-  )
-)
-
-quantile(
-  medias_boot,
-  probs = c(0.025, 0.975)
-)
-```
-
-### `replicate()`
-
-Repite la misma instrucción el número de veces indicado.
-
----
-
-<!-- DOCENTE: 5 min. Bootstrap caveats. -->
-
-# El bootstrap tampoco hace magia
-
-Funciona a partir de la información contenida en la muestra.
-
-Puede ser engañoso si:
-
-- la muestra es muy pequeña;
-- existe dependencia temporal y se remuestrea como si todo fuera independiente;
-- el periodo histórico no representa el contexto relevante;
-- hay cambios estructurales;
-- la muestra ya contiene sesgos.
-
-----
-
-.orange[**Repetir una muestra sesgada no corrige el sesgo original.**]
-
----
-
-<!-- DOCENTE: 4 min. Time series caveat without advanced blocks. -->
-
-# Precaución con series financieras
-
-Los retornos observados en el tiempo pueden presentar:
-
-- volatilidad agrupada;
-- cambios de régimen;
-- dependencia temporal;
-- periodos de crisis y calma.
-
-Para una primera aproximación didáctica usaremos bootstrap simple.
-
-En aplicaciones avanzadas pueden utilizarse remuestreos por bloques que conservan parte de la estructura temporal.
-
----
-
-class: inverse, center, middle
-background-color: #122140
-
-# 6. Métricas Financieras
-## Traducir datos a indicadores con significado
-
----
-
-<!-- DOCENTE: 4 min. Metric depends on definition. -->
-
-# Una métrica no es solo una fórmula
-
-Para interpretar una métrica debemos conocer:
-
-- definición;
-- unidad;
-- frecuencia;
-- periodo de estimación;
-- benchmark;
-- supuestos;
-- limitaciones.
-
-<br>
+$$
+\sigma_{anual}=4\%\sqrt{12}\approx13.9\%
+$$
 
 .center[
-.orange[**El nombre “rentabilidad” o “riesgo” no garantiza que todos estén calculando lo mismo.**]
+.orange[**La anualización cambia la escala de la medida de riesgo; no crea observaciones nuevas.**]
 ]
 
 ---
-
-<!-- DOCENTE: 5 min. Simple return. -->
-
-# Retorno simple
-
-\[
-R_t=\frac{P_t-P_{t-1}}{P_{t-1}}
-\]
-
-Equivale a:
-
-\[
-R_t=\frac{P_t}{P_{t-1}}-1
-\]
-
-```r
-datos <- datos |>
-  arrange(activo, fecha) |>
-  group_by(activo) |>
-  mutate(retorno = precio / lag(precio) - 1)
-```
-
-### `lag()`
-
-Trae el valor de la observación anterior dentro de cada activo.
-
----
-
-<!-- DOCENTE: 5 min. Annualization. -->
-
-# Anualizar retorno y volatilidad
-
-Para retornos mensuales:
-
-\[
-R_{anual}=(1+\bar{R}_{mensual})^{12}-1
-\]
-
-\[
-\sigma_{anual}=\sigma_{mensual}\sqrt{12}
-\]
-
-```r
-resumen |>
-  mutate(
-    retorno_anual = (1 + media_mensual)^12 - 1,
-    volatilidad_anual = volatilidad_mensual * sqrt(12)
-  )
-```
-
----
-
-<!-- DOCENTE: 5 min. Sharpe beginner. -->
 
 # Razón de Sharpe
 
-Compara retorno adicional con volatilidad:
-
-\[
+$$
 Sharpe=\frac{R_p-R_f}{\sigma_p}
-\]
+$$
 
-- `R_p`: retorno del portafolio o activo;
-- `R_f`: tasa libre de riesgo compatible;
-- `σ_p`: volatilidad.
+Mide el **retorno adicional obtenido por unidad de riesgo asumido**.
 
-### Lectura sencilla
+.pull-left[
 
-Un Sharpe mayor indica más retorno adicional por unidad de variabilidad, bajo los supuestos utilizados.
+### Componentes
+
+- $R_p$: retorno del portafolio.
+- $R_f$: tasa libre de riesgo.
+- $\sigma_p$: volatilidad del portafolio.
+
+]
+
+.pull-right[
+
+### Ejemplo
+
+Suponga:
+
+- retorno anual = 12%
+- tasa libre de riesgo = 4%
+- volatilidad anual = 16%
+
+$$
+Sharpe=\frac{0.12-0.04}{0.16}=0.50
+$$
+
+]
+
+**Lectura:** el portafolio obtiene 0.50 unidades de retorno en exceso por cada unidad de riesgo asumido.
+
+.center[
+.orange[**Retorno, tasa libre de riesgo y volatilidad deben estar expresados en frecuencias compatibles.**]
+]
 
 ---
 
-<!-- DOCENTE: 5 min. Downside percentile. -->
+# Interpretación de la razón de Sharpe
 
-# Percentil 5% como medida de cola
+La razón de Sharpe permite comparar el desempeño de activos o portafolios considerando simultáneamente **retorno y riesgo**.
+
+**Ejemplo**
+
+- Portafolio A: Sharpe = 0.40
+- Portafolio B: Sharpe = 0.80
+
+El portafolio B presenta un **mayor retorno en exceso por unidad de volatilidad**.
+
+Sin embargo, Sharpe no resume todas las dimensiones del riesgo.
+
+Por ejemplo, no describe directamente:
+
+- pérdidas extremas;
+- asimetría de los retornos;
+- caídas acumuladas desde máximos.
+
+.center[
+.orange[**Por eso conviene analizarlo junto con otras métricas de riesgo.**]
+]
+
+---
+
+# Drawdown y VaR histórico
+
+.pull-left[
+
+### Drawdown
+
+$$
+DD_t=
+\frac{V_t}{\max(V_1,\ldots,V_t)}-1
+$$
+
+Mide la **caída porcentual desde el máximo alcanzado previamente**.
+
+**Ejemplo**
+
+Si un portafolio alcanza un valor de 120 y posteriormente cae a 90:
+
+$$
+DD=\frac{90}{120}-1=-0.25
+$$
+
+$$
+DD=-25\%
+$$
+
+El portafolio se encuentra 25% por debajo de su máximo previo.
+
+]
+
+.pull-right[
+
+### VaR histórico
+
+Utiliza un percentil de los retornos históricos como referencia para establecer un **umbral de pérdida**.
 
 ```r
-p05 <- quantile(retornos, 0.05, na.rm = TRUE)
+q05 <- quantile(retornos, 0.05)
+VaR95 <- -q05
 ```
 
-Si `p05 = -0.08`, aproximadamente 5% de los meses observados tuvo retornos iguales o menores a `-8%`.
+**Ejemplo**
 
-### Importante
+Si:
 
-No significa que la pérdida máxima sea 8%.
+$$
+q_{0.05}=-3.2\%
+$$
 
-----
+entonces:
 
-.orange[**Es un umbral histórico de cola, no una garantía sobre el futuro.**]
+$$
+VaR_{95}=3.2\%
+$$
+
+Aproximadamente, bajo el comportamiento histórico observado, en 95 de cada 100 periodos la pérdida no superaría 3.2%.
+
+]
 
 ---
 
-<!-- DOCENTE: 5 min. Corporate KPIs. -->
+# Maximum drawdown y VaR
+
+.pull-left[
+
+### Maximum Drawdown
+
+El **maximum drawdown** corresponde a la mayor caída desde un máximo hasta un mínimo posterior durante el periodo analizado.
+
+Por ejemplo:
+
+- valor máximo: 120
+- valor mínimo posterior: 84
+
+$$
+MDD=\frac{84}{120}-1=-30\%
+$$
+
+**Lectura:** la peor caída observada desde un máximo fue de 30%.
+
+]
+
+.pull-right[
+
+### VaR histórico
+
+El VaR responde una pregunta diferente:
+
+> ¿Cuál es un umbral de pérdida asociado a un determinado nivel de confianza?
+
+Un VaR del 95% de 3.2% **no significa** que la pérdida máxima sea 3.2%.
+
+En el 5% restante pueden presentarse pérdidas superiores.
+
+]
+
+---
+
+# Lectura conjunta de las métricas
+
+| Métrica | Pregunta que ayuda a responder |
+|---|---|
+| **Retorno** | ¿Cuánto ganó o perdió el activo? |
+| **Volatilidad** | ¿Qué tanto fluctúan sus retornos? |
+| **Sharpe** | ¿Cuánto retorno adicional genera por unidad de riesgo? |
+| **Drawdown** | ¿Cuánto ha caído desde un máximo previo? |
+| **Maximum Drawdown** | ¿Cuál fue la peor caída observada? |
+| **VaR histórico** | ¿Cuál es un umbral de pérdida para cierto nivel de confianza? |
+
+.center[
+.orange[**Cada métrica describe una dimensión diferente del desempeño y del riesgo financiero.**]
+]
+
+
+---
 
 # Métricas corporativas básicas
 
@@ -1258,49 +907,27 @@ No significa que la pérdida máxima sea 8%.
 | Endeudamiento | Nivel de deuda | pasivos / activos |
 | Liquidez | Razón corriente | activos corrientes / pasivos corrientes |
 
-### Precaución
-
-La comparación debe considerar sector, periodo, política contable y modelo de negocio.
+La comparación debe considerar sector, periodo, unidades y criterios contables.
 
 ---
 
-# Comparación corporativa
+# Resumen de métricas del caso
 
-```{r tabla-corporativa, echo=FALSE}
-empresas_corporativas |>
+```{r metricas-mercado-tabla, echo=FALSE}
+metricas_mercado |>
   transmute(
-    Empresa = empresa,
-    `Margen neto` = percent(margen_neto, accuracy = 0.1),
-    ROA = percent(roa, accuracy = 0.1),
-    Endeudamiento = percent(endeudamiento, accuracy = 0.1),
-    `Razón corriente` = number(razon_corriente, accuracy = 0.01)
+    Activo = activo,
+    `Retorno anual` = percent(retorno_anual, accuracy = 0.1),
+    `Vol. anual` = percent(volatilidad_anual, accuracy = 0.1),
+    Sharpe = round(sharpe_aprox, 2),
+    `Max. drawdown` = percent(max_drawdown, accuracy = 0.1),
+    `VaR hist. 95%` = percent(var95_hist, accuracy = 0.1)
   ) |>
-  kable(align = c("l", "r", "r", "r", "r"))
+  kable(align = c("l", "r", "r", "r", "r", "r"))
 ```
 
-### Pregunta
-
-¿La empresa con mayor margen es también la más líquida o la menos endeudada?
-
----
-
-<!-- DOCENTE: 4 min. KPI vs decision. -->
-
-# Una métrica necesita contexto
-
-Una razón corriente de `1,2` puede parecer suficiente, pero su interpretación depende de:
-
-- velocidad de cobro;
-- composición del inventario;
-- calendario de pagos;
-- estabilidad de los flujos;
-- sector económico;
-- comparación histórica.
-
-----
-
 .center[
-.blue2[**Un KPI señala dónde mirar; rara vez explica por sí solo qué decisión tomar.**]
+.blue2[**Ninguna métrica debería interpretarse de forma aislada.**]
 ]
 
 ---
@@ -1308,289 +935,621 @@ Una razón corriente de `1,2` puede parecer suficiente, pero su interpretación 
 class: inverse, center, middle
 background-color: #122140
 
-# 7. Vamos a R
-## Ejemplo guiado: comparar dos activos
+# 4. Visualización y reportes reproducibles
+## Comunicación de resultados analíticos
 
 ---
 
-<!-- DOCENTE: 3 min. Abrir el script guiado. -->
+# Selección del gráfico según la pregunta
 
-# Ruta del código guiado
-
-Trabajaremos con dos activos y seguiremos esta secuencia:
-
-```text
-1. Importar y reconocer la base
-2. Pasar los datos a formato largo
-3. Calcular estadísticas descriptivas
-4. Comparar distribuciones
-5. Identificar meses extremos
-6. Estimar correlación
-7. Construir un intervalo bootstrap
-8. Comunicar una conclusión financiera
-```
-
-<br>
+| Pregunta | Visualización frecuente |
+|---|---|
+| ¿Cómo evoluciona una variable? | línea |
+| ¿Cómo se comparan categorías? | barras o puntos |
+| ¿Cómo se distribuyen los valores? | histograma, densidad, boxplot |
+| ¿Cómo se relacionan dos variables? | dispersión |
+| ¿Cuál es la incertidumbre? | intervalo, banda, error bar |
 
 .center[
-.orange[**El objetivo no es memorizar funciones, sino comprender qué pregunta responde cada resultado.**]
+.orange[**El gráfico se selecciona por la pregunta, no por disponibilidad del software.**]
 ]
 
 ---
 
-<!-- DOCENTE: 4 min. Mostrar estructura del archivo. -->
+# Principios básicos de visualización
 
-# Base del ejemplo guiado
+Una visualización financiera debería facilitar:
+
+- comparabilidad;
+- lectura de escalas y unidades;
+- identificación de periodos o categorías;
+- jerarquía visual;
+- interpretación del mensaje principal.
+
+Evite exceso de elementos decorativos, escalas engañosas, demasiadas categorías y títulos poco informativos.
+
+---
+
+# Ejemplo de visualización financiera
+
+```{r grafico-indices, echo=TRUE, eval=FALSE, fig.height=4.1}
+retornos_long |>
+  ggplot(aes(fecha, indice, group = activo, linetype = activo)) +
+  geom_line(linewidth = 0.8) +
+  labs(
+    title = "Índice acumulado por activo",
+    subtitle = "Base 100 al inicio del periodo",
+    x = NULL, y = "Índice", linetype = NULL
+  ) +
+  theme_minimal()
+```
+
+
+---
+
+# Ejemplo de visualización financiera
+
+```{r grafico-indices2, echo=FALSE, out.width="80%", fig.align="center"}
+retornos_long |>
+  ggplot(aes(fecha, indice, group = activo, linetype = activo)) +
+  geom_line(linewidth = 0.8) +
+  labs(
+    title = "Índice acumulado por activo",
+    subtitle = "Base 100 al inicio del periodo",
+    x = NULL, y = "Índice", linetype = NULL
+  ) +
+  theme_minimal()
+```
+
+El título, subtítulo, unidad y leyenda también forman parte del análisis.
+
+---
+
+# Visualización de incertidumbre
+
+```{r ic-activos, echo=TRUE, eval=FALSE, out.width="80%", fig.align="center"}
+ic_activos <- retornos_long |>
+  group_by(activo) |>
+  summarise(
+    media = mean(retorno),
+    se = sd(retorno) / sqrt(n()),
+    li = media - qt(0.975, df = n() - 1) * se,
+    ls = media + qt(0.975, df = n() - 1) * se,
+    .groups = "drop"
+  )
+
+ic_activos |>
+  ggplot(aes(x = reorder(activo, media), y = media)) +
+  geom_point(size = 2.4) +
+  geom_errorbar(aes(ymin = li, ymax = ls), width = 0.15) +
+  scale_y_continuous(labels = percent_format(accuracy = 0.5)) +
+  coord_flip() +
+  labs(x = NULL, y = "Retorno mensual medio e IC aproximado 95%") +
+  theme_minimal()
+```
+
+---
+
+
+# Visualización de incertidumbre
+
+```{r ic-activos2, echo=FALSE, out.width="80%", fig.align="center"}
+ic_activos <- retornos_long |>
+  group_by(activo) |>
+  summarise(
+    media = mean(retorno),
+    se = sd(retorno) / sqrt(n()),
+    li = media - qt(0.975, df = n() - 1) * se,
+    ls = media + qt(0.975, df = n() - 1) * se,
+    .groups = "drop"
+  )
+
+ic_activos |>
+  ggplot(aes(x = reorder(activo, media), y = media)) +
+  geom_point(size = 2.4) +
+  geom_errorbar(aes(ymin = li, ymax = ls), width = 0.15) +
+  scale_y_continuous(labels = percent_format(accuracy = 0.5)) +
+  coord_flip() +
+  labs(x = NULL, y = "Retorno mensual medio e IC aproximado 95%") +
+  theme_minimal()
+```
+
+---
+# Galería de visualización de datos
+
+La selección de una figura depende de la **pregunta que queremos responder** y del tipo de variables disponibles.
+
+Esta galería reúne diferentes alternativas de visualización construidas con `ggplot2` y puede utilizarse como referencia para:
+
+- comparar grupos o categorías;
+- analizar distribuciones;
+- estudiar relaciones entre variables;
+- representar evolución temporal;
+- explorar diferentes formas de comunicar resultados.
+
+.center[
+### Consulta la galería de ejemplos
+
+[Aquí!! --> **Galería DataViz — ggplot2**](https://juniorjb5.github.io/DataViz/3_ggplot2/3_ggplot2.html#1)
+
+.orange[**Primero defina qué quiere comunicar; después seleccione el gráfico.**]
+]
+
+
+---
+
+
+# Reportes reproducibles con R Markdown
+
+Un reporte reproducible integra datos, código, tablas, gráficos, resultados e interpretación en un mismo documento.
+
+
+````markdown
+
+````markdown
+---
+title: "Reporte financiero"
+output: html_document
+---
+
+## Resultados
 
 ```r
-datos <- read_csv(
-  "Datos/Clase_3/retornos_activos.csv"
-)
-
-datos_long <- datos |>
-  pivot_longer(
-    -fecha,
-    names_to = "activo",
-    values_to = "retorno"
-  ) |>
-  filter(
-    activo %in% c(
-      "ANDINA_BANCO",
-      "ANDINA_ALIMENTOS"
-    )
-  )
+resumen <- retornos_log |>
+  group_by(activo) |>
+  summarise(retorno = mean(retorno),
+            volatilidad = sd(retorno))
 ```
+
+````
+
+
+Si la información cambia, el documento puede ejecutarse nuevamente para actualizar los resultados.
 
 ---
 
-<!-- DOCENTE: 4 min. Estructura espejo de actividad. -->
+# Análisis manual y flujo reproducible
 
-# Productos del ejemplo guiado
+.pull-left[
 
-Al terminar tendremos:
+### Flujo manual
 
-- una tabla descriptiva por activo;
-- un histograma y un boxplot;
-- los cinco peores meses;
-- una correlación entre activos;
-- un intervalo bootstrap para el retorno promedio;
-- una conclusión sobre retorno, riesgo y diversificación.
+1. calcular;
+2. copiar resultados;
+3. pegar gráficos;
+4. modificar tablas;
+5. repetir cuando cambian los datos.
 
-----
+]
 
-> Esta misma estructura será utilizada por los grupos en la actividad.
+.pull-right[
+
+### Flujo reproducible
+
+1. actualizar datos;
+2. ejecutar el documento;
+3. regenerar tablas y gráficos;
+4. revisar interpretación.
+
+]
+
+.center[
+.blue2[**La reproducibilidad reduce pasos manuales y mejora la trazabilidad.**]
+]
+
+---
+
+
+
+# Reportes reproducibles con R Markdown
+
+R Markdown permite integrar en un mismo documento **texto, código, resultados, tablas y figuras**.
+
+Puede utilizarse para construir reportes que se actualizan automáticamente cuando cambian los datos o el análisis.
+
+Esta guía presenta ejemplos sobre:
+
+- estructura básica de un archivo `.Rmd`;
+- uso de chunks de código;
+- inclusión de tablas y gráficos;
+- generación de documentos reproducibles;
+- combinación de análisis e interpretación en un mismo reporte.
+
+.center[
+### Consulta la guía de R Markdown
+
+[Aquí!! --> **Guía de R Markdown**](https://juniorjb5.github.io/DataViz/5_Rmarkdown/Class_Rmarkdonw.html#1)
+
+.orange[**La idea no es copiar resultados, sino construir documentos que puedan volver a ejecutarse y actualizarse.**]
+]
+
+
+
+---
+
+# Ejemplos de reportes reproducibles
+
+Un reporte reproducible no tiene que verse como una salida básica de R.
+
+Actualmente existen formatos que permiten integrar **análisis, narrativa, tablas, figuras y resultados** con una presentación cercana a un informe profesional.
+
+.center[
+### Explora algunos ejemplos
+
+[Aquí!! --> **Galería oficial de Quarto — Articles & Reports**](https://quarto.org/docs/gallery/)
+
+[Aquí!! --> **Galería oficial de R Markdown**](https://rmarkdown.rstudio.com/gallery/)
+
+.orange[**El contenido es reproducible; el diseño del producto final también puede adaptarse a la audiencia.**]
+]
+
 
 ---
 
 class: inverse, center, middle
 background-color: #122140
 
-# 8. Actividad Aplicada
-## Comité de inversión de Grupo Andino
+# 5. Tableros analíticos con Flexdashboard
+## Estructura, componentes y escenarios de uso
 
 ---
 
-<!-- DOCENTE: 5 min. Explicar el contexto antes de salas. -->
+# Dashboard: definición y componentes
 
-# Situación
+Un dashboard organiza indicadores y visualizaciones para facilitar el seguimiento o análisis de un problema.
 
-El comité financiero de Grupo Andino evalúa cuatro alternativas de inversión:
+Componentes frecuentes:
 
-- `ANDINA_BANCO`;
-- `ANDINA_ENERGIA`;
-- `ANDINA_ALIMENTOS`;
-- `ANDINA_TECNOLOGIA`.
+- **KPIs:** valores resumidos;
+- **gráficos:** evolución, comparación, distribución o relación;
+- **tablas:** detalle;
+- **filtros:** periodo, activo, empresa o categoría;
+- **navegación:** separación de contenidos;
+- **alertas:** reglas o umbrales.
 
-Dispone de 96 retornos mensuales por activo.
-
-### Pregunta de decisión
-
-> ¿Qué combinación de retorno, variabilidad, riesgo de cola y diversificación presenta cada alternativa?
+.center[
+.orange[**El tablero debe partir de una necesidad de gestión, no de una colección de gráficos.**]
+]
 
 ---
 
-# ¿Dónde están los datos?
+# Reporte y dashboard
 
-La base se genera automáticamente al tejer este `.Rmd`:
+| Reporte reproducible | Dashboard |
+|---|---|
+| desarrolla una explicación | organiza información para consulta |
+| puede incluir texto extenso | privilegia síntesis visual |
+| sigue una secuencia de lectura | permite navegación o exploración |
+| documenta el análisis | facilita seguimiento de indicadores |
+
+Ambos pueden utilizar los **mismos datos, métricas y gráficos**.
+
+---
+
+# ¿Qué es Flexdashboard?
+
+`flexdashboard` es un formato de R Markdown para organizar resultados analíticos en forma de tablero.
+
+Permite combinar gráficos, tablas, `valueBox()`, filas, columnas, páginas y componentes HTML.
+
+```yaml
+---
+title: "Dashboard financiero"
+output:
+  flexdashboard::flex_dashboard:
+    orientation: rows
+    vertical_layout: fill
+---
+```
+
+.center[
+.blue2[**Su principal ventaja es reutilizar objetos y código que ya existen en R.**]
+]
+
+---
+
+# Filas, columnas y páginas
+
+.pull-left[
+
+### Filas y columnas
+
+```markdown
+Row
+-------------------------------------
+
+Column {data-width=500}
+-------------------------------------
+```
+
+]
+
+.pull-right[
+
+### Páginas
+
+```markdown
+Desempeño
+=====================================
+
+Riesgo
+=====================================
+```
+
+]
+
+La estructura debe responder al orden en que el usuario consulta la información.
+
+---
+
+# Escenario 1 — Tablero ejecutivo
+
+Uso: presentar un resumen para gerencia o comité.
 
 ```text
-Datos/Clase_3/retornos_activos.csv
+┌─────────┬─────────┬─────────┐
+│ Retorno │  Riesgo │  Sharpe │
+└─────────┴─────────┴─────────┘
+┌─────────────────────────────┐
+│ Evolución del desempeño     │
+└─────────────────────────────┘
+┌─────────────────────────────┐
+│ Resumen / alertas           │
+└─────────────────────────────┘
 ```
 
-### Estructura
-
-- una fila representa un mes;
-- `fecha` identifica el periodo;
-- cada columna adicional contiene el retorno mensual de un activo;
-- los valores se expresan como proporciones: `0.02 = 2%`.
+Pocos KPIs, lectura rápida y énfasis en estado actual y evolución.
 
 ---
 
-<!-- DOCENTE: Trabajo en salas, 35-45 min. -->
+# Escenario 2 — Tablero comparativo
 
-# Trabajo en grupos — Parte 1
+Uso: contrastar activos, empresas, unidades o periodos.
 
-### A. Comprensión y preparación
+```text
+┌───────────────┬───────────────┐
+│ Activo / A    │ Activo / B    │
+├───────────────┼───────────────┤
+│ Retorno       │ Retorno       │
+│ Volatilidad   │ Volatilidad   │
+├───────────────┴───────────────┤
+│ Distribuciones / correlación  │
+└───────────────────────────────┘
+```
 
-1. Importen e inspeccionen la base.
-2. Confirmen la unidad de análisis y la frecuencia.
-3. Pasen los datos de formato ancho a largo.
-4. Revisen faltantes y número de observaciones por activo.
-
-### Producto
-
-Una explicación breve de qué representa cada fila antes y después de `pivot_longer()`.
-
----
-
-# Trabajo en grupos — Parte 2
-
-### B. Descripción y distribución
-
-Para cada activo calculen:
-
-- media y mediana mensual;
-- desviación estándar;
-- mínimo y máximo;
-- percentiles 5, 25, 50, 75 y 95;
-- número de observaciones.
-
-Construyan al menos:
-
-- un gráfico de distribución;
-- un boxplot comparativo.
+Requiere escalas, definiciones y periodos comparables.
 
 ---
 
-# Trabajo en grupos — Parte 3
+# Escenario 3 — Tablero de seguimiento
 
-### C. Valores extremos
+Uso: monitorear una variable o proceso a través del tiempo.
 
-1. Identifiquen los cinco peores meses de cada activo.
-2. Apliquen una regla exploratoria de valores atípicos.
-3. Revisen si los eventos extremos ocurrieron en fechas comunes.
-4. Expliquen por qué no deberían eliminarse automáticamente.
+```text
+┌─────────────────────────────┐
+│ KPIs y estado actual        │
+├─────────────────────────────┤
+│ Serie temporal              │
+├──────────────┬──────────────┤
+│ Alertas      │ Detalle      │
+└──────────────┴──────────────┘
+```
 
-### Pregunta
-
-¿Qué activo presenta la cola izquierda más desfavorable?
-
----
-
-# Trabajo en grupos — Parte 4
-
-### D. Dependencia
-
-1. Calculen las matrices de covarianza y correlación.
-2. Identifiquen la pareja con mayor correlación.
-3. Identifiquen la pareja con menor correlación.
-4. Construyan un gráfico de dispersión para una pareja.
-
-### Pregunta
-
-¿Qué pareja podría aportar mayor diversificación y cuáles son las limitaciones de esa conclusión?
+Puede incorporar actualización periódica, umbrales y detalle para investigar cambios.
 
 ---
 
-# Trabajo en grupos — Parte 5
+# KPIs con `valueBox()`
 
-### E. Incertidumbre
+```r
+flexdashboard::valueBox(
+  value = "12.4%",
+  caption = "Retorno anual",
+  icon = "fa-chart-line"
+)
+```
 
-1. Seleccionen dos activos.
-2. Generen 2.000 remuestras bootstrap.
-3. Construyan el IC 95% del retorno medio mensual.
-4. Comparen la amplitud de los intervalos.
+Los mismos objetos calculados durante el análisis pueden alimentar:
 
-### Pregunta
-
-¿La evidencia permite afirmar claramente que uno tiene mayor retorno promedio?
-
----
-
-# Trabajo en grupos — Parte 6
-
-### F. Métricas y recomendación
-
-Calculen por activo:
-
-- retorno anualizado;
-- volatilidad anualizada;
-- percentil 5%;
-- razón retorno/volatilidad usando tasa libre de riesgo igual a cero para este ejercicio.
-
-Finalmente elaboren una recomendación que reconozca:
-
-- retorno;
-- riesgo;
-- cola izquierda;
-- diversificación;
-- incertidumbre y limitaciones.
-
----
-
-# Entrega de la actividad
-
-Cada grupo debe presentar brevemente:
-
-1. una tabla descriptiva;
-2. dos gráficos relevantes;
-3. las correlaciones más importantes;
-4. un intervalo bootstrap;
-5. una recomendación financiera de máximo cinco líneas.
-
-### No se evalúa
-
-Elegir “el mejor activo” sin justificar los trade-offs.
-
-### Se evalúa
-
-La coherencia entre evidencia, interpretación y recomendación.
-
----
-
-<!-- DOCENTE: 5 min. Common mistakes. -->
-
-# Errores que debemos evitar
-
-- comparar frecuencias diferentes;
-- interpretar volatilidad como pérdida;
-- afirmar causalidad a partir de correlación;
-- eliminar extremos sin investigarlos;
-- presentar solo promedios;
-- tratar un intervalo como garantía;
-- confundir retorno histórico con retorno asegurado;
-- recomendar sin reconocer limitaciones.
-
----
-
-# Cierre de la sesión
+- un KPI;
+- una tabla;
+- un gráfico;
+- un reporte;
+- un dashboard.
 
 .center[
-.font110[
-**Pregunta → Descripción → Distribución → Extremos → Dependencia → Incertidumbre → Métricas → Decisión**
-]
+.blue2[**Cambiar el formato de entrega no obliga a rehacer el análisis.**]
 ]
 
-<br>
+---
 
-Tres ideas centrales:
+# Demostración: Flexdashboard estático
 
-1. Una distribución informa más que un promedio aislado.
-2. Correlación describe asociación lineal, no causalidad ni independencia.
-3. La incertidumbre debe comunicarse junto con la estimación.
+Archivo incluido:
+
+```text
+/dashboard/01_Flexdashboard_Estatico.Rmd
+```
+
+Revisaremos:
+
+1. YAML;
+2. filas y columnas;
+3. `valueBox()`;
+4. gráficos;
+5. tabla resumen.
+
+El archivo utiliza la misma base trabajada durante toda la sesión.
 
 ---
 
 class: inverse, center, middle
 background-color: #122140
 
+# 6. Interactividad con Shiny e inteligencia artificial
+## Extensión de un dashboard reproducible
+
+---
+
+# Shiny: interactividad y arquitectura básica
+
+Shiny permite que los resultados cambien cuando el usuario modifica una selección.
+
 .center[
-<br><br>
+### **Input → Reactive → Output**
+]
+
+- **Input:** valor seleccionado por el usuario;
+- **Reactive:** objeto que se recalcula cuando cambia un input;
+- **Output:** gráfico, tabla, texto o KPI presentado al usuario.
+
+La interactividad se incorpora cuando aporta valor a la pregunta analítica.
+
+---
+
+# Activar Shiny e incorporar inputs
+
+```yaml
+---
+output:
+  flexdashboard::flex_dashboard:
+    orientation: rows
+runtime: shiny
+---
+```
+
+```r
+selectInput(
+  "activo",
+  "Activo",
+  choices = unique(datos$activo)
+)
+```
+
+Un input puede ubicarse en una barra lateral y utilizarse para filtrar el análisis.
+
+---
+
+# `reactive()` y `req()`
+
+```r
+datos_filtrados <- reactive({
+  req(input$activo)
+
+  datos |>
+    filter(activo == input$activo)
+})
+```
+
+- `reactive()` recalcula el objeto cuando cambia un input del que depende;
+- `req()` detiene temporalmente el cálculo cuando falta una condición necesaria.
+
+Este patrón evita repetir filtros en cada gráfico o KPI.
+
+---
+
+# Outputs reactivos y demostración
+
+```r
+renderPlot({
+  d <- datos_filtrados()
+
+  ggplot(d, aes(fecha, indice)) +
+    geom_line()
+})
+```
+
+El archivo completo está incluido en:
+
+```text
+/dashboard/02_Flexdashboard_Shiny.Rmd
+```
+
+Contiene filtros, KPIs reactivos, gráficos y tabla de detalle.
+
+---
+
+# Inteligencia artificial como apoyo de programación
+
+La IA puede acelerar la construcción del dashboard cuando el estudiante especifica claramente:
+
+- estructura de los datos;
+- variables disponibles;
+- KPIs requeridos;
+- filtros;
+- gráficos;
+- comportamiento esperado.
+
+.center[
+.orange[**La IA puede apoyar la implementación; la estructura analítica debe definirse antes.**]
+]
+
+---
+
+# Ejemplo de prompt para ampliar el tablero
+
+> Tengo un Flexdashboard en R con las variables `fecha`, `activo` y `retorno`. Quiero convertirlo en un dashboard interactivo con Shiny. Agrega un selector de activo y un rango de fechas. Los KPIs de retorno anualizado, volatilidad, Sharpe y maximum drawdown deben actualizarse con los filtros. También deben actualizarse un gráfico de índice acumulado y un histograma de retornos. Conserva la estructura actual y explícame qué hace cada bloque nuevo.
+
+El prompt ampliado está disponible en:
+
+```text
+Prompt_IA_Dashboard.txt
+```
+
+---
+
+# Validación del código generado con IA
+
+Antes de aceptar el código:
+
+1. verificar nombres y tipos de variables;
+2. revisar fórmulas financieras;
+3. comprobar unidades y frecuencias;
+4. validar que los filtros afecten los outputs correctos;
+5. probar casos sin datos o con pocos registros;
+6. documentar los cambios incorporados.
+
+.center[
+.blue2[**La validación analítica sigue siendo responsabilidad del analista.**]
+]
+
+---
+
+# Secuencia de demostración
+
+Archivos incluidos en la carpeta:
+
+```text
+Codigo_Guiado_Clase_3.R
+01_Flexdashboard_Estatico.Rmd
+02_Flexdashboard_Shiny.Rmd
+Prompt_IA_Dashboard.txt
+```
+
+.center[
+### Estadística → inferencia → métricas → gráficos → reporte → dashboard → Shiny
+]
+
+---
+
+# Ideas principales
+
+- Describir una variable requiere revisar centro, dispersión y distribución.
+- Correlación resume asociación, pero no causalidad.
+- Inferencia incorpora incertidumbre a las estimaciones.
+- Las métricas financieras deben interpretarse con frecuencia, periodo y contexto.
+- Un gráfico debe responder una pregunta.
+- R Markdown permite documentar y reproducir el análisis.
+- Flexdashboard organiza los resultados; Shiny agrega interacción.
+- La IA puede acelerar la implementación, pero no reemplaza la validación.
+
+---
+
+class: inverse, center, middle
+background-color: #122140
 
 # Gracias!!!
 
-<br><br><br><br><br>
+<br>
 
 ### Preguntas?
-]
-
